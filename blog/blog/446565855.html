@@ -1,0 +1,6 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>MYSQL忘记管理员密码</title></head><body><h1>MYSQL忘记管理员密码</h1><div><p><strong><span style="FONT-SIZE: 18px">杀掉mysql进程：<span style="COLOR: #ff0000">killall&nbsp; mysqld</span></span></strong></p>
+<p><strong><span style="FONT-SIZE: 18px">启动mysql：<span style="COLOR: #ff0000">mysqld_safe --skip-grant-tables &amp;</span></span></strong></p>
+<p><strong><span style="FONT-SIZE: 18px">mysql -u root</span></strong></p>
+<p><strong><span style="FONT-SIZE: 18px">mysql&gt;use mysql;</span></strong></p>
+<p><strong><span style="FONT-SIZE: 18px">mysql&gt;<span style="COLOR: #ff0000">update user set password=password("123456") where user = "root";&nbsp; </span>//passwor函数加密密码用</span></strong></p>
+<p><strong><span style="FONT-SIZE: 18px">mysql&gt;<span style="COLOR: #ff0000">flush privileges;</span>&nbsp;&nbsp; //使密码生效</span></strong></p></div></body></html>

@@ -1,0 +1,269 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>JavaMail发送邮件实例</title></head><body><h1>JavaMail发送邮件实例</h1><div><p><strong><font size="4">一、需要的jar包：mail.jar</font></strong></p>
+<p>下载地址：<a href="http://java.sun.com/products/javamail/downloads/index.html">http://java.sun.com/products/javamail/downloads/index.html</a></p>
+<p>二、使用JavaMail发送邮件的源码</p>
+<p>package com.channelsoft.email;</p>
+<p>import java.util.*;<br>
+import javax.mail.*;<br>
+import javax.mail.internet.*;<br>
+import java.util.Date;<br>
+import javax.activation.*;<br>
+import java.io.*;</p>
+<p>public class sendMail<br>
+{</p>
+<p> private MimeMessage mimeMsg; // MIME邮件对象</p>
+<p> private Session session; // 邮件会话对象</p>
+<p> private Properties props; // 系统属性</p>
+<p> private boolean needAuth = false; // smtp是否需要认证</p>
+<p> private String username = &quot;&quot;; // smtp认证用户名和密码</p>
+<p> private String password = &quot;&quot;;</p>
+<p> private Multipart mp; // Multipart对象,邮件内容,标题,附件等内容均添加到其中后再生成MimeMessage对象</p>
+<p> public sendMail(String smtp)<br>
+ {<br>
+&nbsp;&nbsp; setSmtpHost(smtp);<br>
+&nbsp;&nbsp; createMimeMessage();<br>
+ }</p>
+<p> /**<br>
+  * @param hostName<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  */<br>
+ public void setSmtpHost(String hostName)<br>
+ {<br>
+&nbsp;&nbsp; System.out.println(&quot;设置系统属性：mail.smtp.host = &quot; + hostName);<br>
+&nbsp;&nbsp; if (props == null)<br>
+&nbsp;&nbsp;&nbsp; props = System.getProperties(); // 获得系统属性对象</p>
+<p>&nbsp;&nbsp; props.put(&quot;mail.smtp.host&quot;, hostName); // 设置SMTP主机<br>
+ }</p>
+<p> /**<br>
+  * @return boolean<br>
+  */<br>
+ public boolean createMimeMessage()<br>
+ {<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; System.out.println(&quot;准备获取邮件会话对象！&quot;);<br>
+&nbsp;&nbsp;&nbsp; session = Session.getDefaultInstance(props, null); // 获得邮件会话对象<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; System.err.println(&quot;获取邮件会话对象时发生错误！&quot; + e);<br>
+&nbsp;&nbsp;&nbsp; return false;<br>
+&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp; System.out.println(&quot;准备创建MIME邮件对象！&quot;);<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; mimeMsg = new MimeMessage(session); // 创建MIME邮件对象<br>
+&nbsp;&nbsp;&nbsp; mp = new MimeMultipart();</p>
+<p>&nbsp;&nbsp;&nbsp; return true;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; System.err.println(&quot;创建MIME邮件对象失败！&quot; + e);<br>
+&nbsp;&nbsp;&nbsp; return false;<br>
+&nbsp;&nbsp; }<br>
+ }</p>
+<p> /**<br>
+  * @param need<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  boolean<br>
+  */<br>
+ public void setNeedAuth(boolean need)<br>
+ {<br>
+&nbsp;&nbsp; System.out.println(&quot;设置smtp身份认证：mail.smtp.auth = &quot; + need);<br>
+&nbsp;&nbsp; if (props == null)<br>
+&nbsp;&nbsp;&nbsp; props = System.getProperties();</p>
+<p>&nbsp;&nbsp; if (need)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; props.put(&quot;mail.smtp.auth&quot;, &quot;true&quot;);<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; else<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; props.put(&quot;mail.smtp.auth&quot;, &quot;false&quot;);<br>
+&nbsp;&nbsp; }<br>
+ }</p>
+<p> /**<br>
+  * @param name<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  * @param pass<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  */<br>
+ public void setNamePass(String name, String pass)<br>
+ {<br>
+&nbsp;&nbsp; username = name;<br>
+&nbsp;&nbsp; password = pass;<br>
+ }</p>
+<p> /**<br>
+  * @param mailSubject<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  * @return boolean<br>
+  */<br>
+ public boolean setSubject(String mailSubject)<br>
+ {<br>
+&nbsp;&nbsp; System.out.println(&quot;设置邮件主题！&quot;);<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; mimeMsg.setSubject(mailSubject);<br>
+&nbsp;&nbsp;&nbsp; return true;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; System.err.println(&quot;设置邮件主题发生错误！&quot;);<br>
+&nbsp;&nbsp;&nbsp; return false;<br>
+&nbsp;&nbsp; }<br>
+ }</p>
+<p> /**<br>
+  * @param mailBody<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  */<br>
+ public boolean setBody(String mailBody)<br>
+ {<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; BodyPart bp = new MimeBodyPart();<br>
+&nbsp;&nbsp;&nbsp; bp.setContent(&quot;&quot; + mailBody, &quot;text/html;charset=GB2312&quot;);<br>
+&nbsp;&nbsp;&nbsp; mp.addBodyPart(bp);</p>
+<p>&nbsp;&nbsp;&nbsp; return true;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; System.err.println(&quot;设置邮件正文时发生错误！&quot; + e);<br>
+&nbsp;&nbsp;&nbsp; return false;<br>
+&nbsp;&nbsp; }<br>
+ }</p>
+<p> /**<br>
+  * @param name<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  * @param pass<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  */<br>
+ public boolean addFileAffix(String filename)<br>
+ {</p>
+<p>&nbsp;&nbsp; System.out.println(&quot;增加邮件附件：&quot; + filename);<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; BodyPart bp = new MimeBodyPart();<br>
+&nbsp;&nbsp;&nbsp; FileDataSource fileds = new FileDataSource(filename);<br>
+&nbsp;&nbsp;&nbsp; bp.setDataHandler(new DataHandler(fileds));<br>
+&nbsp;&nbsp;&nbsp; bp.setFileName(fileds.getName());</p>
+<p>&nbsp;&nbsp;&nbsp; mp.addBodyPart(bp);</p>
+<p>&nbsp;&nbsp;&nbsp; return true;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; System.err.println(&quot;增加邮件附件：&quot; + filename + &quot;发生错误！&quot; + e);<br>
+&nbsp;&nbsp;&nbsp; return false;<br>
+&nbsp;&nbsp; }<br>
+ }</p>
+<p> /**<br>
+  * @param name<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  * @param pass<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  */<br>
+ public boolean setFrom(String from)<br>
+ {<br>
+&nbsp;&nbsp; System.out.println(&quot;设置发信人！&quot;);<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; mimeMsg.setFrom(new InternetAddress(from)); // 设置发信人<br>
+&nbsp;&nbsp;&nbsp; return true;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; return false;<br>
+&nbsp;&nbsp; }<br>
+ }</p>
+<p> /**<br>
+  * @param name<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  * @param pass<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  */<br>
+ public boolean setTo(String to)<br>
+ {<br>
+&nbsp;&nbsp; if (to == null)<br>
+&nbsp;&nbsp;&nbsp; return false;<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; mimeMsg.setRecipients(Message.RecipientType.TO, InternetAddress<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .parse(to));<br>
+&nbsp;&nbsp;&nbsp; return true;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; return false;<br>
+&nbsp;&nbsp; }</p>
+<p> }</p>
+<p> /**<br>
+  * @param name<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  * @param pass<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  */<br>
+ public boolean setCopyTo(String copyto)<br>
+ {<br>
+&nbsp;&nbsp; if (copyto == null)<br>
+&nbsp;&nbsp;&nbsp; return false;<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; mimeMsg.setRecipients(Message.RecipientType.CC,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Address[]) InternetAddress.parse(copyto));<br>
+&nbsp;&nbsp;&nbsp; return true;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; return false;<br>
+&nbsp;&nbsp; }<br>
+ }</p>
+<p> /**<br>
+  * @param name<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  * @param pass<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String<br>
+  */<br>
+ public boolean sendout()<br>
+ {<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; mimeMsg.setContent(mp);<br>
+&nbsp;&nbsp;&nbsp; mimeMsg.saveChanges();<br>
+&nbsp;&nbsp;&nbsp; System.out.println(&quot;正在发送邮件....&quot;);</p>
+<p>&nbsp;&nbsp;&nbsp; Session mailSession = Session.getInstance(props, null);<br>
+&nbsp;&nbsp;&nbsp; Transport transport = mailSession.getTransport(&quot;smtp&quot;);<br>
+&nbsp;&nbsp;&nbsp; transport.connect((String) props.get(&quot;mail.smtp.host&quot;), username,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; password);<br>
+&nbsp;&nbsp;&nbsp; transport.sendMessage(mimeMsg, mimeMsg<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .getRecipients(Message.RecipientType.TO));<br>
+&nbsp;&nbsp;&nbsp; // transport.send(mimeMsg);</p>
+<p>&nbsp;&nbsp;&nbsp; System.out.println(&quot;发送邮件成功！&quot;);<br>
+&nbsp;&nbsp;&nbsp; transport.close();</p>
+<p>&nbsp;&nbsp;&nbsp; return true;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; System.err.println(&quot;邮件发送失败！&quot; + e);<br>
+&nbsp;&nbsp;&nbsp; return false;<br>
+&nbsp;&nbsp; }<br>
+ }</p>
+<p> /**<br>
+  * Just do it as this<br>
+  */<br>
+ public static void main(String[] args)<br>
+ {</p>
+<p>&nbsp;&nbsp; String mailbody = &quot;你好！测试JavaMail！&quot;;</p>
+<p>&nbsp;&nbsp; sendMail themail = new sendMail(&quot;smtp.channelsoft.com&quot;);<br>
+&nbsp;&nbsp; themail.setNeedAuth(false);</p>
+<p>&nbsp;&nbsp; if (themail.setSubject(&quot;标题&quot;) == false)<br>
+&nbsp;&nbsp;&nbsp; return;<br>
+&nbsp;&nbsp; if (themail.setBody(mailbody) == false)<br>
+&nbsp;&nbsp;&nbsp; return;<br>
+&nbsp;&nbsp; if (themail.setTo(&quot;<a href="mailto:dibin@channelsoft.com">dibin@channelsoft.com</a>&quot;) == false)<br>
+&nbsp;&nbsp;&nbsp; return;<br>
+&nbsp;&nbsp; if (themail.setFrom(&quot;<a href="mailto:dibin@channelsoft.com">dibin@channelsoft.com</a>&quot;) == false)<br>
+&nbsp;&nbsp;&nbsp; return;<br>
+//&nbsp;&nbsp; if (themail.addFileAffix(&quot;d:\\test.jar&quot;) == false)<br>
+//&nbsp;&nbsp;&nbsp; return;<br>
+&nbsp;&nbsp; themail.setNamePass(&quot;user&quot;, &quot;password&quot;);</p>
+<p><strong><font size="4">//发送邮件的用户名和密码（即自己邮箱的用户名和密码,任何的邮箱，如163邮箱，smtp服务器地址为：smtp.163.com,用户名和密码是你的163注册的用户名和密码）</font></strong></p>
+<p>&nbsp;&nbsp; if (themail.sendout() == false)<br>
+&nbsp;&nbsp;&nbsp; return;<br>
+ }<br>
+}</p></div></body></html>

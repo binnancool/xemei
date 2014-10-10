@@ -1,0 +1,93 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Redhat Linux安装介绍</title></head><body><h1>Redhat Linux安装介绍</h1><div><p>Redhat Linux介绍<br>
+Linux的发行版有很多，主流的Linux有Asianux ，B2D Linux ，Conectiva Linux ，Debian GNU/Linux ，Fedora Core ，Gentoo Linux ，Knoppix Linux ，Linux From Scratch ，Magic Linux ，Mandriva Linux ，Red Hat Linux ，Slackware Linux ，Stanix Live CD ，SUSE Linux ，Turbo Linux ，Ubuntu Linux等，国内著名的Linux是红旗linux。</p>
+<p>Redhat的系列有Redhat Linux、Fedora Core和Redhat Enterprise Linux。其中Redhat Linux的最高版本为9.0，停止发行新的版本；Fedora Core为免费版本，最高版本为11；Redhat Enterprise Linux为商业版本，需要付费使用。</p>
+<p>一、安装<br>
+1、光盘安装<br>
+Redhat Fedora Core 6 Linux安装流程</p>
+<p>首先将linux光盘放入光驱。然后按回车键开始安装。</p>
+<p><br>
+选择右侧的skip按钮，跳过对光盘介质的扫描检测。</p>
+<p><br>
+进入图形安装界面。</p>
+<p><br>
+选择安装过程中的语言为英语。跟据你自已的不同选取语言，默认为英语，一般是文本管理，所以选取英语。</p>
+<p>选择键盘类型为美国英语。</p>
+<p><br>
+选择定制安装软件包，根据你自已的要求选取，这里选取自定义。</p>
+<p><br>
+分区方式有两种：自动分区和手动分区。使用自动分区的话，那么所有的分区都会放在根目录上。若使用手动分区，则要创建独立的usr 、var等分区。</p>
+<p><br>
+选择&ldquo;YES&rdquo;，对磁盘进行初始化。</p>
+<p><br>
+选择磁盘，删除所有磁盘分区。</p>
+<p><br>
+确认操作。</p>
+<p><br>
+系统给出默认分区方案。点击下一步继续。</p>
+<p><br>
+设置启动菜单名称，直接点击一下一步即可。</p>
+<p><br>
+设置网络连接。点击&ldquo;Edit&rdquo;按钮。输入IP地址和子网掩码。</p>
+<p><br>
+配置主机头，例如ctrl.test.com。主机头的设置最好选择您自己使用的域名，然后加上适当前缀,这里是用SERVER加主机编号命名的.</p>
+<p><br>
+选择&ldquo;Enable firewall&rdquo;，即启用防火墙。选中SSH，打开TCP协议22,80,21,25,110等端口。注意：FC3以上版新增了一个SELinux的选项，请把这个选项设置为Disable，否则会影响各种服务的正常运行。</p>
+<p><br>
+选择安装好之后的操作系统语言是英语。（英语兼容性更好，亦可显示中文），但你要选上中文的编码的语言包,</p>
+<p><br>
+选择时区为&ldquo;Asia/Shanghai&rdquo;。</p>
+<p><br>
+输入root密码。</p>
+<p><br>
+在软件列表中，除默认所选的,去掉所有图形选项,并把所有后面为TOOLS的都选上。如果你图形选项，就选上，根据你自已的要求选取安装包，</p>
+<p><br>
+点击下一步开始安装。</p>
+<p><br>
+安装程序格式化磁盘。</p>
+<p><br>
+经过一段时间的复制后文件后，安装完成。</p>
+<p><br>
+系统自动重新启动，请拿出安装光盘。</p>
+<p><br>
+启动系统完成。 登陆即可以，</p>
+<p>附录：Linux系统手动分区方案,一般情况下自动分区即可以</p>
+<p> </p>
+<p>分区类型<br>
+ 加载点<br>
+ 推荐大小<br>
+ 功能<br>
+ <br>
+主分区<br>
+ /boot<br>
+ 128MB<br>
+ 启动分区<br>
+ <br>
+主分区<br>
+ /<br>
+ 剩余空间<br>
+ 主分区，又称根分区<br>
+ <br>
+主分区<br>
+ swap<br>
+ 两倍内存<br>
+ 虚拟缓存,又称交换分区<br>
+ </p>
+<p>2、硬盘安装<br>
+（１）下载光盘镜像文件（扩展名为ISO）</p>
+<p>（２）给RedHat准备磁盘分区。挂载分区4G以上，交换分区是你内存在的二倍，512M就可以了。</p>
+<p>　　由于我先前安装的是WindowsXP，硬盘分成了四个区，还得重新调整磁盘分区。用分区魔术师（我用的PQMagic8.0中文版）重新调整硬盘分区，它是不会损坏硬盘数据的。</p>
+<p>　　（３）下载Grub for DOS</p>
+<p>　　（４）解压缩光盘镜像文件，把它们解压缩到F:\isolinux目录。</p>
+<p>　　（５）重新引导系统到DOS。</p>
+<p>　　（６）在DOS系统提示符下执行grub，即刚才下载的grub.exe，系统提示符变为grub&gt;就对了。可以打入命令help看看。</p>
+<p>　　（７）输入以下这一条命令，：</p>
+<p>　　　　　　root (hda0,X)</p>
+<p>　　X指你解压缩出来的isolinux目录所在的硬盘分区的一个数字，5表示C盘，6表示D盘，7表示E盘，以此类推。输入root (hda0,X)，然后按一下TAB键，会列表出全部硬盘分区的。</p>
+<p>　　（８）输入一条命令，安装Linux内核：</p>
+<p>　　　　　　kernel /yourpath/vmlinuz</p>
+<p>　　说明两点：一是用反斜杠；二是这里的yourpath就是刚才解压缩光盘镜像文件的存放路径，不要输入盘符，root命令已经转入到当前盘。如kernel /isolinux/vmlinux。</p>
+<p>　　（９）装入RedHat的安装文件，输入一条命令：</p>
+<p>　　　　　　initrd /youpath/initrd.img</p>
+<p>　　（１０）开始执行安装，输入一条命令：</p>
+<p>　　　　　　boot</p>
+<p>　　（１１）选择从硬盘安装。剩下的步骤与光盘安装一样。</p></div></body></html>

@@ -1,0 +1,48 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>net use命令详解</title></head><body><h1>net use命令详解</h1><div><div>
+<p><strong><font size="3">时间同步：</font></strong></p>
+<p><strong><font size="3">net use </font></strong><a href="file://10.130.1.90/ipc$"><strong><font size="3">\\10.130.1.90\ipc$</font></strong></a><strong><font size="3"> ***** /user:</font></strong><a href="mailto:cdr@channel.com"><strong><font size="3">cdd</font></strong></a><font size="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>  //首先，建立于服务器的ipc连接</strong></font></p>
+<p><strong><font size="3">net time </font></strong><a href="file://10.130.1.90/"><font size="3">\\10.130.1.9</font></a><font size="3">0</font><strong><font size="3"> /set /yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //与服务器时间同步</font></strong></p>
+<p><font size="3"><br>
+net use \ipipc$ &quot; &quot; /user:&quot; &quot; 建立IPC空链接 </font><font size="3"><br>
+<strong>net use \ipipc$ &quot;密码&quot; /user:&quot;用户名&quot;</strong> 建立IPC非空链接 </font><font size="3"><br>
+net use h: \ipc$ &quot;密码&quot; /user:&quot;用户名&quot; 直接登陆后映射对方C：到本地为H: <br>
+net use h: \ipc$ 登陆后映射对方C：到本地为H: <br>
+net use \ipipc$ /del 删除IPC链接 <br>
+net use h: /del 删除映射对方到本地的为H:的映射 <br>
+net user 用户名　密码　/add 建立用户 <br>
+net user guest /active:yes 激活guest用户<br>
+net user 查看有哪些用户<br>
+net user 帐户名 查看帐户的属性 <br>
+net localgroup administrators 用户名 /add 把&ldquo;用户&rdquo;添加到管理员中使其具有管理员权限,注意：administrator后加s用复数 <br>
+net start 查看开启了哪些服务<br>
+net start 服务名　 开启服务；(如:net start telnet， net start schedule) <br>
+net stop 服务名 停止某服务<br>
+<strong>net time \目标ip 查看对方时间</strong><br>
+<strong>net time \目标ip /set 设置本地计算机时间与&ldquo;目标IP&rdquo;主机的时间同步,加上参数/yes可取消确认信息<br>
+</strong>net view 查看本地局域网内开启了哪些共享<br>
+net view \ip 查看对方局域网内开启了哪些共享 <br>
+net config 显示系统网络设置<br>
+net logoff 断开连接的共享<br>
+net pause 服务名 暂停某服务 <br>
+net send ip &quot;文本信息&quot; 向对方发信息 <br>
+net ver 局域网内正在使用的网络连接类型和信息<br>
+net share 查看本地开启的共享 <br>
+net share ipc$ 开启ipc$共享 <br>
+net share ipc$ /del 删除ipc$共享<br>
+net share c$ /del 删除C：共享 <br>
+net user guest 12345 用guest用户登陆后用将密码改为12345<br>
+net password 密码 更改系统登陆密码 <br>
+netstat -a 查看开启了哪些端口,常用netstat -an <br>
+netstat -n 查看端口的网络连接情况，常用netstat -an<br>
+netstat -v 查看正在进行的工作<br>
+netstat -p 协议名 例：netstat -p tcq/ip 查看某协议使用情况（查看tcp/ip协议使用情况） <br>
+netstat -s 查看正在使用的所有协议使用情况 <br>
+nbtstat -A ip 对方136到139其中一个端口开了的话，就可查看对方最近登陆的用户名（03前的为用户名）-注意：参数-A要大写<br>
+tracert -参数 ip(或计算机名) 跟踪路由（数据包），参数：&ldquo;-w数字&rdquo;用于设置超时间隔。 <br>
+ping ip(或域名) 向对方主机发送默认大小为32字节的数据，参数：&ldquo;-l[空格]数据包大小&rdquo;；&ldquo;-n发送数据次数&rdquo;；&ldquo;-t&rdquo;指一直ping。<br>
+ping -t -l 65550 ip 死亡之ping(发送大于64K的文件并一直ping就成了死亡之ping) <br>
+ipconfig (winipcfg) 用于windows NT及XP(windows 95 98)查看本地ip地址，ipconfig可用参数&ldquo;/all&rdquo;显示全部配置信息 <br>
+tlist -t 以树行列表显示进程(为系统的附加工具，默认是没有安装的，在安装目录的Support/tools文件夹内)<br>
+kill -F 进程名 加-F参数后强制结束某进程(为系统的附加工具，默认是没有安装的，在安装目录的Support/tools文件夹内) <br>
+del -F 文件名 加-F参数后就可删除只读文件,/AR、/AH、/AS、/AA分别表示删除只读、隐藏、系统、存档文件，/A-R、/A-H、/A-S、/A-A表示删除除只读、隐藏、系统、存档以外的文件。例如&ldquo;DEL/AR *.*&rdquo;表示删除当前目录下所有只读文件，&ldquo;DEL/A-S *.*&rdquo;表示删除当前目录下除系统文件以外的所有文件</font></p>
+</div></div></body></html>

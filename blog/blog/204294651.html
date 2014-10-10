@@ -1,0 +1,44 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>SQLServer2005远程连接问题</title></head><body><h1>SQLServer2005远程连接问题</h1><div><p>1、配置SQLServer2005的远程访问</p>
+<p>2、PC1（10.130.14.49&mdash;&mdash;本地连接）远程访问PC2（10.130.14.142&mdash;&mdash;无线网络连接）</p>
+<p><strong>出错信息：</strong></p>
+<p><font face="宋体">Error:Can't connect to Database!<br>
+2010-3-30 18:14:14 com.channelsoft.hr.webservice.impl.DepartmentAndPersonInfoImpl getConnection<br>
+严重: null<br>
+<strong>com.microsoft.sqlserver.jdbc.SQLServerException: 到主机  的 TCP/IP 连接失败。 java.net.ConnectException: Connection timed out: connect<br>
+</strong> at com.microsoft.sqlserver.jdbc.SQLServerException.makeFromDriverError(Unknown Source)<br>
+ at com.microsoft.sqlserver.jdbc.SQLServerConnection.connect(Unknown Source)<br>
+ at com.microsoft.sqlserver.jdbc.SQLServerDriver.connect(Unknown Source)<br>
+ at java.sql.DriverManager.getConnection(DriverManager.java:582)<br>
+ at java.sql.DriverManager.getConnection(DriverManager.java:185)<br>
+ at com.channelsoft.hr.webservice.impl.DepartmentAndPersonInfoImpl.getConnection(DepartmentAndPersonInfoImpl.java:38)<br>
+ at com.channelsoft.hr.webservice.impl.DepartmentAndPersonInfoImpl.queryDepartmentInfo(DepartmentAndPersonInfoImpl.java:65)<br>
+ at com.channelsoft.hr.webservice.impl.DepartmentAndPersonInfoImpl.main(DepartmentAndPersonInfoImpl.java:252)</font></p>
+<p><font face="宋体"><strong>原因：本地连接的防火墙开启，如下图</strong></font></p>
+<p align="center"><font face="宋体"><span><strong><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/e9a02b17cedb2667f2de3270.jpg"></strong></span></font><font face="宋体"><span>
+<p><strong>关闭防火墙：<br>
+</strong></p>
+<p><span><strong><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/8757befb8410afa158ee9045.jpg"><br>
+关闭后本地连接显示：</strong></span></p>
+<p align="center"><span><span><strong><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/ce9f0e98682ec53e6f068c47.jpg"></strong></span></span></p>
+<p><br>
+<strong>2、PC2（10.130.14.142&mdash;&mdash;无线网络连接）远程访问PC1（10.130.14.49&mdash;&mdash;本地连接）</strong></p>
+<p><strong>出错信息：</strong></p>
+<p>Error:Can't connect to Database!<br>
+2010-3-30 18:16:13 com.channelsoft.hr.webservice.impl.DepartmentAndPersonInfoImpl getConnection<br>
+严重: null<br>
+<strong>com.microsoft.sqlserver.jdbc.SQLServerException: 接收 TDS 预登录响应时发生 I/O 错误。<br>
+</strong> at com.microsoft.sqlserver.jdbc.SQLServerException.makeFromDriverError(Unknown Source)<br>
+ at com.microsoft.sqlserver.jdbc.DBComms.Prelogin(Unknown Source)<br>
+ at com.microsoft.sqlserver.jdbc.DBComms.&lt;init&gt;(Unknown Source)<br>
+ at com.microsoft.sqlserver.jdbc.SQLServerConnection.connect(Unknown Source)<br>
+ at com.microsoft.sqlserver.jdbc.SQLServerDriver.connect(Unknown Source)<br>
+ at java.sql.DriverManager.getConnection(DriverManager.java:582)<br>
+ at java.sql.DriverManager.getConnection(DriverManager.java:185)<br>
+ at com.channelsoft.hr.webservice.impl.DepartmentAndPersonInfoImpl.getConnection(DepartmentAndPersonInfoImpl.java:38)<br>
+ at com.channelsoft.hr.webservice.impl.DepartmentAndPersonInfoImpl.queryDepartmentInfo(DepartmentAndPersonInfoImpl.java:65)<br>
+ at com.channelsoft.hr.webservice.impl.DepartmentAndPersonInfoImpl.main(DepartmentAndPersonInfoImpl.java:252)</p>
+<p><strong>原因，无线网络连接防火墙开启，如下图：</strong></p>
+<p align="center"><strong><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/76b46ff82413e96f242df249.jpg"></span></strong><strong><span>
+<p>修改方法同上。</p>
+</span></strong></p>
+</span></font></p></div></body></html>

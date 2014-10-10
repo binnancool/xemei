@@ -1,0 +1,12 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>客户端SMSAPI压力测试心得</title></head><body><h1>客户端SMSAPI压力测试心得</h1><div><p><font size="3" face="宋体">&nbsp;&nbsp;  经过一周的测试，今天终于测试完毕，得出了确切的结论。回顾一周来的测试过程，也是一个思考过程，先做总结如下：</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;  1、压力测试，首先就是怎么制作压力。每秒发送100条消息怎么才能达到？有两种方案：一是循环发送100条消息，sleep（1000）；二是利用java.util.timer定时器类，每秒定时触发循环发送100条消息的操作。可以做一下测试，两种方法都有缺陷，不够精确。</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;  2、测试工具的编写。此次测试需要编写两种测试工具一个java测试工具，一个C++测试工具。本人对于java比较熟悉，根据需求编写比较容易；对于C++测试工具的编写费了些力气，不过也有所收获。</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;  3、测试，对测试结果进行分析。测试结果容易得到，但是对于测试结果的分析比较麻烦，查看日志、分析日志、询问同事，到底是哪里出了问题？怎么证明客户端SMSAPI没有问题？</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;  4、从李国强那得知c++测试工具有压力测试版的，我修改的那个版本是功能版的，对压力测试不能够很好的支持。经过测试，客户端SMSAPI没有问题。问题出在c++版的测试工具。</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;  5、编写测试报告。</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;  此次测试走了一些弯路，但是期间进行了很多思考，进行了很多交流，具体的每天的收获或者思考在我这一周的博客中可以看到。</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;  </font>
+<p><font size="3" face="宋体">展望下一阶段的工作…………</font></p>
+<p> </p>
+</p>
+<p><span style=" font-size: 10.5pt; mso-bidi-font-size: 12.0pt; mso-font-kerning: 1.0pt"><span style="mso-spacerun: yes"> </span></span><font size="3"><span style="font-size: 10.5pt; mso-bidi-font-size: 12.0pt; mso-font-kerning: 1.0pt; mso-ascii- mso-hansi- mso-bidi-">非常感谢吴相铮对我的指导和李国强对我的帮助。</span><span style=" font-size: 10.5pt; mso-bidi-font-size: 12.0pt; mso-font-kerning: 1.0pt"></span></font></p></div></body></html>

@@ -1,0 +1,14 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux XManager SHELL 中文乱码解决！</title></head><body><h1>Linux XManager SHELL 中文乱码解决！</h1><div><p>
+<table style="WIDTH: 100%; TABLE-LAYOUT: fixed">
+<tbody>
+<tr>
+<td>
+<div >
+<div>
+<p><strong><span style="FONT-SIZE: 20px">1、显示乱码</span></strong></p>
+<p><span style="FONT-SIZE: 18px">[root@localhost ~]# service vsftpd restart</span><br><span style="FONT-SIZE: 18px">?抽. vsftpd锛 [ 纭.. ]</span><br><span style="FONT-SIZE: 18px">涓?vsftpd ?.. vsftpd锛 [ 纭.. ]</span></p>
+<p><strong><span style="FONT-SIZE: 20px"></span></strong>&nbsp;</p>
+<p><strong><span style="FONT-SIZE: 20px">2、设置编码</span></strong></p>
+<p><span style="FONT-SIZE: 18px">[root@localhost ~]# cd /etc/sysconfig/</span><br><span style="FONT-SIZE: 18px">[root@localhost sysconfig]# cp i18n i18n.bak&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #备份i18n文件</span><br><span style="FONT-SIZE: 18px">[root@localhost sysconfig]# echo "" &gt;i18n</span><br><span style="FONT-SIZE: 18px">[root@localhost sysconfig]# vi i18n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #加入以下内容</span><br><strong><span style="COLOR: #ff0000; FONT-SIZE: 18px">LANG="zh_CN.GB18030"</span><br><span style="COLOR: #ff0000; FONT-SIZE: 18px">LANGUAGE="zh_CN.GB18030:zh_CN.GB2312:zh_CN"</span><br><span style="COLOR: #ff0000; FONT-SIZE: 18px">SUPPORTED="zh_CN.GB18030:zh_CN:zh:en_US.UTF-8:en_US:en"</span><br><span style="COLOR: #ff0000; FONT-SIZE: 18px">SYSFONT="lat0-sun16"</span></strong></p>
+<p><strong><span style="FONT-SIZE: 20px"></span></strong>&nbsp;</p>
+<p><strong><span style="FONT-SIZE: 20px">3、重新连接后中文显示正常</span></strong><br><span style="FONT-SIZE: 18px">[root@mail ~]# service vsftpd restart</span><br><span style="FONT-SIZE: 18px">关闭 vsftpd： [ 确定 ]</span><br><span style="FONT-SIZE: 18px">为 vsftpd 启动 vsftpd： [ 确定 ]</span></p></div></div></td></tr></tbody></table><br></p></div></body></html>

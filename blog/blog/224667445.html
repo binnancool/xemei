@@ -1,0 +1,7 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>解决循环调用WebService接口，Tomcat死掉问题</title></head><body><h1>解决循环调用WebService接口，Tomcat死掉问题</h1><div><p><strong><font color="#ff0000" size="3">1、问题描述</font></strong></p>
+<p><strong>通过网页循环调用WebService接口，Tomcat假死，在Tomcat窗口，按Ctrl+c，Tomcat正常运行。</strong></p>
+<p><strong><font color="#ff0000" size="3">2、问题分析</font></strong></p>
+<p><strong>A、WebService接口通过网络调用，速度比较慢，每调用一次，需要sleep（100）；</strong></p>
+<p><strong>B、修改接口实现程序，修改为同步，即加关键字：synchronized（java XFire实现WebService）</strong></p>
+<p><strong><font color="#ff0000" size="3">3、解决问题</font></strong></p>
+<p><strong>使用方案B，我写了客户端程序，使用多线程循环调用WebService接口，问题解决。</strong></p></div></body></html>

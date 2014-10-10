@@ -1,0 +1,10 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>explorer.exe应用程序错误的解决方法，验证可以</title></head><body><h1>explorer.exe应用程序错误的解决方法，验证可以</h1><div>导致的EXPLOER进程问题偶尔出现很正常，因为本身WINDOWS的各种未知BUG就很多！经常出现请参考以下：<br>
+1：<br>
+a 、运行regedit进入注册表, 在HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ShellExecuteHooks 下，应该只有一个正常的键值&quot;{AEB6717E-7E19-11d0-97EE-00C04FD91972}, 将其他的删除。<br>
+<br>
+b 、运行 输入cmd 回车在命令提示符下输入<br>
+for %1 in (%windir%\system32\*.dll) do regsvr32.exe /s %1<br>
+<br>
+如果怕输入错误的话，可以复制这条指令，然后在命令提示框点击左上角的c：\，使用下面的&ldquo;编辑－粘贴&rdquo;功能就不容易输错了。在飞速滚屏完全静止之后，别着急启动其他程序，先耐心等一会儿，因为此时dll们还在找位置。直到你的指示灯不闪了再做别的。<br>
+2、要是某特定程序运行后就这样，建议卸了那个程序后安装更新版本的或重装该程序！<br>
+3.彻底解决是重装系统</div></body></html>

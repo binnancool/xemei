@@ -1,0 +1,226 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>jsp详解</title></head><body><h1>jsp详解</h1><div><p> (一).jsp基础<br>
+一个jsp文件中:包含5类元素.<br>
+1.模板元素<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  指jsp的静态html和xml内容.它对jsp的显示是必要的.是网页的框架,它影响页面的结构和美观程度.在jsp编译的时候,它将这些<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  模板元素编译到servlet里.<br>
+2.脚本元素<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  包括声明(Declaration)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  声明就是在jsp程序中声明合法的变量和方法.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  例子:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;%! String getDate()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  return new java.util.Date().toLocaleString();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int count = 10 ;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  %&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  表达式(Expression)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  表达式就是位于&lt;%=和%&gt;之间的代码. 例子:&lt;%=getDate()%&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Scriptlets<br>
+  位于&lt;%和%&gt;之间的代码.它们是合法的java代码.<br>
+  例子:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;%<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int i;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //color表示颜色,通过它来动态控制颜色.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String color1 =&quot;99ccff&quot;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String color2 =&quot;88cc33&quot;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  for(i=1;i&lt;=count;i++){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String color=&quot;&quot;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  if(i%2==0)color=color1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  else color = color2 ;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(&quot;&lt;trbgcolor=&quot;+color+&quot;&gt;&lt;td&gt;-------------------&lt;/td&gt;&lt;tr&gt;&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  %&gt;<br>
+3.指令元素<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  页面(page)指令<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  include指令<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  taglib指令<br>
+4.动作元素<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  在请求处理阶段起作用.jsp规范定义理一系列的标准动作,他们用jsp作为前缀.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:useBean&gt;,&lt;jsp:setProperty&gt;,&lt;jsp:getProperty&gt;,&lt;jsp:param&gt;等.<br>
+5.注释<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  其中有jsp自带的注释规范,也有html/xml的注释规范.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  [1].jsp语法: &lt;!--comment[%=expression%]--&gt; 例子:&lt;!--当前时间为: &lt;%=(new java.util.Date()).toLocaleString()%&gt;--&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  [2].隐藏注释: 写在jsp程序中,但不发给客户.jsp语法:&lt;%--comment--%&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+  (二)指令元素<br>
+指令用于从jsp发送一个信息到容器上.它用来设置全局变量,声明类,要实现的方法和输入内容的类型等.它们并不向客户产生任何输出,<br>
+所有的指令都在jsp整个文件范围内有效.<br>
+&nbsp;&nbsp;  使用格式&lt;<a href="mailto:%@directivename">%@directivename</a> attribute=&quot;value&quot;,attribute=&quot;value&quot; %&gt;<br>
+1.页面指令:<br>
+用来定义jsp文件中的全局属性.<br>
+格式:&lt;%@ page attribute=&quot;value&quot;%&gt;<br>
+其中attribute:language|import|contentType|session|buffer|autoFlush|isThreadSafe|info|errorPage|isErrorPage|extends<br>
+language 定义要使用的脚本语言,目前只能是&quot;java&quot;&nbsp;&nbsp;  ex: language=&quot;java&quot;<br>
+import&nbsp;&nbsp;  和一般的java import意义一样,只是用&quot;,&quot;格开包或者类列表.  ex: import=&quot;java.io.*,java.util.Hashtable&quot;<br>
+session  指定一个Http会话中这个页面是否参与.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ex: session=&quot;true&quot;<br>
+buffer&nbsp;&nbsp;  指定到客户输出流的缓冲模式,如果是none,则不缓冲;如果指定数值,那么输出就用不小于这个值的缓冲区进行缓冲. ex: buffer=&quot;64kb&quot;<br>
+autoFlash true缓冲区满时,到客户端输出被刷新;false缓冲区满时,出现缓冲异常,表示缓冲溢出. ex: autoFlush =&quot;true&quot;<br>
+info&nbsp;&nbsp;&nbsp;&nbsp;  关于jsp页面的信息,定义一个字符串,可以使用servlet.getServletInfo()获得.&nbsp;&nbsp;  ex: info=&quot;一个测试页面&quot;<br>
+isErrorPage 表明当前页是否为其它页的errorPage目标.如果被设置为true,则可以使用exception对象.  ex: isErrorPage=&quot;true&quot;<br>
+errorPage 定义此页面出现异常时调用的页面. errorPage=&quot;error/error.jsp&quot;<br>
+isThreadSafe 用来设置jsp文件是否能多线程使用,如果设置为true,那么一个jsp能够同时处理多个用户的请求;相反,如果设置为false,一个<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  jsp页面只能处理一个请求. ex: IsThreadSafe=&quot;true&quot;<br>
+contentType  定义jsp字符编码和页面响应的MIME类型. ex: contentType=&quot;text/html;charset=gb2312&quot;<br>
+pageEncoding jsp页面的字符编码.&nbsp;&nbsp;  ex: pageEncoding=&quot;gb2312&quot;<br>
+isELIgnored  制定EL(表达式语言)是否被忽略,如果为true,则容器忽略&quot;${}&quot;表达式的计算.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>2.include指令<br>
+include指令通知容器将当前jsp页面中的内嵌的.在指定位置上的资源内容包含.被包含的文件内容可以被jsp解析,这种解析发生在编译期间.<br>
+  ex:  &lt;%@ include file=&quot;filename&quot;%&gt;<br>
+include指令将在jsp编译时插入一个包含文本或代码的文件,当您使用include指令时,这个包含的过程就是静态的. </p>
+<p>3.taglib指令<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  这个指令允许页面使用者自定义标签.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ex: &lt;%@ taglib uri=&quot;taglibURI&quot; prefix=&quot;tagPrefix&quot; %&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  uri用来表示标签描述符,也就是告诉容器怎么找到标签描述文件和标签库,tagPrefix定义了在jsp页面里面要引用这个标签时的前缀.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  这些前缀不可以是:jsp,jspx,java,javax,sun,servlet,sunw.</p>
+<p><br>
+  (三)脚本元素<br>
+JSP脚本元素是jsp代码中使用最频繁的元素,特别是scriptlets.在早期的jsp代码中它占有主导地位.脚本元素把jsp的所有一切都集中在一起,<br>
+它通常是用java些的脚本代码.它允许变量声明＆函数声明.<br>
+1.声明(Declaration)<br>
+在jsp里,声明是一段java代码.它用来定义在产生的类文件中的类的属性和方法.声明后的变量和方法可以在jsp的任意地方使用.可以声明方法,<br>
+也可以声明变量.<br>
+格式: &lt;%! Variable declaration <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  menthod declaration(paramType param,...)%&gt;</p>
+<p>2.表达式(Expression)<br>
+表达式在jsp请求处理阶段计算它的值,所得的结果转换成字符串并与模板数据组合在一起.表达式在页面的位置,也就是该表达式计算结果所在<br>
+的位置.<br>
+格式:&lt;%=Some java expression%&gt;<br>
+如果表达式的任何部分是一个对象,就可以使用toString()进行转换.表达式必须有一个返回值或者本身就是一个对象,实际上表达式被转换<br>
+成out.println()方法中的内容. ex: &lt;%=&quot;hello world&quot;%&gt;  在编译成servlet后,变成:out.write(String.valueOf(&quot;hello,world&quot;));</p>
+<p>3.scriptlet<br>
+  Scriptlet是一段可以在处理请求时间执行的java代码.Scriptlet包括在&lt;%和%&gt;之间,它可以产生输出,并将输出发送到客户的输出流中,<br>
+也可以是一些流程控制语句.在一段Scriptlet中的创建对象,可以在另一个Scriptlet中使用.在编译后的servlet中,Scriptlet被包含在Servlet<br>
+的Servlet方法中.<br>
+格式:&lt;%java code statements%&gt;</p>
+<p>  (四)动作元素<br>
+静态页面(txt,html)写的是什么,在客户端看到的就是什么.不编译.<br>
+动态页面(jsp)要经过编译.<br>
+动作元素在请求处理阶段起作用.<br>
+1.&lt;jsp:param&gt;<br>
+&nbsp;&nbsp;  以&quot;名-值&quot;对的形式为其它标签提供附加信息. 它和&lt;jsp:include&gt;&lt;jsp:forward&gt;&lt;jsp:plugin&gt;一起使用.<br>
+&nbsp;&nbsp;  &lt;jsp:param name=&quot;paramName&quot; value=&quot;paramValue&quot;/&gt;.<br>
+&nbsp;&nbsp;  其中name为属性相关联的关键字,value为属性的值.</p>
+<p>2.&lt;jsp:include&gt;<br>
+&nbsp;&nbsp;  允许在请求时间内在现成的jsp页面里面包含静态或者动态资源.被包含的对象只有对jspWriter对象的访问权,并且它不能设置头或者Cookie.<br>
+&nbsp;&nbsp;  如果页面输出是缓冲的,那么缓冲区的刷新要优先于包含的刷新.此指令在运行上效率比&lt;%@ page include%&gt;指令低,但可以动态增加内容.<br>
+&nbsp;&nbsp;  &lt;jsp:include page=&quot;filename&quot; flush=&quot;true&quot;/&gt;或者<br>
+&nbsp;&nbsp;  &lt;jsp:include page=&quot;filename&quot; flush=&quot;true&quot;&gt;<br>
+&nbsp;&nbsp;  &lt;jsp:param name=&quot;paramName&quot; value=&quot;paramValue&quot;&gt;<br>
+&nbsp;&nbsp;  &lt;/jsp:include&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;  其中,page=&quot;filename&quot;参数为一个相对路径,或者是代表相对路径的表达式.<br>
+&nbsp;&nbsp;  如果路径以&quot;/&quot;开头,那么路径主要是参照jsp应用的上下文关系路径.<br>
+&nbsp;&nbsp;  如果路径是以文件名或目录名开头,那么这个路径就是正在使用的jsp文件的当前路径.<br>
+&nbsp;&nbsp;  &lt;jsp:param name=&quot;paramName&quot; value=&quot;paramValue&quot;&gt;传递一个或多个参数给动态页面.</p>
+<p>3.&lt;jsp:forward&gt;<br>
+&nbsp;&nbsp;  允许将请求转发到另一个jsp,servlet或者静态资源文件.请求被转向到的资源必须位于同jsp发送请求相同的上下文环境中,每当遇到此<br>
+&nbsp;&nbsp;  操作时,就停止执行当前的jsp,转而执行被转发的资源.<br>
+&nbsp;&nbsp;  &lt;jsp:forward page=&quot;uri&quot;/&gt;或者<br>
+&nbsp;&nbsp;  &lt;jsp:forward page=&quot;uri&quot;&gt;<br>
+&nbsp;&nbsp;  &lt;jsp:param name=&quot;paramName&quot; value=&quot;paramValue&quot;/&gt;<br>
+&nbsp;&nbsp;  ...<br>
+&nbsp;&nbsp;  &lt;/jsp:forward&gt;</p>
+<p>4.&lt;jsp:setProperty&gt;<br>
+&nbsp;&nbsp;  此操作和useBean一起协作,用来设置Bean的简单属性和索引属性.&lt;jsp:setProperty&gt;标签使用Bean给定的setXXX()方法,在Bean中设置一个或多个属性.<br>
+&nbsp;&nbsp;  &lt;jsp:setProperty bane=&quot;BeanName&quot; propertyDetails /&gt;<br>
+&nbsp;&nbsp;  其中,propertyDetails可以是下面几个中的一个:<br>
+&nbsp;&nbsp;  property=&quot;*&quot;<br>
+&nbsp;&nbsp;  property=&quot;propertyName&quot; param=&quot;parameterName&quot;<br>
+&nbsp;&nbsp;  property=&quot;propertyName&quot;<br>
+&nbsp;&nbsp;  property=&quot;propertyName&quot; value=&quot;propertyValue&quot;<br>
+&nbsp;&nbsp;  ex:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:useBean id=&quot;usersession&quot; scope=&quot;session&quot; class=&quot;com.user.UserSession&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:setProperty name=&quot;usersession&quot; property=&quot;name&quot; value=&quot;hellking&quot;/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/jsp:useBean&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  或者<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:useBean id=&quot;usersession&quot; scope=&quot;session&quot; class=&quot;com.user.UserSession&quot;/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:setProperty name=&quot;usersession&quot; property=&quot;name&quot; value=&quot;hellking&quot;/&gt; <br>
+&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;  在表单中传过来的数据类型都是String类型的，jsp内在机制回把这些参数转化成Bean属性对应的类型。<br>
+&nbsp;&nbsp;  把字符串转化为其它类型的方法.<br>
+&nbsp;&nbsp;  boolean&nbsp;&nbsp;  java.lang.Boolean.valueOf(String).booleanValue()<br>
+&nbsp;&nbsp;  Boolean&nbsp;&nbsp;  java.lang.Boolean.valueOf(String)<br>
+&nbsp;&nbsp;  byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  java.lang.Byte.valueOf(String).byteValue()<br>
+&nbsp;&nbsp;  Byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  java.lang.Byte.valueOf(String)<br>
+&nbsp;&nbsp;  char&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  java.lang.Character.valueOf(String).charValue()<br>
+&nbsp;&nbsp;  Character java.lang.Character.valueOf(String)<br>
+&nbsp;&nbsp;  double&nbsp;&nbsp;&nbsp;  java.lang.Double.valueOf(String).doubleValue()<br>
+&nbsp;&nbsp;  Double&nbsp;&nbsp;&nbsp;  java.lang.Double.valueOf(String)<br>
+&nbsp;&nbsp;  int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  java.lang.Integer.valueOf(String).intValue()<br>
+&nbsp;&nbsp;  Integer&nbsp;&nbsp;  java.lang.Integer.valueOf(String)<br>
+&nbsp;&nbsp;  float&nbsp;&nbsp;&nbsp;&nbsp;  java.lang.Float.valueOf(String).floatValue()<br>
+&nbsp;&nbsp;  Float&nbsp;&nbsp;&nbsp;&nbsp;  java.lang.Float.valueOf(String)<br>
+&nbsp;&nbsp;  long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  java.lang.Long.valueOf(String).longValue()<br>
+&nbsp;&nbsp;  Long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  java.lang.Long.valueOf(String)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;  <br>
+5.&lt;jsp:getProperty&gt;<br>
+&nbsp;&nbsp;  它用来访问一个Bean的属性.它访问的属性值将它转化成一个String,然后发送到输出流中.如果属性是一个对象,将调用toString()方法.<br>
+&nbsp;&nbsp;  &lt;jsp:getProperty name=&quot;beanName&quot; property=&quot;propertyName&quot;/&gt;<br>
+&nbsp;&nbsp;  例如:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:useBean id=&quot;usersession&quot; scope=&quot;session&quot; class=&quot;com.user.UserSession&quot; /&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;jsp:getProperty name=&quot;usersession&quot; property=&quot;name&quot; /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:getProperty name=&quot;usersession&quot; property=&quot;password&quot; /&gt;<br>
+&nbsp;&nbsp;  该标签有一些限制:不能使用该标签来检索一个已经被索引了的属性.</p>
+<p>6.&lt;jsp:useBean&gt;<br>
+&nbsp;&nbsp;  用来在页面上创建一个Bean实例,并指定它的名字以及作用范围.它保证对象在标签指定的范围内可以使用.<br>
+&nbsp;&nbsp;  语法: &lt;jsp:useBean id=&quot;id&quot; scope=&quot;page|request|session|application&quot; typeSpec/&gt;<br>
+&nbsp;&nbsp;  其中ID是一个大小写相关的名字,用来表示这个实例:scope表示此对象可以使用的范围:typeSpec可以是以下四者之一:<br>
+&nbsp;&nbsp;  [1] class=&quot;className&quot;<br>
+&nbsp;&nbsp;  [2] class=&quot;className&quot; type=&quot;typeName&quot;<br>
+&nbsp;&nbsp;  [3] beanName=&quot;beanName&quot; type=&quot;typeName&quot;<br>
+&nbsp;&nbsp;  [4] type=&quot;typeName&quot;<br>
+&nbsp;&nbsp;  ex:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:useBean id=&quot;shopcart&quot; scope=&quot;session&quot; class=&quot;sesion.Carts&quot; /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:setProperty name=&quot;shopcart&quot; property=&quot;*&quot; /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:useBean id=&quot;checking&quot; scope=&quot;session&quot; class=&quot;bank.checking&quot; &gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:setProperty name=&quot;checking&quot; property=&quot;balance&quot; value=&quot;0.0&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/jsp:useBean&gt;<br>
+&nbsp;&nbsp;  解释:<br>
+&nbsp;&nbsp;  (1)id=&quot;name&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  在所定义的范围中确认Bean的变量,在定义某个JavaBean时,需要指定它的ID,通过此ID对javaBean的实例对象进行引用.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  区分大小写.<br>
+&nbsp;&nbsp;  (2)scope=&quot;page|request|session|application&quot;<br>
+&nbsp;&nbsp;  Bean存在的范围以及ID变量名的有效范围.scope的默认值是page.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  page:能够在包含&lt;jsp:useBean&gt;标签的JSP文件以及此文件中的所有静态包含文件中使用Bean,直到页面执行完毕向客户端<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  发回响应或转到另一个文件为止,超出这个范围Bean失效.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  request:在请求的范围内使用有效.可以使用request对象访问Bean. 比如request.getAttribute(name);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  session:从创建Bean开始,就可以在session有效范围内使用这个Bean,这个Bean对于jsp来说是共享的.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+7.&lt;jsp:plugin&gt;<br>
+&nbsp;&nbsp;  用来产生客户端浏览器的特别标签(Object或者Embed),可以使用它来插入Applet或者JavaBean.<br>
+&nbsp;&nbsp;  当jsp文件被编译把结果发送到浏览器时,&lt;jsp:plugin&gt;元素会根据浏览器的版本替换成&lt;object&gt;或者&lt;embed&gt;<br>
+&nbsp;&nbsp;  &lt;jsp:plugin&gt;会指定对象是Applet还是Bean,同样会指定class的名字,另外还将指定将从哪里下载Java插件.<br>
+&nbsp;&nbsp;  &lt;jsp:plugin type=&quot;bean|applet&quot;  code=&quot;classFileName&quot; codebase=&quot;classFileDirectoryName&quot;<br>
+&nbsp;&nbsp;  [name=&quot;instanceName&quot;][archive=&quot;URIToArchive,...&quot;][align=&quot;bottom|top|middle|left|right&quot;]<br>
+&nbsp;&nbsp;  [height=&quot;displayPixels&quot;][width=&quot;displayPixels&quot;][hspace=&quot;leftRightPixels&quot;][vspace=&quot;topBottomPixels&quot;]<br>
+&nbsp;&nbsp;  [jrevesion=&quot;JREVersionNumber|1.1&quot;][nspluginurl=&quot;URLToPlugin&quot;][iepluginurl=&quot;URLToPlugin&quot;]<br>
+&nbsp;&nbsp;  &gt;<br>
+&nbsp;&nbsp;  [&lt;jsp:params&gt;<br>
+&nbsp;&nbsp;  [&lt;jsp:param name=&quot;parameterName&quot; value=&quot;{parameterValue|&lt;%=expression%&gt;}&quot;/&gt;]+<br>
+&nbsp;&nbsp;  &lt;/jsp:params&gt;]<br>
+&nbsp;&nbsp;  [&lt;jsp:fallback&gt;text message for user&lt;/jsp:fallback&gt;]<br>
+&nbsp;&nbsp;  &lt;/jsp:plugin&gt;<br>
+&nbsp;&nbsp;  ex:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:plugin type=&quot;applet&quot; code=&quot;com.hellking.test.MyApplet.class&quot; codebase=&quot;.&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:params&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:param name=&quot;aParameterName&quot; value=&quot;aParameterNameValue&quot;/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/jsp:params&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp:fallback&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;p&gt;Unable to load applet&lt;/p&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/jsp:fallback&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/jsp:plugin&gt;<br>
+&nbsp;&nbsp;  (1)type=&quot;bean|applet&quot; 将被执行的插件对象的类型.此属性无默认值.必须选择一个.<br>
+&nbsp;&nbsp;  (2)code=&quot;classFileName&quot; 插件将执行的java类文件的名称.必须包括扩展名,且此文件必须在用&quot;codebase&quot;属性指明的目录下.<br>
+&nbsp;&nbsp;  (3)codebase=&quot;classFileDirectoryName&quot; 包含插件将运行的java类的目录或指向这个目录的路径.默认jsp的当前路径.<br>
+&nbsp;&nbsp;  (4)name=&quot;instanceName&quot; Bean或Applet的实例的名称.使得被同一个jsp文件调用的Bean或Applet之间的通信成为可能.<br>
+&nbsp;&nbsp;  (5)archive=&quot;URIToArchive,...&quot;以逗号分隔的路径名列表.是那些用于codebase指定的目录下的类装载器预装载的存档文件所在的路径名.<br>
+&nbsp;&nbsp;  (6)align=&quot;bottom|top|middle|left|right&quot; 图形,对象,Applet的排列方式.<br>
+&nbsp;&nbsp;  (7)height=&quot;displayPixels&quot; width=&quot;displayPixels&quot;  Applet或Bean将要显示的长度的值,此值为数字,单位为象素,如height=&quot;800&quot;<br>
+&nbsp;&nbsp;  (8)hspace=&quot;leftRightPixels&quot; vspace=&quot;topBottomPixels&quot; Applet或Bean显示时在屏幕左右,上下所需留下的空间大小,单位为象素.<br>
+&nbsp;&nbsp;  (9)jrevesion=&quot;JREVersionNumber|1.1&quot;  Applet或Bean运行所需的Java Runtime Environment(JRE)的版本,默认值为1.1<br>
+&nbsp;&nbsp;  (10)nspluginurl=&quot;URLToPlugin&quot; Netscape Navigator用户能够使用的JRE的下载地址,此值为一个标准的URL.<br>
+&nbsp;&nbsp;  (11)iepluginurl=&quot;URLToPlugin&quot; Internet Explorer用户能够使用的JRE的下载地址,此值为一个标准的URL.<br>
+&nbsp;&nbsp;  (12)&lt;jsp:params&gt;  需要向Applet或Bean传送的参数或参数值.<br>
+&nbsp;&nbsp;  (13)&lt;jsp:fallback&gt;show text message for user&lt;/jsp:fallback&gt; 用于java插件不能启动时显示给用户的一段文字,如果插件能够启动<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  而Applet或Bean不能使用,那么浏览器会弹出一个出错信息.</p>
+<p> </p>
+<p>本文来自CSDN博客，转载请标明出处：<a href="http://blog.csdn.net/jnkc369/archive/2008/05/03/2370382.aspx">http://blog.csdn.net/jnkc369/archive/2008/05/03/2370382.aspx</a></p></div></body></html>

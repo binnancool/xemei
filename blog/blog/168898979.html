@@ -1,0 +1,144 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>winRAR命令行参数和实例说明</title></head><body><h1>winRAR命令行参数和实例说明</h1><div><p>&nbsp;&nbsp;  <strong>用法:&nbsp;&nbsp;&nbsp;&nbsp;  rar &lt;命令&gt; -&lt;开关 1&gt; -&lt;开关 N&gt; &lt;压缩文件&gt; &lt;文件 &gt;&lt;@列表文件 &gt; &lt;解压路径\&gt;<br>
+</strong>&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;  &lt;命令&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  a&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加文件到压缩文件<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加压缩文件注释<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  cf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加文件注释<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  cw&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  写入压缩文件注释到文件<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  d&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  删除压缩文件中的文件<br>
+&nbsp;&nbsp;&nbsp;  e&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  解压压缩文件到当前目录<br>
+&nbsp;&nbsp;&nbsp;  f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  刷新压缩文件中的文件<br>
+&nbsp;&nbsp;&nbsp;  i[参数]=&lt;串&gt;  在压缩文件中查找字符串<br>
+&nbsp;&nbsp;&nbsp;  k&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  锁定压缩文件<br>
+&nbsp;&nbsp;&nbsp;  l[t,b]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  列出压缩文件[技术信息,简洁]<br>
+&nbsp;&nbsp;&nbsp;  m[f]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  移动到压缩文件[仅对文件]<br>
+&nbsp;&nbsp;&nbsp;  p&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  打印文件到标准输出设备<br>
+&nbsp;&nbsp;&nbsp;  r&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  修复压缩文件<br>
+&nbsp;&nbsp;&nbsp;  rc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  重建丢失的卷<br>
+&nbsp;&nbsp;&nbsp;  rn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  重命名压缩文件<br>
+&nbsp;&nbsp;&nbsp;  rr[N]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加数据恢复记录<br>
+&nbsp;&nbsp;&nbsp;  rv[N]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  创建恢复卷<br>
+&nbsp;&nbsp;&nbsp;  s[名字|-]&nbsp;&nbsp;&nbsp;&nbsp;  转换压缩文件为自解压格式或转换回压缩文件<br>
+&nbsp;&nbsp;&nbsp;  t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  测试压缩文件<br>
+&nbsp;&nbsp;&nbsp;  u&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  更新压缩文件中的文件<br>
+&nbsp;&nbsp;&nbsp;  v[t,b]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  详细列出压缩文件[技术信息,简洁]<br>
+&nbsp;&nbsp;&nbsp;  x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  用绝对路径解压文件<br>
+  <br>
+  &lt;开关&gt;<br>
+&nbsp;&nbsp;&nbsp;  -&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  停止扫描<br>
+&nbsp;&nbsp;&nbsp;  ac&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  压缩或解压后清除存档属性<br>
+&nbsp;&nbsp;&nbsp;  ad&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加压缩文件名到目标路径<br>
+&nbsp;&nbsp;&nbsp;  ag[格式]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  使用当前日期生成压缩文件名<br>
+&nbsp;&nbsp;&nbsp;  ao&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加具有压缩属性的文件<br>
+&nbsp;&nbsp;&nbsp;  ap&lt;格式&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加路径到压缩文件中<br>
+&nbsp;&nbsp;&nbsp;  as&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  同步压缩文件内容<br>
+&nbsp;&nbsp;&nbsp;  av&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加用户身份校验(仅注册版本可用)<br>
+&nbsp;&nbsp;&nbsp;  av-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  禁用用户身份校验<br>
+&nbsp;&nbsp;&nbsp;  c-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  禁用注释显示<br>
+&nbsp;&nbsp;&nbsp;  cfg-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  禁用读取配置<br>
+&nbsp;&nbsp;&nbsp;  cl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  名称转换为小写<br>
+&nbsp;&nbsp;&nbsp;  cu&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  名称转换为大写<br>
+&nbsp;&nbsp;&nbsp;  df&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  压缩后删除文件<br>
+&nbsp;&nbsp;&nbsp;  dh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  打开共享文件<br>
+&nbsp;&nbsp;&nbsp;  ds&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  对固实压缩文件禁用名称排序<br>
+&nbsp;&nbsp;&nbsp;  e[+]&lt;属性&gt;&nbsp;&nbsp;&nbsp;  设置文件排除和包括属性<br>
+&nbsp;&nbsp;&nbsp;  ed&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  不添加空目录<br>
+&nbsp;&nbsp;&nbsp;  en&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  不添加&quot;压缩文件结束&quot;标志<br>
+&nbsp;&nbsp;&nbsp;  ep&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  从名称中排除路径<br>
+&nbsp;&nbsp;&nbsp;  ep1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  从名称中排除基本目录<br>
+&nbsp;&nbsp;&nbsp;  ep2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  展开为完整路径<br>
+&nbsp;&nbsp;&nbsp;  ep3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  扩展路径为包含盘符的完全路径<br>
+&nbsp;&nbsp;&nbsp;  f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  刷新文件<br>
+&nbsp;&nbsp;&nbsp;  hp[密码]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  同时加密文件数据和文件头<br>
+&nbsp;&nbsp;&nbsp;  id[c,d,p,q]&nbsp;&nbsp;  禁用消息<br>
+&nbsp;&nbsp;&nbsp;  ieml[属性]&nbsp;&nbsp;&nbsp;  用 E-mail 发送压缩文件<br>
+&nbsp;&nbsp;&nbsp;  ierr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  发送所有消息到标准错误设备<br>
+&nbsp;&nbsp;&nbsp;  ilog[名称]&nbsp;&nbsp;&nbsp;  把错误写到日志文件(只有注册版本可用)<br>
+&nbsp;&nbsp;&nbsp;  inul&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  禁用所有消息<br>
+&nbsp;&nbsp;&nbsp;  ioff&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  完成一个操作后关闭 PC 电源<br>
+&nbsp;&nbsp;&nbsp;  isnd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  启用声音<br>
+&nbsp;&nbsp;&nbsp;  k&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  锁定压缩文件<br>
+&nbsp;&nbsp;&nbsp;  kb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  保留损坏的已解压文件<br>
+&nbsp;&nbsp;&nbsp;  m&lt;0..5&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  设置压缩级别(0-存储 3-默认 5-最大)<br>
+&nbsp;&nbsp;&nbsp;  mc&lt;参数&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  设置高级压缩参数<br>
+&nbsp;&nbsp;&nbsp;  md&lt;大小&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  以KB为单位的字典大小(64,128,256,512,1024,2048,4096 or A-G)<br>
+&nbsp;&nbsp;&nbsp;  ms[ext;ext]&nbsp;&nbsp;  指定存储的文件类型<br>
+&nbsp;&nbsp;&nbsp;  n&lt;文件&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  仅包含指定的文件<br>
+&nbsp;&nbsp;&nbsp;  n@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  从标准输入设备读取文件名到包括<br>
+&nbsp;&nbsp;&nbsp;  n@&lt;列表&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  在指定的文件列表包括文件<br>
+&nbsp;&nbsp;&nbsp;  o+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  覆盖已存在文件<br>
+&nbsp;&nbsp;&nbsp;  o-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  不覆盖已存在文件<br>
+&nbsp;&nbsp;&nbsp;  oc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  设置 NTFS 压缩属性<br>
+&nbsp;&nbsp;&nbsp;  os&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  保存 NTFS 流<br>
+&nbsp;&nbsp;&nbsp;  ow&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  保存或恢复文件所有者和组<br>
+&nbsp;&nbsp;&nbsp;  p[密码]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  设置密码<br>
+&nbsp;&nbsp;&nbsp;  p-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  不询问密码<br>
+&nbsp;&nbsp;&nbsp;  r&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  递归子目录<br>
+&nbsp;&nbsp;&nbsp;  r0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  仅递归通配符名称的子目录<br>
+&nbsp;&nbsp;&nbsp;  ri&lt;P&gt;[:&lt;S&gt;]&nbsp;&nbsp;  设置优先级(0-默认,1-最小..15-最大)和以毫秒为单位的休眠时间<br>
+&nbsp;&nbsp;&nbsp;  rr[N]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加数据恢复记录<br>
+&nbsp;&nbsp;&nbsp;  rv[N]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  创建恢复卷<br>
+&nbsp;&nbsp;&nbsp;  s[&lt;N&gt;,v[-],e] 创建固实压缩文件<br>
+&nbsp;&nbsp;&nbsp;  s-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  禁用固实压缩文件<br>
+&nbsp;&nbsp;&nbsp;  sfx[名称]&nbsp;&nbsp;&nbsp;&nbsp;  创建自解压压缩文件<br>
+&nbsp;&nbsp;&nbsp;  st[名称]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  从标准输入设备读取数据(stdin)<br>
+&nbsp;&nbsp;&nbsp;  t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  压缩后测试文件<br>
+&nbsp;&nbsp;&nbsp;  ta&lt;日期&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加日期 &lt;日期&gt; 后修改的文件,日期格式 YYYYMMDDHHMMSS<br>
+&nbsp;&nbsp;&nbsp;  tb&lt;日期&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加日期 &lt;日期&gt; 前修改的文件,日期格式 YYYYMMDDHHMMSS<br>
+&nbsp;&nbsp;&nbsp;  tk&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  保留原始压缩文件时间<br>
+&nbsp;&nbsp;&nbsp;  tl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  设置压缩文件时间为最新文件时间<br>
+&nbsp;&nbsp;&nbsp;  tn&lt;时间&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加 &lt;时间&gt; 以后的文件<br>
+&nbsp;&nbsp;&nbsp;  to&lt;时间&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加 &lt;时间&gt; 以前的文件<br>
+&nbsp;&nbsp;&nbsp;  ts&lt;m,c,a&gt;[N]  保存或恢复文件时间(修改,创建,访问)<br>
+&nbsp;&nbsp;&nbsp;  u&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  更新文件<br>
+&nbsp;&nbsp;&nbsp;  v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  自动检测创建卷的大小或者列出所有的卷<br>
+&nbsp;&nbsp;&nbsp;  v&lt;大小&gt;[k,b]  创建卷大小=&lt;大小&gt;*1000 [*1024, *1]<br>
+&nbsp;&nbsp;&nbsp;  vd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  创建容量前清除磁盘内容<br>
+&nbsp;&nbsp;&nbsp;  ver[n]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  文件版本控制<br>
+&nbsp;&nbsp;&nbsp;  vn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  使用旧风格的卷命名方案<br>
+&nbsp;&nbsp;  vp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  每卷之前暂停<br>
+&nbsp;&nbsp;  w&lt;路径&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  指定工作目录<br>
+&nbsp;&nbsp;  x&lt;文件&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  排除指定的文件<br>
+&nbsp;&nbsp;  x@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  从标准输入设备读取要排除的文件名<br>
+&nbsp;&nbsp;  x@&lt;列表&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  排除指定列表文件中的文件<br>
+&nbsp;&nbsp;  y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  假设对全部询问都回答是<br>
+&nbsp;&nbsp;  z&lt;文件&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  从文件读取压缩文件注释<br>
+ <br>
+&nbsp;&nbsp;<br>
+ <br>
+<strong> 例子：</strong><br>
+ <br>
+ 1. 建立一个批处理文件，起作用的只有1行。<br>
+ <br>
+ BackFav.bat（名字可以随便起）文件内容：<br>
+ <br>
+ REM 这个批处理文件是用来自动备份我的收藏夹<br>
+ REM WinRAR  &lt;命令&gt; -&lt;开关1&gt; -&lt;开关N&gt; &lt;压缩文件&gt; &lt;文件 &gt; &lt;@列表文件 &gt; &lt;解压路径\&gt;</p>
+<p><br>
+&quot;D:\Program Files\WinRAR\WinRAR.exe&quot; a -as -r -sfx -zsfxpara.txt -EP1 &quot;d:\my documents\Favorites.exe&quot; &quot;%USERPROFILE%\Favorites&quot;<br>
+ <br>
+ <br>
+ <br>
+ 参数说明：<br>
+ <br>
+ a:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  添加指定的文件（源目录，这里是&quot;%USERPROFILE%\Favorites&quot;）和文件夹到压缩文件（目标文件，这里是&quot;d:\my documents\Favorites.exe&quot;）中。<br>
+ <br>
+ -as:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  这是一个开关，指添加方式是&ldquo;同步压缩文件内容&rdquo;<br>
+ <br>
+ -r:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  表示&ldquo;包含子文件夹&rdquo;<br>
+ <br>
+ -sfx:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  表示建立的是一个自解压文件<br>
+ <br>
+ -zsfxpara.txt:  从文件sfxpara.txt读取压缩文件注释，这注释有什么用后面解释<br>
+ <br>
+ -ep1:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  表示不把路径%USERPROFILE%保存在压缩文件中<br>
+ <br>
+  <br>
+ <br>
+ 2. 注释文件的作用<br>
+ <br>
+ 建立压缩文件的时候不光要考虑压缩那些文件，还要考虑怎么解压缩。通过注释文件可以向压缩包传递许多有用的信息。<br>
+ sfxpara.txt内容：<br>
+ <br>
+ PATH=%USERPROFILE%\<br>
+ Silent=1</p></div></body></html>

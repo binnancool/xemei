@@ -1,0 +1,21 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java日前格式输出</title></head><body><h1>java日前格式输出</h1><div><p><font size="3" face="宋体"><strong>Date now = new Date(System.currentTimeMillis());<br>
+DateFormat d = DateFormat.getDateTimeInstance();<br>
+String tm = d.format(now);</strong></font></p>
+<p><font size="3" face="宋体"><strong>输出：2009-8-13 9:00:21</strong></font></p>
+<p><font size="3" face="宋体">Date date = new Date();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+DateFormat shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+DateFormat mediumDateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+DateFormat longDateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+DateFormat fullDateFormat = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+System.out.println(shortDateFormat.format(date));  //08-4-1 下午2:40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+System.out.println(mediumDateFormat.format(date)); //2008-4-1 14:40:44&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+System.out.println(longDateFormat.format(date));&nbsp;&nbsp;  //2008年4月1日 下午02时40分44秒&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+System.out.println(fullDateFormat.format(date));&nbsp;&nbsp;  //2008年4月1日 星期二 下午02时40分44秒 CST</font></p>
+<div ><font face="宋体">
+
+
+
+
+
+
+</font></div></div></body></html>

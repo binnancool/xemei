@@ -1,0 +1,58 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Hibernate配置文件详解</title></head><body><h1>Hibernate配置文件详解</h1><div><strong>全局配置文件：<span class="hilite1">hibernate</span>.cfg.xml: 主要用来实现整个应用程序中使用的数据库，以及这个应用程序中的对象关系映射。</strong> <br>
+例子：
+<p class="dp-highlighter"><span>&lt;?xml version='1.0' encoding='utf-8'?&gt;&nbsp;&nbsp;  <br>
+&lt;!DOCTYPE hibernate-configuration PUBLIC&nbsp;&nbsp;&nbsp;  &quot;-//Hibernate/Hibernate Configuration DTD 3.0//EN&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &quot;/home/soft01/hibernate-configuration-3.0.dtd&quot;&gt;&nbsp;&nbsp;  <br>
+&lt;hibernate-configuration&gt;&nbsp;&nbsp;  <br>
+&lt;session-factory&gt;&nbsp;&nbsp;&nbsp;</span></p>
+<p class="dp-highlighter"><span>&lt;property name=&quot;<strong>hibernate.bytecode.use_reflection_optimizer</strong>&quot;&gt;false&lt;/property&gt;字节码&nbsp;&nbsp;  动态修改字节码，来替换掉java的动态代理，以这种方式对性能进行优化 <br>
+</span></p>
+<p class="dp-highlighter"><span>&lt;property name=&quot;<strong>cache.provider_class</strong>&quot;&gt;org.hibernate.cache.NoCacheProvider &lt;/property&gt;设置二级缓存为无</span></p>
+<p class="dp-highlighter"><span><br>
+&nbsp;&nbsp;  &lt;property name=&quot;<strong>connection.driver_class</strong>&quot;&gt; com.mysql.jdbc.Driver&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  &lt;/property&gt; 指定数据库的驱动程序&nbsp;&nbsp;&nbsp;</span></p>
+<p class="dp-highlighter"><span><br>
+&nbsp;&nbsp;&nbsp;  &lt;property name=&quot;<strong>connection.url</strong>&quot;&gt;jdbc:mysql://127.0.0.1:3306/test&nbsp;&nbsp;  <br>
+&lt;/property&gt; 指定连接数据库的URL&nbsp;&nbsp;&nbsp;</span></p>
+<p class="dp-highlighter"><span><br>
+&nbsp;&nbsp;  &lt;property name=&quot;<strong>connection.username</strong>&quot;&gt;root&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;  &lt;/property&gt; 联结数据库的用户名，&nbsp;&nbsp;&nbsp;</span></p>
+<p class="dp-highlighter"><span><br>
+&nbsp;&nbsp;&nbsp;  &lt;property name=&quot;<strong>connection.password</strong>&quot;&gt;831022&lt;/property&gt; 密码&nbsp;&nbsp;&nbsp;</span></p>
+<p class="dp-highlighter"><span><br>
+&nbsp;&nbsp;&nbsp;  &lt;propertyname=&quot;dialect&quot;&gt;<strong>org.hibernate.dialect.MySQLDialect</strong>&nbsp;&nbsp;  <br>
+&lt;/property&gt; 指定数据库使用的方言，本质上就是hibernate API 中的一个用来标示不同数据库的接口&nbsp;&nbsp;&nbsp;</span></p>
+<p class="dp-highlighter"><span>&lt;property name=&quot;<strong>connection.pool_size</strong>&quot;&gt;1&lt;/property&gt;数据库连接池大小为1</span></p>
+<p class="dp-highlighter"><span><br>
+&nbsp;&nbsp;&nbsp;  &lt;property name=&quot;<strong>show_sql</strong>&quot;&gt;true&lt;/property&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  用来在控制台输出hibernate 产生的SQL语句&nbsp;&nbsp;&nbsp;<br>
+</span></p>
+<p class="dp-highlighter"><span>&nbsp;&nbsp;  &lt;property name=&quot;<strong>format_sql</strong>&quot;&gt;true&lt;/property&gt; 对SQL语句进行format&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+<p class="dp-highlighter"><span>&lt;property name=&quot;<strong>hbm2ddl.auto</strong>&quot;&gt;update&lt;/property&gt;</span></p>
+<p style="text-indent: 2em"><em>它包含4个属性: </em></p>
+<p style="text-indent: 2em"><em>&nbsp;&nbsp;&nbsp;  * create : 会根据你的model类来生成表,但是每次运行都会删除上一次的表,重新生成表,哪怕2次没有任何改变 </em></p>
+<p style="text-indent: 2em"><em>&nbsp;&nbsp;&nbsp;  * create-drop : 根据model类生成表,但是sessionFactory一关闭,表就自动删除 </em></p>
+<p style="text-indent: 2em"><em>&nbsp;&nbsp;&nbsp;  * update : 最常用的属性，也根据model类生成表,即使表结构改变了,表中的行仍然存在,不会删除以前的行 </em></p>
+<p style="text-indent: 2em"><em>&nbsp;&nbsp;&nbsp;  * validate : 只会和数据库中的表进行比较(<strong>比较表名，结构可以不同，插入相应的属性。如果表结构中没有要插入的属性，则出错；如果没有表，则错误</strong>),不会创建新表,但是会插入新值</em></p>
+<p style="text-indent: 2em">&lt;property name=&quot;<strong>current_session_context_class</strong>&quot;&gt;thread&lt;/property&gt;</p>
+<p style="text-indent: 2em"><em>sessionFactory.getCurrentSession()可以完成一系列的工作，当调用时，<br>
+hibernate将session绑定到当前线程，事务结束后，hibernate<br>
+将session从当前线程中释放，并且关闭session。当再次调用getCurrentSession<br>
+()时，将得到一个新的session，并重新开始这一系列工作。<br>
+这样调用方法如下：<br>
+<br>
+Session session = <strong>HibernateUtil.getSessionFactory().getCurrentSession();<br>
+</strong>session.beginTransaction();<br>
+Event theEvent = new Event();<br>
+theEvent.setTitle(title);<br>
+theEvent.setDate(theDate);<br>
+session.save(theEvent);<br>
+session.getTransaction().commit();<br>
+</em></p>
+<p class="dp-highlighter"><span>&nbsp;&nbsp;<strong> &lt;mapping resource=&quot;Student.hbm.xml&quot;/&gt;&nbsp;&nbsp;  对象关系映射文件，可以有多个&nbsp;&nbsp;  </strong></span></p>
+<p class="dp-highlighter"><span><strong><br>
+</strong>&lt;/session-factory&gt;&nbsp;&nbsp;  <br>
+&lt;/hibernate-configuration&gt; </span></p>
+<p><strong>使用注意：</strong> <br>
+◆任何一个应用程序的全局配置文件名字都是<font face="宋体"><font size="5"><strong><span class="hilite1">hibernate</span>.cfg.xml</strong></font></font>，并且默认放在工程的根目录下，也就是<strong><font size="5" face="宋体">与源程序代码同级</font></strong>。每一个工程只能有一个这样的全局配置文件，如果想要使用别的配置文件，调用configuration 的有参的构造方法，指定这个配置文件的位置。如：</p>
+<p><strong>SessionFactory sessionFactory = new Configuration().configure(new File(cfg)).buildSessionFactory();</strong></p>
+<p><strong>其中：cfg为配置文件的路径。</strong></p></div></body></html>

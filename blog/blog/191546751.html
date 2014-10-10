@@ -1,0 +1,67 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>JavaScript正则表达式详解</title></head><body><h1>JavaScript正则表达式详解</h1><div><p>正则表达式的形式一般如下：　</p>
+<p>定界符：&ldquo;/&rdquo;</p>
+<p>/love/　　其中位于&ldquo;/&rdquo;定界符之间的部分就是将要在目标对象中进行匹配的模式。用户只要把希望查找匹配对象的模式内容放入&ldquo;/&rdquo;定界符之间即可。</p>
+<p>元字符：较为常用的元字符包括： &ldquo;+&rdquo;， &ldquo;*&rdquo;，&ldquo;?&ldquo;</p>
+<p>所谓元字符就是指那些在正则表达式中具有特殊意义的专用字符，可以用来规定其前导字符（即位于元字符前面的字符）在目标对象中的出现模式。</p>
+<p><span>&ldquo;+&rdquo;元字符规定其前导字符必须在目标对象中连续出现一次或多次。</span></p>
+<p><span>&ldquo;*&rdquo;元字符规定其前导字符必须在目标对象中出现零次或连续多次。</span></p>
+<p><span>&ldquo;?&rdquo;元字符规定其前导对象必须在目标对象中连续出现零次或一次。 </span></p>
+<p><span>{n} n 是一个非负整数。匹配确定的 n 次。例如，<span class="string"><font color="#0000ff">'o{2}'</font></span><span> 不能匹配 </span><span class="string"><font color="#0000ff">&quot;Bob&quot;</font></span><span> 中的 </span><span class="string"><font color="#0000ff">'o'</font></span><span>，但是能匹配 </span><span class="string"><font color="#0000ff">&quot;food&quot;</font></span><span> 中的两个 o。</span></span></p>
+<p><span><span>{n,} n 是一个非负整数。至少匹配 n 次。例如，<span class="string"><font color="#0000ff">'o{2,}'</font></span><span> 不能匹配 </span><span class="string"><font color="#0000ff">&quot;Bob&quot;</font></span><span> 中的 </span><span class="string"><font color="#0000ff">'o'</font></span><span>，但能匹配 </span><span class="string"><font color="#0000ff">&quot;foooood&quot;</font></span><span> 中的所有 o。</span></span></span></p>
+<p><span><span><span>{n,m} m 和 n 均为非负整数，其中n &lt;= m。最少匹配 n 次且最多匹配 m 次。例如，<span class="string"><font color="#0000ff">&quot;o{1,3}&quot;</font></span><span> 将匹配 </span><span class="string"><font color="#0000ff">&quot;fooooood&quot;</font></span><span> 中的前三个 o。</span><span class="string"><font color="#0000ff">'o{0,1}'</font></span><span> 等价于 </span><span class="string"><font color="#0000ff">'o?'</font></span><span>。请注意在逗号和两个数之间不能有空格。</span></span></span></span></p>
+<span><span><span><span>
+<p><span>\s：用于匹配单个空格符，包括tab键和换行符； &nbsp;&nbsp;</span></p>
+<p><span>\S：用于匹配除单个空格符之外的所有字符； &nbsp;&nbsp;</span></p>
+<p><span>\d：用于匹配从</span><span class="number"><font color="#c00000">0</font></span><span>到</span><span class="number"><font color="#c00000">9</font></span><span>的数字； &nbsp;&nbsp;</span></p>
+<p><span>\w：用于匹配字母，数字或下划线字符； &nbsp;&nbsp;</span></p>
+<p><span>\W：用于匹配所有与\w不匹配的字符； &nbsp;&nbsp;</span></p>
+<p><span>. ：用于匹配除换行符之外的所有字符。 </span></p>
+<p><span><span>&ldquo;^&rdquo;定位符规定匹配模式必须出现在目标字符串的开头 &nbsp;&nbsp;</span></span></p>
+<div> </div>
+<p> </p>
+<p> </p>
+<p><span>&ldquo;$&rdquo;定位符规定匹配模式必须出现在目标对象的结尾 &nbsp;&nbsp;</span></p>
+<p><span>&ldquo;\b&rdquo;定位符规定匹配模式必须出现在目标字符串的开头或结尾的两个边界之一 &nbsp;&nbsp;</span></p>
+<p><span>&ldquo;\B&rdquo;定位符则规定匹配对象必须位于目标字符串的开头和结尾两个边界之内，&nbsp;&nbsp;&nbsp;</span></p>
+<p><span>\ &nbsp;&nbsp;   将下一个字符标记为一个特殊字符、或一个原义字符、或一个向后引用、或一个八进制转义符。例如，'n' 匹配字符 &quot;n&quot;。'\n' 匹配一个换行符。序列 '\\' 匹配 &quot;\&quot; 而 &quot;\(&quot; 则匹配 &quot;(&quot;。<br>
+^ &nbsp;&nbsp;   匹配输入字符串的开始位置。如果设置了 RegExp 对象的 Multiline 属性，^ 也匹配 '\n' 或 '\r' 之后的位置。<br>
+$ &nbsp;&nbsp;   匹配输入字符串的结束位置。如果设置了RegExp 对象的 Multiline 属性，$ 也匹配 '\n' 或 '\r' 之前的位置。<br>
+* &nbsp;&nbsp;   匹配前面的子表达式零次或多次。例如，zo* 能匹配 &quot;z&quot; 以及 &quot;zoo&quot;。* 等价于{0,}。<br>
++ &nbsp;&nbsp;   匹配前面的子表达式一次或多次。例如，'zo+' 能匹配 &quot;zo&quot; 以及 &quot;zoo&quot;，但不能匹配 &quot;z&quot;。+ 等价于 {1,}。<br>
+? &nbsp;&nbsp;   匹配前面的子表达式零次或一次。例如，&quot;do(es)?&quot; 可以匹配 &quot;do&quot; 或 &quot;does&quot; 中的&quot;do&quot; 。? 等价于 {0,1}。<br>
+{n} &nbsp;&nbsp;   n 是一个非负整数。匹配确定的 n 次。例如，'o{2}' 不能匹配 &quot;Bob&quot; 中的 'o'，但是能匹配 &quot;food&quot; 中的两个 o。<br>
+{n,} &nbsp;&nbsp;   n 是一个非负整数。至少匹配n 次。例如，'o{2,}' 不能匹配 &quot;Bob&quot; 中的 'o'，但能匹配 &quot;foooood&quot; 中的所有 o。'o{1,}' 等价于 'o+'。'o{0,}' 则等价于 'o*'。<br>
+{n,m} &nbsp;&nbsp;   m 和 n 均为非负整数，其中n &lt;= m。最少匹配 n 次且最多匹配 m 次。例如，&quot;o{1,3}&quot; 将匹配 &quot;fooooood&quot; 中的前三个 o。'o{0,1}' 等价于 'o?'。请注意在逗号和两个数之间不能有空格。<br>
+? &nbsp;&nbsp;   当该字符紧跟在任何一个其他限制符 (*, +, ?, {n}, {n,}, {n,m}) 后面时，匹配模式是非贪婪的。非贪婪模式尽可能少的匹配所搜索的字符串，而默认的贪婪模式则尽可能多的匹配所搜索的字符串。例如，对于字符串 &quot;oooo&quot;，'o+?' 将匹配单个 &quot;o&quot;，而 'o+' 将匹配所有 'o'。<br>
+. &nbsp;&nbsp;   匹配除 &quot;\n&quot; 之外的任何单个字符。要匹配包括 '\n' 在内的任何字符，请使用象 '[.\n]' 的模式。<br>
+(pattern) &nbsp;&nbsp;   匹配 pattern 并获取这一匹配。所获取的匹配可以从产生的 Matches 集合得到，在VBScript 中使用 SubMatches 集合，在JScript 中则使用 $0…$9 属性。要匹配圆括号字符，请使用 '\(' 或 '\)'。<br>
+(?:pattern) &nbsp;&nbsp;   匹配 pattern 但不获取匹配结果，也就是说这是一个非获取匹配，不进行存储供以后使用。这在使用 &quot;或&quot; 字符 (|) 来组合一个模式的各个部分是很有用。例如， 'industr(?:y|ies) 就是一个比 'industry|industries' 更简略的表达式。<br>
+(?=pattern) &nbsp;&nbsp;   正向预查，在任何匹配 pattern 的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。例如，'Windows (?=95|98|NT|2000)' 能匹配 &quot;Windows 2000&quot; 中的 &quot;Windows&quot; ，但不能匹配 &quot;Windows 3.1&quot; 中的 &quot;Windows&quot;。预查不消耗字符，也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，而不是从包含预查的字符之后开始。<br>
+(?!pattern) &nbsp;&nbsp;   负向预查，在任何不匹配 pattern 的字符串开始处匹配查找字符串。这是一个非获取匹配，也就是说，该匹配不需要获取供以后使用。例如'Windows (?!95|98|NT|2000)' 能匹配 &quot;Windows 3.1&quot; 中的 &quot;Windows&quot;，但不能匹配 &quot;Windows 2000&quot; 中的 &quot;Windows&quot;。预查不消耗字符，也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，而不是从包含预查的字符之后开始<br>
+x|y &nbsp;&nbsp;   匹配 x 或 y。例如，'z|food' 能匹配 &quot;z&quot; 或 &quot;food&quot;。'(z|f)ood' 则匹配 &quot;zood&quot; 或 &quot;food&quot;。<br>
+[xyz] &nbsp;&nbsp;   字符集合。匹配所包含的任意一个字符。例如， '[abc]' 可以匹配 &quot;plain&quot; 中的 'a'。<br>
+[^xyz] &nbsp;&nbsp;   负值字符集合。匹配未包含的任意字符。例如， '[^abc]' 可以匹配 &quot;plain&quot; 中的'p'。<br>
+[a-z] &nbsp;&nbsp;   字符范围。匹配指定范围内的任意字符。例如，'[a-z]' 可以匹配 'a' 到 'z' 范围内的任意小写字母字符。<br>
+[^a-z] &nbsp;&nbsp;   负值字符范围。匹配任何不在指定范围内的任意字符。例如，'[^a-z]' 可以匹配任何不在 'a' 到 'z' 范围内的任意字符。<br>
+\b &nbsp;&nbsp;   匹配一个单词边界，也就是指单词和空格间的位置。例如， 'er\b' 可以匹配&quot;never&quot; 中的 'er'，但不能匹配 &quot;verb&quot; 中的 'er'。<br>
+\B &nbsp;&nbsp;   匹配非单词边界。'er\B' 能匹配 &quot;verb&quot; 中的 'er'，但不能匹配 &quot;never&quot; 中的 'er'。<br>
+\cx &nbsp;&nbsp;   匹配由 x 指明的控制字符。例如， \cM 匹配一个 Control-M 或回车符。x 的值必须为 A-Z 或 a-z 之一。否则，将 c 视为一个原义的 'c' 字符。<br>
+\d &nbsp;&nbsp;   匹配一个数字字符。等价于 [0-9]。<br>
+\D &nbsp;&nbsp;   匹配一个非数字字符。等价于 [^0-9]。<br>
+\f &nbsp;&nbsp;   匹配一个换页符。等价于 \x0c 和 \cL。<br>
+\n &nbsp;&nbsp;   匹配一个换行符。等价于 \x0a 和 \cJ。<br>
+\r &nbsp;&nbsp;   匹配一个回车符。等价于 \x0d 和 \cM。<br>
+\s &nbsp;&nbsp;   匹配任何空白字符，包括空格、制表符、换页符等等。等价于 [ \f\n\r\t\v]。<br>
+\S &nbsp;&nbsp;   匹配任何非空白字符。等价于 [^ \f\n\r\t\v]。<br>
+\t &nbsp;&nbsp;   匹配一个制表符。等价于 \x09 和 \cI。<br>
+\v &nbsp;&nbsp;   匹配一个垂直制表符。等价于 \x0b 和 \cK。<br>
+\w &nbsp;&nbsp;   匹配包括下划线的任何单词字符。等价于'[A-Za-z0-9_]'。<br>
+\W &nbsp;&nbsp;   匹配任何非单词字符。等价于 '[^A-Za-z0-9_]'。<br>
+\xn &nbsp;&nbsp;   匹配 n，其中 n 为十六进制转义值。十六进制转义值必须为确定的两个数字长。例如，'\x41' 匹配 &quot;A&quot;。'\x041' 则等价于 '\x04' &amp; &quot;1&quot;。正则表达式中可以使用 ASCII 编码。.<br>
+\num &nbsp;&nbsp;   匹配 num，其中 num 是一个正整数。对所获取的匹配的引用。例如，'(.)\1' 匹配两个连续的相同字符。<br>
+\n &nbsp;&nbsp;   标识一个八进制转义值或一个向后引用。如果 \n 之前至少 n 个获取的子表达式，则 n 为向后引用。否则，如果 n 为八进制数字 (0-7)，则 n 为一个八进制转义值。<br>
+\nm &nbsp;&nbsp;   标识一个八进制转义值或一个向后引用。如果 \nm 之前至少有 nm 个获得子表达式，则 nm 为向后引用。如果 \nm 之前至少有 n 个获取，则 n 为一个后跟文字 m 的向后引用。如果前面的条件都不满足，若 n 和 m 均为八进制数字 (0-7)，则 \nm 将匹配八进制转义值 nm。<br>
+\nml &nbsp;&nbsp;   如果 n 为八进制数字 (0-3)，且 m 和 l 均为八进制数字 (0-7)，则匹配八进制转义值 nml。<br>
+\un &nbsp;&nbsp;   匹配 n，其中 n 是一个用四个十六进制数字表示的 Unicode 字符。例如， \u00A9 匹配版权符号 (?)。</span></p>
+<p>转自：<a href="http://www.javaeye.com/topic/30728">http://www.javaeye.com/topic/30728</a></p>
+</span></span></span></span></div></body></html>

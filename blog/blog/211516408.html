@@ -1,0 +1,77 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Servlet的Filter过滤器</title></head><body><h1>Servlet的Filter过滤器</h1><div><p><strong><font size="4">一、概述</font></strong></p>
+<p>过滤器是请求和响应之间的一种WEB组件，它驻留在服务器端，用来截取客户端与资源之间的请求，并对这些信息进行&ldquo;过滤&rdquo;。 <br>
+<br>
+Servlet容器对部署描述符中声明的每一个过滤器只会创建一个实例。与Servlet类似，容器将在同一个过滤器实例上运行多个线程来同时为多个请求服务，因此开发过滤器时要注意线程安全问题。 <br>
+<br>
+当Web容器接受到一个对资源的请求时，它将判断是否有过滤器与这个资源相关联，如果有那么容器将把请求交给过滤器进行处理，在过滤器中可以改变请求的内容，或重新设置请求的报头信息，然后将请求发送给目标资源，当目标资源对请求做出响应时，容器同样会将响应转发给过滤器，在过滤器中可以对响应的内容进行过滤，从上面的过程我们可以看出，客户端和目标资源不需要知道过滤器的存在，对于客户端来说是透明的。 <br>
+<br>
+过滤器位于javax.servlet包中，有3个主要方法: <br>
+<strong>1.init(FilterConfig config)</strong> <br>
+  Web容器调用方法来初始化过滤器，容器在调用该方法时，向过滤器传递FilterConfig对象，FilterConfig用法和ServletConfig类似。利用FilterConfig对象可以得到ServletContext对象，以及在部署描述符中配置的过滤器的初始化参数。 <br>
+<br>
+<strong>2.doFilter(ServletRequest request,ServletResponse response,FilterChain chain)</strong> <br>
+  doFilter()方法类似Servlet接口的service()方法。当客户端请求目标资源的时候，容器会调用与这个目标资源想关联的过滤器的doFilter()方法。在这个方法中，可以对请求和响应进行处理，实现过滤器的功能。在特定的操作完成后，可以调用chain.doFilter()方法将请求传给下一个过滤器(或目标资源)，也可以直接向客户端返回响应信息，或利用RequestDispatcher的forward()和include()方法，以及sendRedirect()方法转发。 <br>
+但是要注意，这个方法的请求响应参数的类型是ServletRequest和ServletResponse，也就是说过滤器的使用不依赖具体的协议。 <br>
+<br>
+<strong>3.destroy() <br>
+</strong>  Web容器调用该方法只是过滤器的声明周期结束。 <br>
+<br>
+<strong><font size="4">二、四种过滤方式：REQUEST,INCLUDE,FORWARD和ERROR</font></strong><span class="hilite1"> </span>
+<p> </p>
+</p>
+<p>Servlet容器对部署描述符中声明的每一个过滤器，只创建一个实例。与Servlet类似，</p>
+<p>容器将在同一个过滤器实例上运行多个线程来同时为多个请求服务，因此，开发过滤器</p>
+<p>时，也要注意线程安全的问题。<wbr></wbr></p>
+<p>&lt;filter-mapping&gt;元素用于指定过滤器关联的url样式或者Servlet。</p>
+<p>其中&lt;filter-name&gt;子元素的值必须是在&lt;filter&gt;元素中声明过的过滤器的名字。&lt;url-pattern&gt;元素和&lt;servlet-name&gt;元素可以选择一个；&lt;url-pattern&gt;元素指定过滤器关联的URL样式；&lt;servlet-name&gt;元素指定过滤器对应的Servlet。用户在访问&lt;url-pattern&gt;元素指定的URL上的资源或&lt;servlet-name&gt;元素指定的Servlet时，该过滤器才会被容器调用。&lt;filter-mapping&gt;元素还可以包含0到4个&lt;dispatcher&gt;，指定过滤器对应的请求方式，可以是REQUEST,INCLUDE,FORWARD和ERROR之一，默认REQUEST.</p>
+<p> <wbr></wbr></p>
+<p><strong>·REQUEST</strong><br>
+ <wbr></wbr> 当用户直接访问也面时，Web容器将会调用过滤器。如果目标资源是通过RequestDispatcher的include()或forward()方法访问时，那么该过滤器就不会被调用。</p>
+<p> <wbr></wbr></p>
+<p><strong>·INCLUDE<br>
+</strong> <wbr></wbr> 如果目标资源是通过RequestDispatcher的include()方法访问时，那么该过滤器将被调用。除此之外，该过滤器不会被调用。</p>
+<p> <wbr></wbr></p>
+<p><strong>·FORWARD</strong><br>
+ <wbr></wbr> 如果目标资源是通过RequestDispatcher的forward()方法访问时，那么该过滤器将被调用，除此之外，该过滤器不会被调用。</p>
+<p> <wbr></wbr></p>
+<p><strong>·ERROR</strong><br>
+ <wbr></wbr> 如果目标资源是通过声明式异常处理机制调用时，那么该过滤器将被调用。除此之外，过滤器不会被调用。</p>
+<p><br>
+<font color="#990033">例子：</font></p>
+<p><font color="#990033">&lt;filter-mapping&gt;<br>
+ <wbr></wbr>&lt;filter-name&gt;testFilter&lt;/filter-name&gt;<br>
+ <wbr></wbr>&lt;url-pattern&gt;/test.jsp&lt;/url-pattern&gt;<br>
+&lt;/filter-mapping&gt;<br>
+当用户访问test.jsp页面时，容器就会调用testFilter过滤器。</font></p>
+<p><font color="#990033">&lt;filter-mapping&gt;<br>
+ <wbr></wbr>&lt;filter-name&gt;testFilter&lt;/filter-name&gt;<br>
+ <wbr></wbr>&lt;url-pattern&gt;/index.jsp&lt;/url-pattern&gt;<br>
+ <wbr></wbr>&lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;<br>
+ <wbr></wbr>&lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;<br>
+&lt;/filter-mapping&gt;</font></p>
+<p>当用户直接访问index.jsp页面，或者通过RequestDispatcher的forward()方法访问时，容器就会调用testFilter过滤器。</p>
+<p><strong><font size="4">三、servlet<span>容器对</span><span>url</span><span>的匹配过程</span></font></strong></p>
+<p>
+<table style="border-bottom: medium none; border-left: medium none; border-collapse: collapse; background: #f2f2f2; border-top: medium none; border-right: medium none" class="MsoNormalTable" border="1" cellspacing="0" cellpadding="0">
+    <tbody>
+        <tr>
+            <td style="border-bottom: #9bbb59 1pt solid; border-left: #9bbb59 1pt solid; padding-bottom: 0cm; padding-left: 5.4pt; width: 426.1pt; padding-right: 5.4pt; border-top: #9bbb59 1pt solid; border-right: #9bbb59 1pt solid; padding-top: 0cm" valign="top" width="568">
+            <p style="line-height: 150%; text-indent: 21pt" class="MsoNormal"><span>当一个请求发送到</span><span>servlet</span><span>容器的时候，容器先会将请求的</span><span>url</span><span>减去当前应用上下文的</span><span>路径</span><span>作为</span><span>servlet</span><span>的映射</span><span>url</span><span>，比如我访问的是</span><span><a href="http://localhost/test/aaa.html"><font color="#108ac6">http://localhost/test/aaa.html</font></a></span><span>，我的应用上下文是</span><span>test</span><span>，容器会将</span><span><a href="http://localhost/test"><font color="#108ac6">http://localhost/test</font></a></span><span>去掉，剩下的</span><span>/aaa.html</span><span>部分拿来做</span><span>servlet</span><span>的映射匹配。这个映射匹配过程是有顺序的，而且当有一个</span><span>servlet</span><span>匹配成功以后，就不会去理会剩下的</span><span>servlet</span><span>了（</span><span><span class="hilite1">filter</span></span><span>不同，后文会提到）。其匹配规则和顺序如下：</span><span>&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+            <p style="line-height: 150%; text-indent: -21pt; margin-left: 42pt" class="MsoListParagraph"><span><span>1.<span>&nbsp;&nbsp;&nbsp;&nbsp;  </span></span></span><span>精确路径匹配。例子：比如</span><span>servletA </span><span>的</span><span><span class="hilite2">url-pattern</span></span><span>为</span><span> /test</span><span>，</span><span>servletB</span><span>的</span><span><span class="hilite2">url-pattern</span></span><span>为</span><span> <span>/* </span></span><span>，这个时候，如果我访问的</span><span>url</span><span>为</span><span><a href="http://localhost/test"><font color="#108ac6">http://localhost/test</font></a> </span><span>，这个时候容器就会先</span><span> </span><span>进行精确路径匹配，发现</span><span>/test</span><span>正好被</span><span>servletA</span><span>精确匹配，那么就去调用</span><span>servletA</span><span>，也不会去理会其他的</span><span>servlet</span><span>了。</span><span>&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+            <p style="line-height: 150%; text-indent: -21pt; margin-left: 42pt" class="MsoListParagraph"><span><span>2.<span>&nbsp;&nbsp;&nbsp;&nbsp;  </span></span></span><span>最长路径匹配。例子：</span><span>servletA</span><span>的</span><span><span class="hilite2">url-pattern</span></span><span>为</span><span>/test/*</span><span>，而</span><span>servletB</span><span>的</span><span><span class="hilite2">url-pattern</span></span><span>为</span><span>/test/a/*</span><span>，此时访问</span><span><a href="http://localhost/test/a"><font color="#108ac6">http://localhost/test/a</font></a></span><span>时，容器会选择路径最长的</span><span>servlet</span><span>来匹配，也就是这里的</span><span>servletB</span><span>。</span><span>&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+            <p style="line-height: 150%; text-indent: -21pt; margin-left: 42pt" class="MsoListParagraph"><span><span>3.<span>&nbsp;&nbsp;&nbsp;&nbsp;  </span></span></span><span>扩展匹配，如果</span><span>url</span><span>最后一段包含扩展，容器将会根据扩展选择合适的</span><span>servlet</span><span>。例子：</span><span>servletA</span><span>的</span><span><span class="hilite2">url-pattern</span></span><span>：</span><span>*.action&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+            <p style="line-height: 150%; text-indent: -21pt; margin-left: 42pt" class="MsoListParagraph"><strong><span><span>4.<span>&nbsp;&nbsp;&nbsp;&nbsp;  </span></span></span></strong><span>如果前面三条规则都没有找到一个</span><span>servlet</span><span>，容器会根据</span><span>url</span><span>选择对应的请求资源。如果应用定义了一个</span><span>default servlet</span><span>，则容器会将请求丢给</span><span>default servlet</span><span>（什么是</span><span>default servlet</span><span>？后面会讲）</span><span>。</span><strong><span>&lt;o:p&gt;&lt;/o:p&gt;</span></strong></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</p>
+<p style="line-height: 150%" class="MsoNormal"><span><span> </span><span>&nbsp;&nbsp;&nbsp;  </span></span><span>根据这个规则表，就能很清楚的知道</span><span>servlet</span><span>的匹配过程，所以定义</span><span>servlet</span><span>的时候也要考虑</span><span><span class="hilite2">url-pattern</span></span><span>的写法，以免出错。</span><span>&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p style="line-height: 150%" class="MsoNormal"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span></span><span>对于</span><span><span class="hilite1">filter</span></span><span>，不会像</span><span>servlet</span><span>那样只匹配一个</span><span>servlet</span><span>，因为</span><span><span class="hilite1">filter</span></span><span>的集合是一个链，所以只会有处理的顺序不同，而不会出现只选择一个</span><span><span class="hilite1">filter</span></span><span>。</span><span><span class="hilite1">Filter</span></span><span>的处理顺序和</span><span><span class="hilite1">filter</span>-mapping</span><span>在</span><span>web.xml</span><span>中定义的顺序相同。</span><span>&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<h2 style="line-height: 150%"><font size="3"><span>&nbsp;&nbsp;&nbsp;  二，<span class="hilite2">url-pattern</span></span><span>详解</span><span>&lt;o:p&gt;&lt;/o:p&gt;</span></font></h2>
+<p style="line-height: 150%" class="MsoNormal"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span></span><span>在</span><span>web.xml</span><span>文件中，以下语法用于定义映射：</span></p>
+<p style="line-height: 150%; text-indent: -21pt; margin-left: 41.9pt" class="MsoListParagraph"><span><span>l<span>  </span></span></span><span>以</span><span>&rdquo;/&rsquo;</span><span>开头和以</span><span>&rdquo;/*&rdquo;</span><span>结尾的是用来做路径映射的。</span></p>
+<p style="line-height: 150%; text-indent: -21pt; margin-left: 41.9pt" class="MsoListParagraph"><span><span>l<span>  </span></span></span><span>以前缀</span><span>&rdquo;*.&rdquo;</span><span>开头的是用来做扩展映射的。</span></p>
+<p style="line-height: 150%; text-indent: -21pt; margin-left: 41.9pt" class="MsoListParagraph"><span><span>l<span>  </span></span></span><span>&ldquo;/&rdquo; </span><span>是用来定义</span><span>default servlet</span><span>映射的。</span></p>
+<p style="line-height: 150%; text-indent: -21pt; margin-left: 41.9pt" class="MsoListParagraph"><span><span>l<span>  </span></span></span><span>剩下的都是用来定义详细映射的。比如：</span><span> /aa/bb/cc.action</span></p>
+<p style="line-height: 150%; text-indent: 20.9pt" class="MsoNormal"><span>所以，为什么定义</span><span>&rdquo;/*.action&rdquo;</span><span>这样一个看起来很正常的匹配会错？因为这个匹配即属于路径映射，也属于扩展映射，导致容器无法判断。</span></p></div></body></html>

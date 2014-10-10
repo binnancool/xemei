@@ -1,0 +1,192 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Java对Cookie的操作总结</title></head><body><h1>Java对Cookie的操作总结</h1><div><p><strong>1.设置Cookie</strong></p>
+<div>
+<div class="dp-highlighter">
+<div class="bar"> </div>
+<ol class="dp-j">
+    <li class="alt"><font color="#ff0000"><span><span>　　Cookie cookie = </span><span class="keyword">new</span><span> Cookie(</span><span class="string">&quot;key&quot;</span><span>, </span><span class="string">&quot;value&quot;</span><span>); &nbsp;&nbsp;</span></span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>　　cookie.setMaxAge(</span><span class="number">60</span><span>); &nbsp;&nbsp;</span> </font></li>
+</ol>
+</div>
+</div>
+<p>　　设置60秒生存期，如果设置为负值的话，则为浏览器进程Cookie(内存中保存)，关闭浏览器就失效。</p>
+<div>
+<div class="dp-highlighter">
+<div class="bar"> </div>
+<ol class="dp-j">
+    <li class="alt"><span><font color="#ff0000"><span>　　cookie.setPath(</span><span class="string">&quot;/test/test2&quot;</span></font><span><font color="#ff0000">);</font>&nbsp;&nbsp;&nbsp;</span></span></li>
+</ol>
+</div>
+</div>
+<p>　　设置Cookie路径，不设置的话为当前路径(对于Servlet来说为request.getContextPath() + web.xml里配置的该Servlet的url-pattern路径部分)</p>
+<div>
+<div class="dp-highlighter">
+<div class="bar"> </div>
+<ol class="dp-j">
+    <li class="alt"><span><span><font color="#ff0000">　　response.addCookie(cookie);</font>&nbsp;&nbsp;&nbsp;</span></span></li>
+</ol>
+</div>
+</div>
+<p><strong>2.读取Cookie</strong></p>
+<p>　　该方法可以读取当前路径以及&ldquo;直接父路径&rdquo;的所有Cookie对象，如果没有任何Cookie的话，则返回null</p>
+<div>
+<div class="dp-highlighter">
+<div class="bar"> </div>
+<ol class="dp-j">
+    <li class="alt"><span><span>　<font color="#ff0000">　Cookie[] cookies = request.getCookies();</font>&nbsp;&nbsp;&nbsp;</span></span></li>
+</ol>
+</div>
+</div>
+<p><strong>3.删除Cookie</strong></p>
+<div>
+<div class="dp-highlighter">
+<div class="bar"> </div>
+<ol class="dp-j">
+    <li class="alt"><font color="#ff0000"><span><span>　　Cookie cookie = </span><span class="keyword">new</span><span> Cookie(</span><span class="string">&quot;key&quot;</span><span>, </span><span class="keyword">null</span><span>); &nbsp;&nbsp;</span></span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>　　cookie.setMaxAge(</span><span class="number">0</span></font><span><font color="#ff0000">);</font> &nbsp;&nbsp;</span></li>
+</ol>
+</div>
+</div>
+<p>　　设置为0为立即删除该Cookie</p>
+<div>
+<div class="dp-highlighter">
+<div class="bar"> </div>
+<ol class="dp-j">
+    <li class="alt"><span><span>　<font color="#ff0000">　cookie.setPath(</font></span><span class="string"><font color="#ff0000">&quot;/test/test2&quot;</font></span><span><font color="#ff0000">);</font>&nbsp;&nbsp;&nbsp;</span></span></li>
+</ol>
+</div>
+</div>
+<p>　　删除指定路径上的Cookie，不设置该路径，默认为删除当前路径Cookie</p>
+<div>
+<div class="dp-highlighter">
+<div class="bar"> </div>
+<ol class="dp-j">
+    <li class="alt"><span><span><font color="#ff0000">　　response.addCookie(cookie);</font>&nbsp;&nbsp;&nbsp;</span></span></li>
+</ol>
+</div>
+</div>
+<p><strong>4.修改Cookie</strong></p>
+<div>
+<div class="dp-highlighter">
+<div class="bar"> </div>
+<ol class="dp-j">
+    <li class="alt"><font color="#ff0000"><span><span>Cookie[] cookies=request.getCookies(); &nbsp;&nbsp;</span></span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span class="keyword">if</span><span>(cookies.length&gt;</span><span class="number">1</span><span>){ &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword">for</span><span>(</span><span class="keyword">int</span><span> i=</span><span class="number">0</span><span>;i&lt;cookies.length;i++){ &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword">if</span><span>(cookies[i].getName().equals(</span><span class="string">&quot;key&quot;</span><span>)) { &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String oldValue = cookies[i].getValue(); &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String newValue=&nbsp;&nbsp;</span><span class="string">&quot;newValue&quot;</span><span>; &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  cookies[i].setValue(newValue); &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  response.addCookie(cookies[i]); &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword">break</span><span>; &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;  } &nbsp;&nbsp;</span> </font></li>
+</ol>
+</div>
+</div>
+<p> </p>
+<p> </p>
+<p>===============================================================</p>
+<p>实例：<br>
+<strong>1.实现两个网站</strong><a href="http://www.ajava.org/"><strong>www.ajava.org</strong></a><strong>和ask.ajava.org共用Cookies</strong><br>
+<strong>2.添加Cookies</strong></p>
+<div>
+<div class="dp-highlighter">
+<div class="bar"> </div>
+<ol class="dp-j">
+    <li class="alt"><font color="#ff0000"><span><span>Cookie cookie = </span><span class="keyword">new</span><span> Cookie(</span><span class="string">&quot;name&quot;</span><span>, </span><span class="string">&quot;ajava&quot;</span><span>); &nbsp;&nbsp;</span></span> </font></li>
+    <li><font color="#ff0000"><span>cookie.setPath(</span><span class="string">&quot;/&quot;</span><span>);</span><span class="comment">//这个要设置 </span><span>&nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>cookie.setDomain(</span><span class="string">&quot;.ajava.org&quot;</span><span>);</span><span class="comment">//这个也要设置才能实现上面的两个网站共用 </span><span>&nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>cookie.setMaxAge(</span><span class="number">365</span><span>*</span><span class="number">24</span><span>*</span><span class="number">60</span><span>*</span><span class="number">60</span><span>);</span><span class="comment">//不设置的话，则cookies不写入硬盘,而是写在内存,只在当前页面有用,以秒为单位 </span><span>&nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>response.addCookie(cookie); &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>cookie = </span><span class="keyword">new</span><span> Cookie(</span><span class="string">&quot;nick&quot;</span><span>, URLEncoder.encode(</span><span class="string">&quot;王伟宗&quot;</span><span>,</span><span class="string">&quot;UTF-8&quot;</span><span>)); &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>cookie.setPath(</span><span class="string">&quot;/&quot;</span><span>); &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>cookie.setDomain(</span><span class="string">&quot;.ajava.org&quot;</span><span>); &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>cookie.setMaxAge(</span><span class="number">365</span><span>*</span><span class="number">24</span><span>*</span><span class="number">60</span><span>*</span><span class="number">60</span><span>); &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>response.addCookie(cookie);&nbsp;&nbsp;</span> </font></li>
+</ol>
+</div>
+</div>
+<p><br>
+<strong><font color="#ff0000">3.获取cookies</font></strong></p>
+<div>
+<div class="dp-highlighter">
+<div class="bar"> </div>
+<ol class="dp-j">
+    <li class="alt"><font color="#ff0000"><span><span>Cookie cookies[] = request.getCookies(); &nbsp;&nbsp;</span></span> </font></li>
+    <li><font color="#ff0000"><span class="keyword">if</span><span> (cookies != </span><span class="keyword">null</span><span>) &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>{ &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword">for</span><span> (</span><span class="keyword">int</span><span> i = </span><span class="number">0</span><span>; i &lt; cookies.length; i++) &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;  { &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword">if</span><span> (cookies[i].getName().equals(</span><span class="string">&quot;nick&quot;</span><span>)) &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  { &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(URLDecoder.decode(cookies[i].getValue(),</span><span class="string">&quot;UTF-8&quot;</span><span>)); &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;  } &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>}&nbsp;&nbsp;</span> </font></li>
+</ol>
+</div>
+</div>
+<p><br>
+<strong>4.删除cookies</strong></p>
+<div>
+<div class="dp-highlighter">
+<div class="bar"> </div>
+<ol class="dp-j">
+    <li class="alt"><font color="#ff0000"><span><span>Cookie cookies[] = request.getCookies(); &nbsp;&nbsp;</span></span> </font></li>
+    <li><font color="#ff0000"><span class="keyword">if</span><span> (cookies != </span><span class="keyword">null</span><span>) &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>{ &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword">for</span><span> (</span><span class="keyword">int</span><span> i = </span><span class="number">0</span><span>; i &lt; cookies.length; i++) &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;  { &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword">if</span><span> (cookies[i].getName().equals(</span><span class="string">&quot;nick&quot;</span><span>)) &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  { &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Cookie cookie = </span><span class="keyword">new</span><span> Cookie(</span><span class="string">&quot;nick&quot;</span><span>,</span><span class="string">&quot;&quot;</span><span>);</span><span class="comment">//这边得用&quot;&quot;,不能用null </span><span>&nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  cookie.setPath(</span><span class="string">&quot;/&quot;</span><span>);</span><span class="comment">//设置成跟写入cookies一样的 </span><span>&nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  cookie.setDomain(</span><span class="string">&quot;.ajava.org&quot;</span><span>);</span><span class="comment">//设置成跟写入cookies一样的 </span><span>&nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  response.addCookie(cookie); &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } &nbsp;&nbsp;</span> </font></li>
+    <li class="alt"><font color="#ff0000"><span>&nbsp;&nbsp;&nbsp;&nbsp;  } &nbsp;&nbsp;</span> </font></li>
+    <li><font color="#ff0000"><span>}&nbsp;&nbsp;</span> </font></li>
+</ol>
+</div>
+</div>
+<p>========================================================</p>
+<p><strong>应用实例</strong></p>
+<div>
+<div class="bar"> </div>
+<div class="dp-highlighter">
+<ol class="dp-xml">
+    <li class="alt"><font color="#ff0000"><strong><span><span class="tag">&lt;</span><span>%@ page </span><span class="attribute">contentType</span><span>=</span><span class="attribute-value">&quot;text/html; charset=gb2312&quot;</span><span> </span><span class="attribute">language</span><span>=</span><span class="attribute-value">&quot;java&quot;</span><span> </span><span class="attribute">import</span><span>=</span><span class="attribute-value">&quot;java.util.*&quot;</span><span> </span><span class="attribute">errorPage</span><span>=</span><span class="attribute-value">&quot;&quot;</span><span> %</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span> </strong></font></li>
+    <li><font color="#ff0000"><strong><span class="tag">&lt;</span><span>%@ page </span><span class="attribute">import</span><span>=</span><span class="attribute-value">&quot;java.net.URLDecoder&quot;</span><span> %</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;  //注意导入此包 &nbsp;&nbsp;</span> </strong></font></li>
+    <li class="alt"><font color="#ff0000"><strong><span>&nbsp;&nbsp;</span> </strong></font></li>
+    <li><font color="#ff0000"><strong><span class="tag">&lt;</span><span>% &nbsp;&nbsp;</span> </strong></font></li>
+    <li class="alt"><font color="#ff0000"><strong><span>Cookie </span><span class="attribute">cookie</span><span>=</span><span class="attribute-value">new</span><span> Cookie(&quot;hi&quot;,&quot;welcome&quot;); &nbsp;&nbsp;</span> </strong></font></li>
+    <li><font color="#ff0000"><strong><span>response.addCookie(cookie); &nbsp;&nbsp;</span> </strong></font></li>
+    <li class="alt"><font color="#ff0000"><strong><span>Cookie[] </span><span class="attribute">cookies</span><span>=</span><span class="attribute-value">request</span><span>.getCookies(); &nbsp;&nbsp;</span> </strong></font></li>
+    <li><font color="#ff0000"><strong><span>if(cookies!=null){ &nbsp;&nbsp;</span> </strong></font></li>
+    <li class="alt"><font color="#ff0000"><strong><span>for(int </span><span class="attribute">i</span><span>=</span><span class="attribute-value">0</span><span>;i</span><span class="tag">&lt;</span><span class="tag-name">cookies.length</span><span>;i++){ &nbsp;&nbsp;</span> </strong></font></li>
+    <li><font color="#ff0000"><strong><span>if(cookies[i].getName().equals(&quot;hi&quot;)){ &nbsp;&nbsp;</span> </strong></font></li>
+    <li class="alt"><font color="#ff0000"><strong><span>String </span><span class="attribute">cookieValue</span><span>=</span><span class="attribute-value">URLDecoder</span><span>.decode(cookies[i].getValue(),&quot;utf-8&quot;); &nbsp;&nbsp;</span> </strong></font></li>
+    <li><font color="#ff0000"><strong><span>out.print(&quot;</span><span class="attribute">hi</span><span>=&quot;+cookieValue); &nbsp;&nbsp;</span> </strong></font></li>
+    <li class="alt"><font color="#ff0000"><strong><span>} &nbsp;&nbsp;</span> </strong></font></li>
+    <li><font color="#ff0000"><strong><span>} &nbsp;&nbsp;</span> </strong></font></li>
+    <li class="alt"><font color="#ff0000"><strong><span>}else{ &nbsp;&nbsp;</span> </strong></font></li>
+    <li><font color="#ff0000"><strong><span>out.print(&quot; no cookie&quot;); &nbsp;&nbsp;</span> </strong></font></li>
+    <li class="alt"><font color="#ff0000"><strong><span>} &nbsp;&nbsp;</span> </strong></font></li>
+    <li><font color="#ff0000"><strong><span>%</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span> </strong></font></li>
+</ol>
+</div>
+<p><font color="#ff0000"><font color="#000000"><strong>注意：假设路径结构如下 </strong></font></font></p>
+<p><strong>　　</strong><font color="#000000">test/test2/test345/test555/test666 </font></p>
+<p><font color="#000000">　　a.相同键名的Cookie(值可以相同或不同)可以存在于不同的路径下。 </font></p>
+<p><font color="#000000">　　b. 删除时，如果当前路径下没有键为&quot;key&quot;的Cookie，则查询全部父路径，检索到就执行删除操作(每次只能删除一个与自己最近的父路径Cookie) 　　FF.必须指定与设定cookie时使用的相同路径来删除改cookie，而且cookie的键名不论大写、小写或大小混合都要指定路径。IE.键名小写时，如果当前路径为/test/test2，如果找不到再向上查询/test、/test555、/test345，如果还找不到就查询/(/test555/test666不查询) 。键名大小写混合或大写时，不指定路径则默认删除当前路径，并且不向上查询。 </font></p>
+<p><font color="#000000">　　c.读取Cookie时只能读取直接父路径的Cookie。如果当前路径为/test/test2，要读取的键为&ldquo;key&rdquo;。当前路径读取后，还要读取/test，/test读取后，还要读取/ 。</font></p>
+<p><font color="#000000">　　d.在做Java的web项目时，由于一般的Web服务器(如Tomcat或Jetty)都用Context来管理不同的Web Application，这样对于每个Context有不同的Path，在一个Server中有多个Web Application时要特别小心，不要设置Path为/的Cookie，容易误操作(当然前提是域名相同) 。<br>
+</font></p>
+</div></div></body></html>

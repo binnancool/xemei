@@ -1,0 +1,153 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>tar和rpm命令</title></head><body><h1>tar和rpm命令</h1><div><p>tar和rpm的用法：<br>
+一. tar<br>
+　　</p>
+<p><strong>tar -cvf bin.tar bin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //打包bin文件夹为bin.tar</strong></p>
+<p><strong>tar -xf bin.tar -C /home&nbsp;&nbsp;&nbsp;  //解包bin.tar到目录/home下</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p><strong>tar -czvf bin.tar bin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //打包并调用gzip压缩bin文件夹为bin.tar.gz</strong></p>
+<p><strong>tar -xzf bin.tar -C /home&nbsp;&nbsp;&nbsp;  //解压bin.tar.gz到目录/home下</strong>&nbsp;&nbsp;</p>
+<p><br>
+　　1.压缩一组文件为tar.gz后缀。<br>
+　　# tar cvf backup.tar /etc<br>
+　　#gzip -q backup.tar<br>
+　　或<br>
+　　# tar cvfz backup.tar.gz /etc/<br>
+　　<br>
+　　2.释放一个后缀为tar.gz的文件。<br>
+　　#gunzip backup.tar.gz<br>
+　　#tar xvf backup.tar<br>
+　　或<br>
+　　# tar xvfz backup.tar.gz<br>
+　　<br>
+　　3.用一个命令完成压缩<br>
+　　#tar cvf - /etc/ | gzip -qc &gt; backup.tar.gz<br>
+　　<br>
+　　4.用一个命令完成释放<br>
+　　# gunzip -c backup.tar.gz | tar xvf -<br>
+　　<br>
+　　5.如何解开tar.Z的文件？<br>
+　　# tar xvfz backup.tar.Z<br>
+　　或<br>
+　　# uncompress backup.tar.Z<br>
+　　#tar xvf backup.tar<br>
+　　<br>
+　　6.如何解开.tgz文件？<br>
+　　#gunzip backup.tgz<br>
+　　<br>
+　　7.如何压缩和解压缩.bz2的包？<br>
+　　#bzip2 /etc/smb.conf<br>
+　　这将压缩文件smb.conf成smb.conf.bz2<br>
+　　#bunzip2 /etc/smb.conf.bz2<br>
+　　这将在当前目录下还原smb.conf.bz2为smb.conf<br>
+　　</p>
+<p><strong>注:-c是表示产生新的包；</strong><strong>-O 将文件解开到标准输出;-v 处理过程中输出相关信息</strong></p>
+<p><strong>-f指定包的文件名；</strong><strong>-r是表示增加文件；</strong><strong>-u是表示更新文件；-t是列出文件的意思；</strong><strong>-x是解开的意思；</strong></p>
+<p><strong>-z这个参数来调用gzip；</strong></p>
+<p><strong>-j这个参数来调用bzip2；</strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  1) tar调用gzip</p>
+<p>gzip是GNU组织开发的一个压缩程序，.gz结尾的文件就是gzip压缩的结果。与gzip<br>
+相对的解压程序是gunzip。tar中使用-z这个参数来调用gzip。下面来举例说明一下<br>
+：</p>
+<p># tar -czf all.tar.gz *.jpg<br>
+这条命令是将所有.jpg的文件打成一个tar包，并且将其用gzip压缩，生成一个<br>
+gzip压缩过的包，包名为all.tar.gz</p>
+<p># tar -xzf all.tar.gz<br>
+这条命令是将上面产生的包解开。</p>
+<p>2) tar调用bzip2</p>
+<p>bzip2是一个压缩能力更强的压缩程序，.bz2结尾的文件就是bzip2压缩的结果。<br>
+与bzip2相对的解压程序是bunzip2。tar中使用-j这个参数来调用bzip2。下面来举例<br>
+说明一下：</p>
+<p># tar -cjf all.tar.bz2 *.jpg<br>
+这条命令是将所有.jpg的文件打成一个tar包，并且将其用bzip2压缩，生成一个<br>
+bzip2压缩过的包，包名为all.tar.bz2</p>
+<p># tar -xjf all.tar.bz2<br>
+这条命令是将上面产生的包解开。<br>
+3)tar调用compress</p>
+<p>compress也是一个压缩程序，但是好象使用compress的人不如gzip和bzip2的人<br>
+多。.Z结尾的文件就是compress压缩的结果。与 compress相对的解压程序是uncompress<br>
+。tar中使用-Z这个参数来调用compress。下面来举例说明一下：</p>
+<p># tar -cZf all.tar.Z *.jpg<br>
+这条命令是将所有.jpg的文件打成一个tar包，并且将其用compress压缩，生成<br>
+一个uncompress压缩过的包，包名为all.tar.Z</p>
+<p># tar -xZf all.tar.Z<br>
+这条命令是将上面产生的包解开</p>
+<p>有了上面的知识，你应该可以解开多种压缩文件了，下面对于tar系列的压缩文<br>
+件作一个小结：</p>
+<p>1)对于.tar结尾的文件</p>
+<p>tar -xf all.tar</p>
+<p>2)对于.gz结尾的文件</p>
+<p>gzip -d all.gz<br>
+gunzip all.gz</p>
+<p>3)对于.tgz或.tar.gz结尾的文件</p>
+<p>tar -xzf all.tar.gz<br>
+tar -xzf all.tgz</p>
+<p>4)对于.bz2结尾的文件</p>
+<p>bzip2 -d all.bz2<br>
+bunzip2 all.bz2</p>
+<p>5)对于tar.bz2结尾的文件</p>
+<p>tar -xjf all.tar.bz2</p>
+<p>6)对于.Z结尾的文件</p>
+<p>uncompress all.Z</p>
+<p>7)对于.tar.Z结尾的文件</p>
+<p>tar -xZf all.tar.z</p>
+<p>另外对于Window下的常见压缩文件.zip和.rar，Linux也有相应的方法来解压它<br>
+们：</p>
+<p>1)对于.zip</p>
+<p>linux下提供了zip和unzip程序，zip是压缩程序，unzip是解压程序。它们的参<br>
+数选项很多，这里只做简单介绍，依旧举例说明一下其用法：</p>
+<p># zip all.zip *.jpg<br>
+这条命令是将所有.jpg的文件压缩成一个zip包<br>
+# unzip all.zip<br>
+这条命令是将all.zip中的所有文件解压出来</p>
+<p>2)对于.rar</p>
+<p>要在linux下处理.rar文件，需要安装RAR for Linux，可以从网上下载，但要记<br>
+住，RAR for Linux<br>
+不是免费的；可从<a href="http://www.rarsoft.com/download.htm">http://www.rarsoft.com/download.htm</a>下载RARfor Linux 3.2.<br>
+0，然后安装：</p>
+<p># tar -xzpvf rarlinux-3.2.0.tar.gz<br>
+# cd rar<br>
+# make</p>
+<p>这样就安装好了，安装后就有了rar和unrar这两个程序，rar是压缩程序，unrar<br>
+是解压程序。它们的参数选项很多，这里只做简单介绍，依旧举例说明一下其用法：</p>
+<p><br>
+# rar a all *.jpg<br>
+这条命令是将所有.jpg的文件压缩成一个rar包，名为all.rar，该程序会将.rar<br>
+扩展名将自动附加到包名后。</p>
+<p># unrar e all.rar<br>
+这条命令是将all.rar中的所有文件解压出来。</p>
+<p>　　<br>
+　　二. rpm<br>
+　　<br>
+　　1.安装一个包<br>
+　　# rpm -ivh<br>
+　　<br>
+　　2.升级一个包<br>
+　　# rpm -Uvh<br>
+　　<br>
+　　3.移走一个包<br>
+　　# rpm -e<br>
+　　<br>
+　　4.安装参数<br>
+　　--force 即使覆盖属于其它包的文件也强迫安装<br>
+　　--nodeps 如果该RPM包的安装依赖其它包，即使其它包没装，也强迫<br>
+　　安装。<br>
+　　<br>
+　　5.查询一个包是否被安装<br>
+　　# rpm -q &lt; rpm package name&gt;<br>
+　　<br>
+　　6.得到被安装的包的信息<br>
+　　# rpm -qi &lt; rpm package name&gt;<br>
+　　<br>
+　　7.列出该包中有哪些文件<br>
+　　# rpm -ql &lt; rpm package name&gt;<br>
+　　<br>
+　　8.列出服务器上的一个文件属于哪一个RPM包<br>
+　　#rpm -qf<br>
+　　<br>
+　　9.可综合好几个参数一起用<br>
+　　# rpm -qil &lt; rpm package name&gt;<br>
+　　<br>
+　　10.列出所有被安装的rpm package<br>
+　　# rpm -qa<br>
+　　<br>
+　　11.列出一个未被安装进系统的RPM包文件中包含有哪些文件？<br>
+　　# rpm -qilp &lt; rpm package name&gt;</p></div></body></html>

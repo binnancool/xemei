@@ -1,0 +1,373 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Java学习总结一</title></head><body><h1>Java学习总结一</h1><div><p><font face="宋体"><font size="3"><strong><font size="5">Java的一些规定</font></strong><br>
+<br>
+1、若在源文件中定义了声明为public的类，需要将类所在的源文件的文件名取名为类名<br>
+2、在同一个源文件中有且只能有一个定义为public的类<br>
+3、编译时文件名大小写是不敏感的，执行的时候加载的类名是大小写敏感的<br>
+<br>
+<strong><font size="5">Java的语法</font></strong><br>
+<br>
+1、byte类型是一个有符号的8位的整数(-128~127)。其他语言的字节类型通常是无符号的整数。<br>
+2、为了保持精度,byte型与byte型或整数运算时，将转换为整型后运算。将结果赋值给byte变量需要类型转换。<br>
+3、short类型(-32768~32767)<br>
+4、java中的char类型可以表示0~65535个字符，利用unicode编码格式<br>
+5、可以使用单引号字符或者整数对char型赋值<br>
+6、java中小数常量被认为double型，若要表明为float型，在其后加f<br>
+7、float是4个字节，double是8个字节<br>
+8、java中的boolean只有两个取值true和false<br>
+9、java中条件判断只能使用true或者false<br>
+<br>
+<font size="5"><strong>java中的数组</strong><br>
+</font><br>
+1、java中一维数组在定义的时候是不能够分配空间的，例：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int num[];//中括号中不能写大小<br>
+&nbsp;&nbsp;  只有在定义完成之后为数组分配大小<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  num = new int[3];<br>
+&nbsp;&nbsp;  java中数组定义建议采取下面的形式：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int[] num;<br>
+&nbsp;&nbsp;  数组可以在定义时进行初始化：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int[] num = {1, 2, 3};<br>
+&nbsp;&nbsp;  或者<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int[] num = new int[]{1, 2, 3};<br>
+&nbsp;&nbsp;  注意不要写为：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int[] num = new int[3]{1, 2, 3};<br>
+2、java中的二维数组<br>
+&nbsp;&nbsp;  定义：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int[][] num;<br>
+&nbsp;&nbsp;  分配空间：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  num = new int[1][2];<br>
+3、java中二维数组每行的列数可以不相同：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int[][] num;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  num = new int[3][];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  num[0] = new int[1];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  num[1] = new int[2];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  num[2] = new int[3];<br>
+&nbsp;&nbsp;  有些像c/c++中的指针数组<br>
+4、java中定义一个数值型数组的时候，会自动将数组的元素全部赋值为0<br>
+5、当用初始值填充数组时，不要在中括号中填写大小，例：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int[][] num = new int[2][]{{1, 2, 3}, {4, 5, 6}}; //error<br>
+6、java支持不规则数组元素<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int[][] num = {{1, 2, 3}, {4, 5}, {6}};<br>
+&nbsp;&nbsp;  <br>
+<strong><font size="5">java中的自增操作</font><br>
+</strong><br>
+1、表现形式与c/c++中一样<br>
+<br>
+java的移位运算符<br>
+<br>
+1、左移&lt;&lt;<br>
+&nbsp;&nbsp;  带符号右移&gt;&gt;<br>
+&nbsp;&nbsp;  无符号右移&gt;&gt;&gt;<br>
+<br>
+<font size="5"><strong>java的包</strong><br>
+</font><br>
+1、package语句必须是java源文件中的第一条语句。如果不加package语句，则指定为缺省包或者无名包。<br>
+2、包对应着文件系统的目录层次结构。在package语句中，用&ldquo;.&rdquo;来指明包（目录）的层次。<br>
+&nbsp;&nbsp;  如果在源文件中定义了package（给类取了包名）,则类的完整的名字为：包名.类名 。<br>
+3、java中提供的包(package)和文件系统的目录层次结构是相对应的。当为类定义了包名时，&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;  要求在硬盘上有相应包名的目录，该目录下有类文件。<br>
+4、可以使用&ldquo;/&rdquo;分隔包名和类名，通常使用&ldquo;.&rdquo;。<br>
+5、包名可以使用多重限定名，例：package p1.p2.p3;//即顶层包p1有子包p2,p2有子包p3,包 <br>
+&nbsp;&nbsp;  p3中有当前类。注意：文件系统中应该有相应的目录层次结构。<br>
+6、可以使用javac的-d参数指定在什么位置生成类的文件，并且会根据源文件中定义的包名生成相应的目录层次结构。未指定-d则在当前目录生成类文件,并且不会生成package指定的目录<br>
+层次。<br>
+<br>
+<strong><font size="5">import语句</font></strong><br>
+<br>
+1、引入包中的类：import java.io.File;<br>
+2、引入整个包： import java.io.*;<br>
+3、在同一包中的类可以相互引用，无需import语句。<br>
+4、java.lang包是自动导入的，不需要显式的加上import语句。<br>
+5、除非有必要尽量避免导入一个包中的所有类。<br>
+<br>
+<strong><font size="5">类的说明符</font></strong><br>
+<br>
+1、类的访问说明符<br>
+&nbsp;&nbsp;  （1）public<br>
+&nbsp;&nbsp;  （2）default(不加访问说明符时）<br>
+2、类的其它修饰符<br>
+&nbsp;&nbsp;  （1）final&nbsp;&nbsp;&nbsp;&nbsp;  表明类为最终类，不能派生其它子类<br>
+&nbsp;&nbsp;  （2）abstract 抽象类<br>
+3、将目录下的所有源文件都编译生成：javac -d . *.java<br>
+&nbsp;&nbsp;  好处是不需要考虑哪个类先生成了。<br>
+4、class关键字前没有加任何访问说明符时，类为缺省类。不同包中的类无法访问。<br>
+5、在不同的包之间访问类时，只能访问到包中声明为public的类。<br>
+6、缺省的类访问说明符，表明类只能被同一包中的类访问。<br>
+<br>
+<strong><font size="5">方法的访问说明符</font></strong><br>
+<br>
+1、方法的访问说明符<br>
+&nbsp;&nbsp;  （1）public&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;  （2）protected&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;  （3）default(不加访问说明符时）<br>
+&nbsp;&nbsp;  （4）private<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  public&nbsp;&nbsp;&nbsp;  protected&nbsp;&nbsp;&nbsp;  default&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  private<br>
+&nbsp;&nbsp;&nbsp;  同类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  v <br>
+&nbsp;&nbsp;&nbsp;  同包&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  v<br>
+&nbsp;&nbsp;&nbsp;  子类&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  v<br>
+&nbsp;&nbsp;&nbsp;  不同包&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  v<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+2、方法的其它修饰符<br>
+&nbsp;&nbsp;  （1）static<br>
+&nbsp;&nbsp;  （2）final<br>
+&nbsp;&nbsp;  （3）abstract<br>
+&nbsp;&nbsp;  （4）native<br>
+&nbsp;&nbsp;  （5）synchronized<br>
+3、final方法：为了确保某个函数的行为在继承过程中保持不变，并且不能被覆盖<br>
+&nbsp;&nbsp;  (overridden),可以使用final方法。<br>
+4、抽象的方法和抽象类：<br>
+&nbsp;&nbsp;  *在类中没有方法体的方法就是抽象方法。<br>
+&nbsp;&nbsp;  *含有抽象方法的类，即为抽象类。<br>
+&nbsp;&nbsp;  *如果一个子类没有实现抽象基类中所有的抽象方法，则子类也成为一个抽象类。<br>
+&nbsp;&nbsp;  *我们可以将一个没有任何抽象方法的类声明为abstract，避免由这个类产生任何的对象。<br>
+&nbsp;&nbsp;  *抽象类需要声明abstract<br>
+<br>
+<strong><font size="5">垃圾回收</font></strong><br>
+<br>
+1、java虚拟机退出之前，会去调用函数finalize()<br>
+2、java虚拟机中，垃圾回收是作为一个低优先级的线程在运行。在内存不够的情况下，才会运行垃圾收集器。<br>
+3、使用System的静态方法gc()运行垃圾回收器。<br>
+<br>
+接口<br>
+<br>
+1、接口中所有的方法都是抽象的，定义了一类行为的集合，行为的实现由其实现类来完成。<br>
+2、使用interface定义接口，而不是class。<br>
+3、类使用implements关键字实现接口。<br>
+4、接口中所有的方法都是public abstract。<br>
+5、实现一个接口时，如果类需要实例话，则要实现接口中所有的方法。<br>
+6、接口不能实例化为一个对象，但实现了接口的类可以作为接口的实例。<br>
+7、在接口中声明方法时，不能使用native、static、final、synchronized、private、<br>
+&nbsp;&nbsp;  protected等修饰符。<br>
+8、和public类一样，public接口也必须定义在与接口同名的文件中。<br>
+9、接口中可以有数据成员，这些成员默认都是public static final。<br>
+10、访问接口的数据成员的几种形式：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  接口.接口数据成员名称<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  实现了接口的类的名称.接口数据成员名称<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  实现了接口的类的实例.接口数据成员名称<br>
+11、一个接口可以继承自另一个接口。<br>
+12、java中不允许类的多继承，但允许接口的多继承。<br>
+13、在java中，一个类可以实现多个接口。<br>
+14、一个类在继承另外一个类的同时，可以实现多个接口。<br>
+<br>
+<font size="5"><strong>内部类<br>
+</strong></font><br>
+1、内部类：在一个类中定义另外一个类，这个类就叫做内部类或内置类(inner class)。<br>
+2、内部类可以让我们将逻辑上相关的一组类组织起来，并由外部类(outer class)来控制内部类的可见性。<br>
+3、当我们建立一个inner class时，其对象就拥有了与外部类对象之间的一种关系，这就是通过一个特殊的this reference形成的，使得内部类对象可以随意的访问外部类中的所有的成员。<br>
+4、内部类可以随意的访问外部类中所有的成员方法和成员变量（包括私有的成员方法和成员变<br>
+&nbsp;&nbsp;  量）。<br>
+5、java中凡是用new产生的对象，都是在堆内存中分配的。<br>
+6、在内部类中引用外部成员变量可以使用以下形式：<br>
+&nbsp;&nbsp;  外部类名.this.成员变量<br>
+&nbsp;&nbsp;  例：outer.this.varname<br>
+7、若main函数不在外部类中，引用外部类中的内部类，如声明一个内部类，形式如下：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Outer.Inner inner;<br>
+8、如果想要直接实例化一个内部类对象，必须要有一个引用指向外部类对象<br>
+&nbsp;&nbsp;  如何在main方法中直接产生内部类对象：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Outer.Inner inner = outer.new Inner();<br>
+9、内部类定义可以放在函数、条件语句、语句块中，并且不管内部类嵌套的层次有多深，都可以访外部类的成员。<br>
+10、若方法的内部有内部类，方法定义的局部变量需要被内部类所访问，则需要将变量声明为final 。<br>
+11、对于一个类，访问权限可以是缺省的或者是public的。而对于一个内部类，还也可以声明为<br>
+&nbsp;&nbsp;&nbsp;  protected 或者 private、abstract、final、static 。如果内部类声明为<br>
+&nbsp;&nbsp;&nbsp;  abstract，则内部类就不能实例化了。需要在外部类中再定义一个内部类，从声明为<br>
+&nbsp;&nbsp;&nbsp;  abstract的类派生出来，然后再实例化。一个静态的内部类，只能访问外部类中静态<br>
+&nbsp;&nbsp;&nbsp;  的成员变量或者一个静态的成员方法。<br>
+12、静态的内部类可以有静态的成员函数或变量，非静态内部类中不能有静态的声明。<br>
+13、在方法中定义的内部类，如果要访问方法中定义的本地变量或者方法的参数，则变量必须被声明为final。<br>
+14、内部类可以声明为private或protected；还可以声明为abstract或final。<br>
+15、内部类可以声明为static的，但此时就不能再使用外部类的非static的成员变量和非static的成员方法；<br>
+16、非static的内部类中的成员不能声明为static的，只有在顶层类或static的内部类中才可以声明static成员。<br>
+17、产生一个派生类对象的时候，会调用基类的构造函数，产生一个基类的对象。<br>
+18、要产生一个内部类对象，首先需要产生一个外部类的对象，然后才能产生内部类对象。从而建立起内部类对象到外部类对象的一个引用关系。<br>
+19、为什么使用内部类？<br>
+&nbsp;&nbsp;&nbsp;  *在内部类(inner class)中，可以随意的访问外部类成员，这可以让我们更好地组织管理我们的代码，增强代码的可读性。<br>
+&nbsp;&nbsp;&nbsp;  *内部类可以用于创建适配器类，适配器类是用于实现接口的类。使用内部类来实现接口，可以更好地定位与接口关联的方法在代码中的位置。<br>
+<br>
+<strong><font size="5">java中的异常处理<br>
+</font></strong><br>
+1、java通过异常类表明异常，所有的异常都有个叫做Exception的基类。<br>
+2、派生自Exception的异常类，不一定都在java.lang包中。<br>
+3、Exception类派生自java.lang.Throwable,从Throwable派生了2个类：<br>
+&nbsp;&nbsp;  *Error类：从该类派生的有VitualMachineError(包含了OutOfMemoryError和<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  StackOverflowError)和AWTError<br>
+&nbsp;&nbsp;  *Exception:从该类派生的有RuntimeException和IOException等<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  RuntimeException通常代表了程序编写时的一些错误,这类错误在java中不需<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  要捕获，由java运行时系统自动抛出并自动处理。<br>
+4、打开一个不存在的文件、网络连接中断、数组下标越界、正在加载的类文件丢失等都会引发<br>
+&nbsp;&nbsp;  异常。<br>
+5、java中的异常类定义了程序中遇到的轻微的错误条件。<br>
+6、java中的错误类定义了程序中不能恢复的严重错误条件。如内存溢出、类文件格式错误等。<br>
+&nbsp;&nbsp;  这一类错误由java运行系统处理，不需要我们去处理。<br>
+7、java程序在执行过程中如出现异常，会自动生成一个异常类对象，该异常对象将被提交给<br>
+&nbsp;&nbsp;  java运行时系统，这个过程称为抛出(throw)异常。<br>
+8、当java运行时系统接收到异常对象时，会寻找能处理这一异常的代码并把当前异常对象交给<br>
+&nbsp;&nbsp;  其处理，这一过程称为捕获(catch)异常。<br>
+9、如果java运行时系统找不到可以捕获异常的方法，则运行时系统将终止，相应的java程序也将退出。<br>
+10、try/catch/finally语句。<br>
+11、一旦引发了异常，调用方法下面的语句就不会再执行了。<br>
+12、Exception的方法来自其基类Throwable。<br>
+&nbsp;&nbsp;&nbsp;  几个主要的方法：<br>
+&nbsp;&nbsp;&nbsp;  getMessage()<br>
+&nbsp;&nbsp;&nbsp;  toString()<br>
+&nbsp;&nbsp;&nbsp;  printStackTrace()<br>
+13、告诉用户使用自己写的方法调用时有可能产生异常，让其做好准备，可以使用java的异常声明语法去声明一个异常，在方法的参数列表后面使用throws关键字抛出一个异常。当我们声明要抛出一个异常，java编译器在编译的时候就会强制我们去捕获这个异常。<br>
+14、抛出一个异常的时候，会抛给它的调用者。<br>
+&nbsp;&nbsp;&nbsp;  main函数可以将异常抛给java运行时系统。<br>
+15、实际编写代码的时候，最好将自行捕获到，在自己的代码中进行处理，打印出一个准确而又<br>
+&nbsp;&nbsp;&nbsp;  详尽的信息提示给用户，或者对发生的异常进行补救。<br>
+16、所有的异常都是Exception所派生出来的，所以写异常捕获代码时一般将具体的异常捕获放<br>
+&nbsp;&nbsp;&nbsp;  在前面，将通用型的放在后面。也就是说由特殊到一般的写catch语句。<br>
+17、除了RuntimeException这类异常之外的异常，当我们抛出的时候java编译器都会强制的要<br>
+&nbsp;&nbsp;&nbsp;  求我们去进行捕获。<br>
+18、在catch到异常后，可以不进行处理，将异常对象再次抛出：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  throw e;<br>
+19、throw和throws的区别：<br>
+&nbsp;&nbsp;&nbsp;  *当我们声明抛出异常的时候，使用throws关键字；<br>
+&nbsp;&nbsp;&nbsp;  *当我们抛出异常的时候，使用throw关键字。<br>
+20、程序执行到throw语句，程序将会发生跳转。<br>
+21、可以抛出一个新的异常：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  throw new Exception(&quot;new exception&quot;);<br>
+22、定义自己的异常类：<br>
+&nbsp;&nbsp;&nbsp;  *派生自Exception;<br>
+&nbsp;&nbsp;&nbsp;  *构造方法；<br>
+&nbsp;&nbsp;&nbsp;  *构造方法中调用基类的构造方法；(super())<br>
+23、声明异常的时候，可以同时声明抛出多个异常。<br>
+24、不管程序执行有没有发生异常，finally语句中的代码都会执行(在return前也会执行)。<br>
+25、当程序终止运行的时候，finally语句就不会执行了。<br>
+26、System.exit(int status)静态方法终止当前正在运行的java虚拟机。其参数status表示<br>
+&nbsp;&nbsp;&nbsp;  状态的代码，按照约定，一个非0的状态代码指示了一个非正常的终止。<br>
+<br>
+<strong><font size="5">java编程规范</font></strong><br>
+<br>
+1、package的命名<br>
+&nbsp;&nbsp;  package的名字由全部小写的字母组成，例如：cn.mypackage<br>
+2、class和interface的命名<br>
+&nbsp;&nbsp;  class和interface的名字由大写字母开头而其它字母都小写的单词组成，例如：<br>
+&nbsp;&nbsp;  Exception、RuntimeException。<br>
+3、class变量的命名<br>
+&nbsp;&nbsp;  变量的名字用一个小写字母开头，后面的单词用大写字母开头，例如：<br>
+&nbsp;&nbsp;  myInfo、currentUser<br>
+4、class方法的命名<br>
+&nbsp;&nbsp;  方法的名字用一个小写字母开头，后面的单词用大写字母开头，例如：<br>
+&nbsp;&nbsp;  run()、getInstance()<br>
+5、static final常量的命名<br>
+&nbsp;&nbsp;  所有字母都大写，并且能表示完整含义。例如：PI<br>
+6、参数的命名<br>
+&nbsp;&nbsp;  参数的名字和变量的命名规范一致。<br>
+7、数组的命名<br>
+&nbsp;&nbsp;  数组应该总是用这样的方式命名：byte[] buffer<br>
+<br>
+<strong><font size="5">java的常用包</font></strong><br>
+<br>
+1、java.applet:包含一些用于创建java小应用程序的类。<br>
+2、java.awt:&nbsp;&nbsp;  包含一些用于编写与平台无关的图形界面（GUI）应用程序的类。<br>
+3、java.io:&nbsp;&nbsp;&nbsp;  包含一些用作输入输出（I/O）处理的类。<br>
+4、java.lang: 包含一些java语言的基本类与核心类，如String、Math、Integer、System<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  和Runtime，提供常用的功能，这个包中的所有类是被隐式导入的。<br>
+5、java.net:&nbsp;&nbsp;  包含用于建立网络连接的类，与java.io同时使用完成与网络有关的读写。<br>
+6、java.util：包含一些实用工具类和数据结构类。<br>
+<br>
+<strong><font size="5">&ldquo;==&rdquo;和&ldquo;equals&rdquo;的用法</font></strong><br>
+<br>
+1、在java中，boolean、byte、short、int、long、char、float、double这八种是基本数据<br>
+&nbsp;&nbsp;  类型，其余的都是引用类型。<br>
+2、&ldquo;==&rdquo;是比较两个变量的值是否相等<br>
+&nbsp;&nbsp;&nbsp;  &quot;equals&quot;是比较两个对象变量所代表的对象的内容是否相等<br>
+3、当我们声明了一个引用类型变量时，系统只为该变量分配了引用空间，并未创建一个具体的<br>
+&nbsp;&nbsp;  对象；当用new为对象分配空间后，将对象的引用赋值给引用变量。<br>
+&nbsp;&nbsp;  *可以将java中的引用理解为一个地址，也就是对象的首地址<br>
+<br>
+<strong><font size="5">String和StringBuffer</font></strong><br>
+<br>
+1、String str = &quot;abc&quot;;<br>
+&nbsp;&nbsp;  int i = 3;<br>
+&nbsp;&nbsp;  float f = 4.5f;<br>
+&nbsp;&nbsp;  char ch = 'a';<br>
+&nbsp;&nbsp;  boolean b = true;<br>
+&nbsp;&nbsp;  System.out.println(str + i + f + ch + b);<br>
+2、针对String的&ldquo;+&rdquo;和&ldquo;+=&rdquo;，是java中唯一被重载的操作符；在java中，不允许程序员重<br>
+&nbsp;&nbsp;  载操作符。<br>
+3、String类对象是一个常量对象。（String对象一旦给赋了一个引用之后，它就是一个常量对<br>
+&nbsp;&nbsp;  象了）<br>
+&nbsp;&nbsp;  String str = &quot;abc&quot;;<br>
+&nbsp;&nbsp;  str = &quot;def&quot;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //&quot;abc&quot;此时成了垃圾内存，str保存了&quot;def&quot;的引用<br>
+4、在处理大量字符串的程序中，我们通常用StringBuffer来替代String。<br>
+5、构造一个空的StringBuffer,初始的容量是16个字符。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  StringBuffer()<br>
+&nbsp;&nbsp;  超出16个字符，容量会自动增加，这样就不用担心容量不够。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  StringBuffer(int length);<br>
+&nbsp;&nbsp;  构造时指定初始容量。<br>
+&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;  StringBuffer类的一些常用方法：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int capacity() 返回当前StringBuffer的容量;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  char charAt() 获取一个char;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  StringBuffer delete(int start, int end) 删除StringBuffer中字符串的一个子<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  串，从开始位置到结束位置。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  需要注意的是，删除的结束位置字符通 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  常是不包括的。可以理解为大于等于起<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  始位置和小于结束位置。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  StringBuffer reverse()<br>
+<br>
+<strong><font size="5">数组</font></strong><br>
+<br>
+1、数组元素是基本数据类型将被初始化为0，是引用类型的将被初始化为NULL<br>
+2、当给数组变量赋值为NULL时，相当于把它所保存的引用清除掉了。原来保存的引用的所在的<br>
+&nbsp;&nbsp;  对象就成了垃圾对象。所以，如果想让内存成为垃圾内存，可以给保存了对象引用的变量赋<br>
+&nbsp;&nbsp;  值为NULL。<br>
+3、main方法是由java虚拟机调用的，所以必须是public的。由于java调用main方法时，不需要<br>
+&nbsp;&nbsp;  产生任何的对象，所以它要声明为static。不需要返回值，所以声明为void。有一个引用类<br>
+&nbsp;&nbsp;  型的数组参数String[] args。<br>
+&nbsp;&nbsp;  *args是用来接收命令行参数的，不包括命令行输入的java和java后的类名称。<br>
+&nbsp;&nbsp;  <br>
+<strong><font size="5">函数的调用</font></strong><br>
+<br>
+1、在java中，传递参数时，都是以传值的方式进行。<br>
+2、对于基本数据类型，传递的是数据的拷贝；对于引用类型，传递的是引用的拷贝。<br>
+<br>
+<br>
+<strong><font size="5">数组的相关操作</font></strong><br>
+<br>
+1、在java中，所有的数组都有一个缺省的属性length，用于获取数组中元素的个数。<br>
+2、数组的复制：System.arraycopy(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Object src, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int srcPos, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Object dest, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int destPos,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int length)。<br>
+3、数组的排序：Arrays.sort()。<br>
+4、在已排序的数组中查找某个元素：<br>
+&nbsp;&nbsp;  Arrays.binarySearch()。<br>
+5、Arrays类在java.util包中。<br>
+6、数组是一种引用类型的变量。<br>
+7、Arrays.sort()对于对象排序的要求：数组中的所有元素必须实现了Comparable接口。数组中的所有元素都是可以互相比较的。<br>
+&nbsp;&nbsp;  Comparable接口中有一个方法需要被实现:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  public int compareTo(Object o);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //小于返回负数，等于返回0，大于返回正数。<br>
+8、String类本身已经实现了Comparable接口，可以直接调用compareTo进行比较。<br>
+<br>
+<strong><font size="5">封装类</font></strong><br>
+<br>
+1、针对八种基本数据类型定义的相应的引用类型--封装类：<br>
+&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  基本数据类型&nbsp;&nbsp;&nbsp;  封装类<br>
+&nbsp;&nbsp;&nbsp;  boolean&nbsp;&nbsp;&nbsp;&nbsp;  Boolean<br>
+&nbsp;&nbsp;&nbsp;  byte&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Byte<br>
+&nbsp;&nbsp;&nbsp;  short&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Short<br>
+&nbsp;&nbsp;&nbsp;  int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Integer<br>
+&nbsp;&nbsp;&nbsp;  long&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Long<br>
+&nbsp;&nbsp;&nbsp;  char&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Character<br>
+&nbsp;&nbsp;&nbsp;  float&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Float<br>
+&nbsp;&nbsp;&nbsp;  double&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Double<br>
+2、从Integer中取出int值使用函数intValue()；<br>
+&nbsp;&nbsp;  从Long中取出long值使用函数longValue()<br>
+&nbsp;&nbsp;  从Float中取出float值使用函数floatValue();<br>
+3、将Integer转换为字符串类型toString()<br>
+4、将String类型转换为Integer可以用Integer.valueOf(String s)静态方法。<br>
+5、基本数据类型转换为String可以通过是使用封装类型的toString()方法达到目的。<br>
+6、将String类型转换为基本数据类型可以通过调用封装类的parseXXX（）静态方法来达到目<br>
+&nbsp;&nbsp;  的。例：int n = Integer.parseInt(&quot;123&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  float f = Float.parseFloat(&quot;12.34&quot;);<br>
+&nbsp;&nbsp;  注意Boolean类型没有类似的parse用法。<br>
+7、所有的封装类都是只读类型，没有提供任何方法修改其内容。</font></font></p>
+<p><br>
+<font size="3" face="宋体">本文来自CSDN博客，转载请标明出处：</font><a href="http://blog.csdn.net/allan_sun/archive/2006/02/21/604353.aspx"><font size="3" face="宋体">http://blog.csdn.net/allan_sun/archive/2006/02/21/604353.aspx</font></a></p></div></body></html>

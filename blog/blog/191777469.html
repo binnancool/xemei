@@ -1,0 +1,203 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Web Service实践之——XFire实例</title></head><body><h1>Web Service实践之——XFire实例</h1><div><p>转自：<a href="http://www.javaeye.com/topic/195927">http://www.javaeye.com/topic/195927</a><br>
+1、配置XFire运行环境：<br>
+在Tomcat下新建一个Web Applications，命名为stove，然后在其WEB-INF目录下新建一个web.xml文件，文件中输入：</p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Xml代码</div>
+</div>
+<ol class="dp-xml">
+    <li><span><strong><font color="#006699"><span class="tag">&lt;?</span><span class="tag-name">xml</span></font></strong><span> </span><span class="attribute"><font color="#ff0000">version</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;1.0&quot;</font></span><span> </span><span class="attribute"><font color="#ff0000">encoding</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;GB2312&quot;</font></span><span class="tag"><strong><font color="#006699">&gt;</font></strong></span><span>&nbsp;&nbsp;</span></span></li>
+    <li><span>&lt;!DOCTYPE web-app &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;  PUBLIC &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot; &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;  &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot;</span><span class="tag"><strong><font color="#006699">&gt;</font></strong></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;</span></li>
+    <li><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">web-app</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">servlet</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span></font></strong><span>XFireServlet</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">display-name</span><span class="tag">&gt;</span></font></strong><span>XFire Servlet</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">display-name</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">servlet-class</span><span class="tag">&gt;</span></font></strong><span>org.codehaus.xfire.transport.http.XFireConfigurableServlet</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">servlet-class</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">servlet</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">servlet-mapping</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span></font></strong><span>XFireServlet</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">url-pattern</span><span class="tag">&gt;</span></font></strong><span>/servlet/XFireServlet/*</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">url-pattern</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">servlet-mapping</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">servlet-mapping</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span></font></strong><span>XFireServlet</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">url-pattern</span><span class="tag">&gt;</span></font></strong><span>/services/*</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">url-pattern</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">servlet-mapping</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">web-app</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span>
+    <pre style="display: none" class="xml" name="code"> </pre>
+    </li>
+</ol>
+</div>
+<p>其中主要就是引入了XFireServlet，用以处理Web Service请求，并且负责提供Web Service的WSDL，如果你发布了一个名为BookService的WebService，则可以通过网址：<br>
+http://&lt;服务器&gt;[:端口]/&lt;webapp名&gt;/services/BookService<br>
+来访问这个WebService，并且通过地址：<br>
+http://&lt;服务器&gt;[:端口]/&lt;webapp名&gt;/services/BookService?WSDL 来得到这个WebService的WSDL信息。</p>
+<p>2、开发最简单的WebService</p>
+<p>建一个package:cn.com.pansky.webservice.xfire.study，在这个包下面新建一个接口：</p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Java代码</div>
+</div>
+<ol class="dp-j">
+    <li><span><span class="keyword"><strong><font color="#7f0055">package</font></strong></span><span> cn.com.pansky.webservice.xfire.study; &nbsp;&nbsp;</span></span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">public</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">interface</font></strong></span><span> SayHiService{ &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">public</font></strong></span><span> String sayHi(String name); &nbsp;&nbsp;</span></li>
+    <li><span>}&nbsp;&nbsp;</span>
+    <pre style="display: none" class="java" name="code"> </pre>
+    </li>
+</ol>
+</div>
+<p>这个接口是告诉服务器你的WebService哪些方法可以被用户调用的。下面我们再来写一个SayHiService的实现类，以完成业务逻辑：</p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Java代码</div>
+</div>
+<ol class="dp-j">
+    <li><span><span class="keyword"><strong><font color="#7f0055">package</font></strong></span><span> cn.com.pansky.webservice.xfire.study; &nbsp;&nbsp;</span></span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">public</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">class</font></strong></span><span> SayHiServiceImpl </span><span class="keyword"><strong><font color="#7f0055">implements</font></strong></span><span> SayHiService{ &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">public</font></strong></span><span> String sayHi(String name){ &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">if</font></strong></span><span>(name==</span><span class="keyword"><strong><font color="#7f0055">null</font></strong></span><span>){ &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">return</font></strong></span><span> </span><span class="string"><font color="#0000ff">&quot;连名字也不肯告诉我吗？&quot;</font></span><span>; &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;  } &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">return</font></strong></span><span> name+</span><span class="string"><font color="#0000ff">&quot;, 你吃了吗？没吃回家吃去吧。&quot;</font></span><span>; &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;  } &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">public</font></strong></span><span> String 不告诉你(){ &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">return</font></strong></span><span> </span><span class="string"><font color="#0000ff">&quot;我的名字不告诉你！&quot;</font></span><span>; &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;  } &nbsp;&nbsp;</span></li>
+    <li><span>}&nbsp;&nbsp;</span>
+    <pre style="display: none" class="java" name="code"> </pre>
+    这个类实现了sayHi方法，该方法是可以通过WebService调用访问到的。另外还实现了一个方法&ldquo;不告诉你&rdquo;，该方法因为没有在接口SayHiService中定义，所以不能被WebService调用到。<br>
+    &nbsp;&nbsp;  这个例子足够简单吧，就跟我们刚学Java时写的&quot;Hello world&quot;没什么两样。<br>
+    到这里为止，我们做的跟平时的Java开发没啥区别，该如何来发布WebService呢？</li>
+</ol>
+</div>
+<p>3、把JAVA类发布为WebService：<br>
+<strong>在src目录下新建文件夹：META-INF/xfire，然后在该文件夹下新建一个XML文件：services.xml，</strong>文件内容如下：</p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Xml代码</div>
+</div>
+<ol class="dp-xml">
+    <li><span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">beans</span></font></strong><span> </span><span class="attribute"><font color="#ff0000">xmlns</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;http://xfire.codehaus.org/config/1.0&quot;</font></span><span class="tag"><strong><font color="#006699">&gt;</font></strong></span><span>&nbsp;&nbsp;</span></span></li>
+    <li><span>&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">service</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">name</span><span class="tag">&gt;</span></font></strong><span>SayHiService</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">name</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">namespace</span><span class="tag">&gt;</span></font></strong><span>http://cn.com.pansky/SayHiService</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">namespace</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">serviceClass</span><span class="tag">&gt;</span></font></strong><span>cn.com.pansky.webservice.xfire.study.SayHiService</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">serviceClass</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">implementationClass</span><span class="tag">&gt;</span></font></strong><span>cn.com.pansky.webservice.xfire.study.SayHiServiceImpl</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">implementationClass</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">service</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">beans</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<pre style="display: none" class="xml" name="code"> </pre>
+<p>这个文件定义一个WebService: SayHiService，并同时定义了接口和实现类。<br>
+好了，该建的文件基本建完了，现在想办法把src下的java文件编译成class，并复制到WEB-INF/classes目录下</p>
+<p>4、启动Tomcat，测试WebService<br>
+如果Tomcat还没配置好，抽两分钟再配一下。再把Tomcat启动起来。<br>
+再打开浏览器，输入：<br>
+<a href="http://localhost/stove/services"><font color="#006699">http://localhost/stove/services</font></a><br>
+，服务器返回的结果如下：<br>
+Available Services:<br>
+&nbsp;&nbsp;&nbsp;  * SayHiService [wsdl]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  Generated by XFire ( <a href="http://xfire.codehaus.org/"><font color="#006699">http://xfire.codehaus.org</font></a> ) <br>
+我们看到我们的WebService已经布署成功了，我们再看看它的WSDL信息：</p>
+<pre style="display: none" class="xml" name="code"> </pre>
+这个文件跟我们用Axis生成的基本是一样的。
+<p>5、享受美味的时刻</p>
+<p><strong><font size="3">注意：客户端使用WebService接口需要jar包（wsdl4j-1.6.1.jar和xfire-all-1.2.6.jar），缺少wsdl4j-1.6.1.jar时，会出现错误：The type javax.wsdl.Definition cannot be resolved. It is indirectly referenced from&nbsp;&nbsp;  required .class files</font></strong></p>
+<p><strong><font size="3"><br>
+</font></strong>WebService这道大餐算是烹制好了，现在是享用美餐的时候了。<br>
+我们写一个客户端吃掉这道大餐：</p>
+<div class="bar">
+<div class="tools">Java代码</div>
+</div>
+<div class="dp-highlighter">
+<ol class="dp-j">
+    <li><span><span class="keyword"><strong><font color="#7f0055">package</font></strong></span><span> cn.com.pansky.webservice.xfire.study; &nbsp;&nbsp;</span></span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">import</font></strong></span><span> java.net.MalformedURLException; &nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">import</font></strong></span><span> java.util.Map; &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">import</font></strong></span><span> org.codehaus.xfire.client.Client; &nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">import</font></strong></span><span> org.codehaus.xfire.client.XFireProxyFactory; &nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">import</font></strong></span><span> org.codehaus.xfire.service.Service; &nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">import</font></strong></span><span> org.codehaus.xfire.service.binding.ObjectServiceFactory; &nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">import</font></strong></span><span> org.codehaus.xfire.transport.http.CommonsHttpMessageSender; &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">public</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">class</font></strong></span><span> SayHiClient{ &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">public</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">static</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">void</font></strong></span><span> main(String args[]) { &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;  String serviceURL = </span><span class="string"><font color="#0000ff">&quot;http://localhost/stove/services/SayHiService&quot;</font></span><span>; &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;  Service serviceModel = </span><span class="keyword"><strong><font color="#7f0055">new</font></strong></span><span> ObjectServiceFactory().create(SayHiService.</span><span class="keyword"><strong><font color="#7f0055">class</font></strong></span><span>,</span><span class="keyword"><strong><font color="#7f0055">null</font></strong></span><span>,</span><span class="string"><font color="#0000ff">&quot;http://cn.com.pansky/SayHiService&quot;</font></span><span>,</span><span class="keyword"><strong><font color="#7f0055">null</font></strong></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;  XFireProxyFactory serviceFactory = </span><span class="keyword"><strong><font color="#7f0055">new</font></strong></span><span> XFireProxyFactory(); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">try</font></strong></span><span>{ &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  SayHiService service = (SayHiService) serviceFactory.create(serviceModel, serviceURL); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <strong><font size="4">//忽略http连接的超时时间,0为不设置超时时间，》=1为超时毫秒数</font></strong></span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Client client = Client.getInstance(service); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.setProperty(CommonsHttpMessageSender.HTTP_TIMEOUT, </span><span class="string"><font color="#0000ff">&quot;0&quot;</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String hello = service.sayHi(</span><span class="string"><font color="#0000ff">&quot;张山疯&quot;</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(</span><span class="string"><font color="#0000ff">&quot;服务器对[张山疯] 的回答是：&quot;</font></span><span> + hello ); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  hello = service.sayHi(</span><span class="keyword"><strong><font color="#7f0055">null</font></strong></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(</span><span class="string"><font color="#0000ff">&quot;服务器胡言乱语说：&quot;</font></span><span> + hello ); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;  } </span><span class="keyword"><strong><font color="#7f0055">catch</font></strong></span><span> (MalformedURLException e) { &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  e.printStackTrace(); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;  } &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;  } &nbsp;&nbsp;</span></li>
+    <li><span>}&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<p> </p>
+<p><strong><font size="4">注意：当客户端设置http连接超时为1毫秒时</font></strong></p>
+<p><strong><font size="4">Client client = Client.getInstance(service);&nbsp;&nbsp;&nbsp;&nbsp;</font></strong></p>
+<p><strong><font size="4"><span>client.setProperty(CommonsHttpMessageSender.HTTP_TIMEOUT, </span><span class="string"><font color="#0000ff">&quot;1&quot;</font></span></font></strong><span><strong><font size="4">);</font></strong>&nbsp;&nbsp;&nbsp;</span></p>
+<p><span>会出现如下错误提示：</span></p>
+<p><span>log4j:WARN No appenders could be found for logger (org.codehaus.xfire.transport.DefaultTransportManager).<br>
+log4j:WARN Please initialize the log4j system properly.<br>
+Exception in thread &quot;main&quot; org.codehaus.xfire.XFireRuntimeException: Could not invoke service.. Nested exception is org.codehaus.xfire.fault.XFireFault: Couldn't send message.<br>
+org.codehaus.xfire.fault.XFireFault: Couldn't send message.<br>
+at org.codehaus.xfire.fault.XFireFault.createFault(XFireFault.java:89)<br>
+at org.codehaus.xfire.handler.OutMessageSender.invoke(OutMessageSender.java:30)<br>
+at org.codehaus.xfire.handler.HandlerPipeline.invoke(HandlerPipeline.java:131)<br>
+at org.codehaus.xfire.client.Invocation.invoke(Invocation.java:79)<br>
+at org.codehaus.xfire.client.Invocation.invoke(Invocation.java:114)<br>
+at org.codehaus.xfire.client.Client.invoke(Client.java:336)<br>
+at org.codehaus.xfire.client.XFireProxy.handleRequest(XFireProxy.java:77)<br>
+at org.codehaus.xfire.client.XFireProxy.invoke(XFireProxy.java:57)<br>
+at $Proxy0.startSLEEChannel(Unknown Source)<br>
+at slee.startSlee.main(startSlee.java:33)<br>
+Caused by: org.codehaus.xfire.XFireException: Couldn't send message.<br>
+at org.codehaus.xfire.transport.http.HttpChannel.sendViaClient(HttpChannel.java:145)<br>
+at org.codehaus.xfire.transport.http.HttpChannel.send(HttpChannel.java:48)<br>
+at org.codehaus.xfire.handler.OutMessageSender.invoke(OutMessageSender.java:26)<br>
+... 8 more<br>
+Caused by: java.net.SocketTimeoutException: Read timed out<br>
+at java.net.SocketInputStream.socketRead0(Native Method)<br>
+at java.net.SocketInputStream.read(SocketInputStream.java:129)<br>
+at java.io.BufferedInputStream.fill(BufferedInputStream.java:218)<br>
+at java.io.BufferedInputStream.read(BufferedInputStream.java:237)<br>
+at org.apache.commons.httpclient.HttpParser.readRawLine(HttpParser.java:78)<br>
+at org.apache.commons.httpclient.HttpParser.readLine(HttpParser.java:106)<br>
+at org.apache.commons.httpclient.HttpConnection.readLine(HttpConnection.java:1116)<br>
+at org.apache.commons.httpclient.MultiThreadedHttpConnectionManager$HttpConnectionAdapter.readLine(MultiThreadedHttpConnectionManager.java:1413)<br>
+at org.apache.commons.httpclient.HttpMethodBase.readStatusLine(HttpMethodBase.java:1973)<br>
+at org.apache.commons.httpclient.HttpMethodBase.readResponse(HttpMethodBase.java:1735)<br>
+at org.apache.commons.httpclient.HttpMethodBase.execute(HttpMethodBase.java:1098)<br>
+at org.apache.commons.httpclient.HttpMethodDirector.executeWithRetry(HttpMethodDirector.java:398)<br>
+at org.apache.commons.httpclient.HttpMethodDirector.executeMethod(HttpMethodDirector.java:171)<br>
+at org.apache.commons.httpclient.HttpClient.executeMethod(HttpClient.java:397)<br>
+at org.codehaus.xfire.transport.http.CommonsHttpMessageSender.send(CommonsHttpMessageSender.java:369)<br>
+at org.codehaus.xfire.transport.http.HttpChannel.sendViaClient(HttpChannel.java:123)<br>
+... 10 more</span></p></div></body></html>

@@ -1,0 +1,72 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java中，对文件进行追加内容操作的三种方法！</title></head><body><h1>java中，对文件进行追加内容操作的三种方法！</h1><div><p><font size="3" face="宋体">import java.io.BufferedWriter;<br>
+import java.io.FileOutputStream;<br>
+import java.io.FileWriter;<br>
+import java.io.IOException;<br>
+import java.io.OutputStreamWriter;<br>
+import java.io.PrintWriter;<br>
+import java.io.RandomAccessFile;</font></p>
+<p><font face="宋体"><font size="3"><strong>//如果文件存在，则追加内容；如果文件不存在，则创建文件，追加内容的三种方法</strong><br>
+public class AppendContentToFile {</font></font></p>
+<p><font size="3" face="宋体">@SuppressWarnings(&quot;static-access&quot;)<br>
+public static void main(String[] args) {<br>
+&nbsp;&nbsp;  AppendContentToFile a = new AppendContentToFile();<br>
+&nbsp;&nbsp;  a.method1();<br>
+&nbsp;&nbsp;  a.method2(&quot;E:\\dd.txt&quot;, &quot;222222222222222&quot;);<br>
+&nbsp;&nbsp;  a.method3(&quot;E:\\dd.txt&quot;, &quot;33333333333&quot;);<br>
+&nbsp;&nbsp;</font></p>
+<p><font size="3" face="宋体">}</font></p>
+<p><font face="宋体"><font size="3"><strong>方法1：</strong> </font></font></p>
+<p><font size="3" face="宋体">public void method1() {<br>
+&nbsp;&nbsp;  FileWriter fw = null;<br>
+&nbsp;&nbsp;  try {<br>
+&nbsp;&nbsp;&nbsp;  //如果文件存在，则追加内容；如果文件不存在，则创建文件</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;  File f=new File(&quot;E:\\dd.txt&quot;);<br>
+&nbsp;&nbsp;&nbsp;  fw = new FileWriter(f, true);<br>
+&nbsp;&nbsp;  } catch (IOException e) {<br>
+&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;  }</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;  PrintWriter pw = new PrintWriter(fw);<br>
+&nbsp;&nbsp;  pw.println(&quot;追加内容&quot;);<br>
+&nbsp;&nbsp;  pw.flush();<br>
+&nbsp;&nbsp;  try {<br>
+&nbsp;&nbsp;&nbsp;  fw.flush();<br>
+&nbsp;&nbsp;&nbsp;  pw.close();<br>
+&nbsp;&nbsp;&nbsp;  fw.close();<br>
+&nbsp;&nbsp;  } catch (IOException e) {<br>
+&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;  }<br>
+}</font></p>
+<p><font face="宋体"><font size="3"><strong>方法2：</strong> </font></font></p>
+<p><font size="3" face="宋体">public static void method2(String file, String conent) {<br>
+&nbsp;&nbsp;  BufferedWriter out = null;<br>
+&nbsp;&nbsp;  try {<br>
+&nbsp;&nbsp;&nbsp;  out = new BufferedWriter(new OutputStreamWriter(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  new FileOutputStream(file, true)));<br>
+&nbsp;&nbsp;&nbsp;  out.write(conent+&quot;\r\n&quot;);<br>
+&nbsp;&nbsp;  } catch (Exception e) {<br>
+&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;  } finally {<br>
+&nbsp;&nbsp;&nbsp;  try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  out.close();<br>
+&nbsp;&nbsp;&nbsp;  } catch (IOException e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  }<br>
+}</font></p>
+<p><font face="宋体"><font size="3"><strong>方法3：</strong> </font></font></p>
+<p><font size="3" face="宋体">public static void method3(String fileName, String content) {<br>
+&nbsp;&nbsp;  try {<br>
+&nbsp;&nbsp;&nbsp;  // 打开一个随机访问文件流，按读写方式&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  RandomAccessFile randomFile = new RandomAccessFile(fileName, &quot;rw&quot;);<br>
+&nbsp;&nbsp;&nbsp;  // 文件长度，字节数&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  long fileLength = randomFile.length();<br>
+&nbsp;&nbsp;&nbsp;  // 将写文件指针移到文件尾。&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  randomFile.seek(fileLength);<br>
+&nbsp;&nbsp;&nbsp;  randomFile.writeBytes(content+&quot;\r\n&quot;);<br>
+&nbsp;&nbsp;&nbsp;  randomFile.close();<br>
+&nbsp;&nbsp;  } catch (IOException e) {<br>
+&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;  }<br>
+}<br>
+}</font></p>
+<p><font size="3" face="宋体">参考：<a href="http://blog.csdn.net/smartcat86/archive/2009/04/16/4085739.aspx">http://blog.csdn.net/smartcat86/archive/2009/04/16/4085739.aspx</a></font></p></div></body></html>

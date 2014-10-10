@@ -1,0 +1,20 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Davenport WebDAV-SMB Gateway（局域网共享文件的web显示，带权限）</title></head><body><h1>Davenport WebDAV-SMB Gateway（局域网共享文件的web显示，带权限）</h1><div><p><strong><font size="4">一、Davenport WebDAV-SMB Gateway的下载地址</font></strong></p>
+<p><a href="http://sourceforge.net/projects/davenport/"><strong>http://sourceforge.net/projects/davenport/</strong></a></p>
+<p><strong><font size="4">二、部署方法</font></strong></p>
+<p><strong>1、解压davenport-0.9.11.zip</strong></p>
+<p><strong>2、拷贝解压后的文件夹davenport-0.9.11\webapps\下的root文件夹，拷贝到tomcat的webapps\目录下，修改名称为KnowledgeBase</strong></p>
+<p><strong>注：resin、jetty、apache服务器应该也可行</strong></p>
+<p><strong>3、屏蔽隐藏文件设置，打开KnowledgeBase\WEB-INF\目录下的web.xml文件，把如下的注释去掉：</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;  &lt;init-param&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-name&gt;fileFilters&lt;/param-name&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-value&gt;myHiddenFilter&lt;/param-value&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;/init-param&gt;<br>
+&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  &lt;init-param&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-name&gt;myHiddenFilter&lt;/param-name&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-value&gt;smbdav.filters.HiddenFilter&lt;/param-value&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;/init-param&gt;</strong></p>
+<p><strong>4、启动tomcat服务器</strong></p>
+<p><strong>5、打开IE浏览器，输入</strong><a href="http://10.130.14.42/KnowledgeBase/10.130.1.20/"><strong>http://10.130.14.42/KnowledgeBase/10.130.1.20/</strong></a></p>
+<p><strong>其中10.130.14.42为tomcat服务器的IP地址，端口设置为80；10.130.1.20为共享文件的服务器IP地址</strong></p>
+<p><strong>注意：性能不稳定；在Windows server 2003和Windows 7中无法以Web文件夹形式浏览</strong></p></div></body></html>

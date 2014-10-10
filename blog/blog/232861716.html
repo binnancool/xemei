@@ -1,0 +1,74 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Java中dom4j的xml文件读取方法</title></head><body><h1>Java中dom4j的xml文件读取方法</h1><div><p><strong><font color="#660000" size="4">1、使用绝对路径</font></strong></p>
+<p>// 解析XML文件成Document ,url为文件路径<br>
+&nbsp;&nbsp; SAXReader reader = new SAXReader();<br>
+&nbsp;&nbsp; Document document = null;<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String xmlFilePath = &quot;d:/serialComm.xml&quot;;<br>
+<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;<strong><font color="#ff0000">document = reader.read(xmlFilePath);</font></strong><br>
+&nbsp;&nbsp;&nbsp; InitSMSCat.log.info(&quot;串口配置文件的目录：&quot;+xmlFilePath);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp; if(document == null)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; InitSMSCat.log.info(&quot;配置文件serialComm.xml读取发生错误！！！&quot;);<br>
+&nbsp;&nbsp;&nbsp; throw new Exception(&quot;配置文件serialComm.xml读取发生错误！！！&quot;);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; // read Docment内容<br>
+&nbsp;&nbsp; Element root = document.getRootElement();</p>
+<p>&nbsp;&nbsp; // 从XML的根结点开始遍历<br>
+&nbsp;&nbsp; for (Iterator i = root.elementIterator(); i.hasNext();)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; Element element = (Element) i.next();<br>
+&nbsp;&nbsp;&nbsp; if(element.getName().equals(&quot;comm&quot;)) comm = element.getText();<br>
+&nbsp;&nbsp; }</p>
+<p><strong><font color="#660000" size="4">2、使用环境变量</font></strong></p>
+<p>// 解析XML文件成Document ,url为文件路径<br>
+&nbsp;&nbsp; SAXReader reader = new SAXReader();<br>
+&nbsp;&nbsp; Document document = null;<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp; InitSMSCat.log.info(&quot;环境变量SMS_HOME = &quot;+System.getenv(&quot;SMS_HOME&quot;));<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; String xmlFilePath = &quot;&quot;;<br>
+&nbsp;&nbsp;&nbsp; if(Utility.getOsName().equals(&quot;windows&quot;))<br>
+&nbsp;&nbsp;&nbsp;&nbsp; xmlFilePath = System.getenv(&quot;SMS_HOME&quot;)+&quot;<a href="file://config//serialComm.xml">\\config\\serialComm.xml</a>&quot;;<br>
+&nbsp;&nbsp;&nbsp; if(Utility.getOsName().equals(&quot;linux&quot;))<br>
+&nbsp;&nbsp;&nbsp;&nbsp; xmlFilePath = (System.getenv(&quot;SMS_HOME&quot;)+&quot;/config/serialComm.xml&quot;).replace(&quot;\\&quot;, &quot;/&quot;);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;<strong><font color="#ff0000">document = reader.read(xmlFilePath);</font></strong><br>
+&nbsp;&nbsp;&nbsp; InitSMSCat.log.info(&quot;串口配置文件的目录：&quot;+xmlFilePath);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp; if(document == null)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; InitSMSCat.log.info(&quot;配置文件serialComm.xml读取发生错误！！！&quot;);<br>
+&nbsp;&nbsp;&nbsp; throw new Exception(&quot;配置文件serialComm.xml读取发生错误！！！&quot;);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; // read Docment内容<br>
+&nbsp;&nbsp; Element root = document.getRootElement();</p>
+<p>&nbsp;&nbsp; // 从XML的根结点开始遍历<br>
+&nbsp;&nbsp; for (Iterator i = root.elementIterator(); i.hasNext();)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; Element element = (Element) i.next();<br>
+&nbsp;&nbsp;&nbsp; if(element.getName().equals(&quot;comm&quot;)) comm = element.getText();<br>
+&nbsp;&nbsp; }</p>
+<p><strong><font color="#660000" size="4">3、读取jar包中的xml文件</font></strong></p>
+<p>// 解析XML文件成Document ,url为文件路径<br>
+&nbsp;&nbsp; SAXReader reader = new SAXReader();<br>
+&nbsp;&nbsp; Document document = null;</p>
+<p>&nbsp;&nbsp;<strong><font color="#ff0000"> document = reader.read(this.getClass().getResourceAsStream(&quot;/serialComm.xml&quot;));<br>
+</font></strong>&nbsp;&nbsp; if(document == null)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; InitSMSCat.log.info(&quot;配置文件serialComm.xml读取发生错误！！！&quot;);<br>
+&nbsp;&nbsp;&nbsp; throw new Exception(&quot;配置文件serialComm.xml读取发生错误！！！&quot;);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; // read Docment内容<br>
+&nbsp;&nbsp; Element root = document.getRootElement();</p>
+<p>&nbsp;&nbsp; // 从XML的根结点开始遍历<br>
+&nbsp;&nbsp; for (Iterator i = root.elementIterator(); i.hasNext();)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; Element element = (Element) i.next();<br>
+&nbsp;&nbsp;&nbsp; if(element.getName().equals(&quot;comm&quot;)) comm = element.getText();<br>
+&nbsp;&nbsp; }</p></div></body></html>

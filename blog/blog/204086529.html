@@ -1,0 +1,125 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ICE实例（Eclipse与Slice2Java插件）</title></head><body><h1>ICE实例（Eclipse与Slice2Java插件）</h1><div><p><font size="5" face="宋体"><strong>一、准备条件</strong></font></p>
+<p><font size="4" face="宋体"><strong>1、Eclipse3.4</strong></font></p>
+<p><font size="4" face="宋体"><strong>2、Slice2Java插件：下载地址及使用说明：</strong></font><a href="http://www.zeroc.com/eclipse.html"><font size="4" face="宋体"><strong>http://www.zeroc.com/eclipse.html</strong></font></a><font size="4" face="宋体"><strong>，具体如下：</strong></font></p>
+<p><font size="4" face="宋体">ZeroC hosts an Eclipse plug-in site that you can add to your Eclipse configuration. Follow these steps to install the Slice2Java plug-in: </font></p>
+<ol>
+    <li><font size="4" face="宋体"><strong>From the <tt>Help</tt> menu, choose <tt>Software Updates</tt> </strong></font></li>
+    <li><font size="4" face="宋体"><strong>Select the <tt>Available Software</tt> tab </strong></font></li>
+    <li><font size="4" face="宋体"><strong>Click <tt>Add Site</tt> </strong></font></li>
+    <li><font size="4" face="宋体"><strong>In the <tt>Location</tt> field, enter <tt>http://www.zeroc.com/download/eclipse</tt> </strong></font></li>
+    <li><font size="4" face="宋体"><strong>Select the Slice2Java plug-in and click <tt>Install</tt></strong> </font></li>
+</ol>
+<p><font size="4" face="宋体">The plug-in requires Ice 3.3.1 or later. Users of Ice for Android 0.1 may also use the plug-in but you must upgrade your Ice installation to version 3.3.1 or later. </font></p>
+<p><font size="4" face="宋体"><strong>安装成功后：点击Eclipse的Window&mdash;&mdash;preferences,如下图：</strong></font></p>
+<p><font size="4" face="宋体"><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/5c3228509480771243a75b42.jpg"><br>
+</span></font></p>
+<p><font size="4" face="宋体"><strong>3、Ice-3.3.1-VC80.msi安装，目录为</strong>D:\Ice-3.3.1<a>。<strong>下载地址：</strong></a><a href="http://www.zeroc.com/download.html"></a>http://www.zeroc.com/download.html</font></p>
+<p><font size="5" face="宋体"><strong>二、操作步骤</strong></font></p>
+<p><font size="4" face="宋体"><strong>1、建立Java工程：MyTestICE</strong></font></p>
+<p><font size="4" face="宋体"><strong>2、建立slice文件夹，在其目录下建立：Printer.ice，内容如下：</strong></font></p>
+<p><font size="4" face="宋体"><strong>module  PrinterInterface<br>
+{<br>
+ interface Printer<br>
+ {<br>
+&nbsp;&nbsp; void printString(string s);<br>
+ };<br>
+};</strong></font></p>
+<p><font size="4" face="宋体"><strong>3、使用Slice2Java插件（也可以使用命令行：</strong>slice2java Printer.ice<strong>）</strong></font></p>
+<p><font size="4" face="宋体"><strong>右键点击工程&ldquo;MyTestICE&rdquo;&mdash;&mdash;Slice2Java&mdash;&mdash;Add Slice2Java builder，自动生成generated文件夹下的java文件，如下图所示：</strong></font></p>
+<p align="center"><font size="4" face="宋体"><strong><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/2e986b550e05ea6ed009065a.jpg"></span></strong></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong>4、编写servant类的PrinterI</strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong>package printer;</strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong>import Ice.Current;<br>
+import PrinterInterface._PrinterDisp;</strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong>@SuppressWarnings(&quot;serial&quot;)<br>
+public class PrinterI extends _PrinterDisp<br>
+{</strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong> public void shutdown(Current arg0)<br>
+ {<br>
+&nbsp;&nbsp;<br>
+ }</strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong> public void writeMessage(String arg0, int arg1, Current arg2)<br>
+ {<br>
+&nbsp;&nbsp;<br>
+ }<br>
+ <br>
+ <font color="#ff0000">public void printString(String s, Ice.Current current)<br>
+ {<br>
+&nbsp;&nbsp; System.out.println(&quot;The string is : &quot;+s);<br>
+ }</font></strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong>}<br>
+5、编写ICE的server</strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong>package server;</strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong>import printer.PrinterI;</strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong>public class Server<br>
+{<br>
+ public static void main(String[] args)<br>
+ {<br>
+&nbsp;&nbsp; int status = 0;<br>
+&nbsp;&nbsp; Ice.Communicator ic = null;<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;<font color="#ff0000">ic = Ice.Util.initialize(args);<br>
+&nbsp;&nbsp;&nbsp; Ice.ObjectAdapter adapter = ic.createObjectAdapterWithEndpoints(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;SimplePrinterAdapter&quot;, &quot;default -p 2888&quot;);<br>
+&nbsp;&nbsp;&nbsp; Ice.Object object = new PrinterI();<br>
+&nbsp;&nbsp;&nbsp; adapter.add(object, Ice.Util.stringToIdentity(&quot;SimplePrinter&quot;));<br>
+&nbsp;&nbsp;&nbsp; adapter.activate();<br>
+&nbsp;&nbsp;&nbsp; ic.waitForShutdown();<br>
+</font>&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Ice.LocalException e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp;&nbsp; status = 1;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; System.err.println(e.getMessage());<br>
+&nbsp;&nbsp;&nbsp; status = 1;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; finally<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; if (ic != null)<br>
+&nbsp;&nbsp;&nbsp;&nbsp; ic.destroy();<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; System.exit(status);<br>
+ }<br>
+}<br>
+6、编写client客户端</strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong>package client;</strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong>import PrinterInterface.PrinterPrx;</strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong>public class Client<br>
+{<br>
+ public static void main(String[] args)<br>
+ {<br>
+&nbsp;&nbsp; int status = 0;<br>
+&nbsp;&nbsp; Ice.Communicator ic = null;<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;<font color="#ff0000">ic = Ice.Util.initialize(args);<br>
+&nbsp;&nbsp;&nbsp; Ice.ObjectPrx base = ic<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; .stringToProxy(&quot;SimplePrinter:default -h 10.130.14.49 -p 2888&quot;);<br>
+&nbsp;&nbsp;&nbsp; PrinterPrx printer = PrinterPrxHelper.checkedCast(base);<br>
+&nbsp;&nbsp;&nbsp; if (printer == null)<br>
+&nbsp;&nbsp;&nbsp;&nbsp; throw new Error(&quot;Invalid proxy&quot;);<br>
+&nbsp;&nbsp;&nbsp; printer.printString(&quot;Hello World!&quot;);<br>
+</font>&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Ice.LocalException e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp;&nbsp; status = 1;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; System.err.println(e.getMessage());<br>
+&nbsp;&nbsp;&nbsp; status = 1;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; finally<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; if (ic != null)<br>
+&nbsp;&nbsp;&nbsp;&nbsp; ic.destroy();<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; System.exit(status);<br>
+ }<br>
+}</strong></span></font></p>
+<p align="left"><font size="4" face="宋体"><span><strong>7、在另外的机器上允许Server，在本机运行Client，在运行Server的机器上输出：The string is:Hello World!</strong></span></font></p></div></body></html>

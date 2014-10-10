@@ -1,0 +1,57 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>eclipse 无法启动 JVM terminated. Exit code=-1 的解决办法</title></head><body><h1>eclipse 无法启动 JVM terminated. Exit code=-1 的解决办法</h1><div>今天遇到了这个问题，启动eclipse弹出以下内容：<br>
+JVM terminated.Exit code=-1<br>
+-Dosgi.requiredJavaVersion=1.5<br>
+-Xms40m<br>
+-Xmx512m<br>
+-XX:MaxPermSize=256M<br>
+-Djava.class.path=D:\eclipse\\plugins\org.eclips.equinox.launcher_1.0.1.r33x_v20070828.jar<br>
+-os win32<br>
+-ws win32<br>
+-atch x86<br>
+-showsplash D:\eclipse\\plugins\org.eclipse.platform_3.3.2.R33X_V20071022\splash.bmp<br>
+-launcher D:\eclipse\eclipse.exe<br>
+-name Eclipse<br>
+--launcher.library D:\eclipse\plugins\org.eclipse.equinox.launcher.win32.win32.x86_1.0.2.R331_v20071019\eclipse_1021.dll<br>
+-startup D:\eclipse\plugins\org.eclipse.equinox.launcher_1.0.1.R33x_v20070828.jar<br>
+-vm C:\Progarm Files\Java\jre1.5.0_06\bin\client\jvm.dll<br>
+-vmargs<br>
+-Dosgi.requiredJavaVersion=1.5<br>
+-Xms40m<br>
+-XX:MaxPermSize=256m<br>
+-Djava.class.path=D:\eclipse\plugins\org.eclipse.equinox.launcher_1.0.1.R33x_v20070828.jar
+<p>下载了两个版本3.4，3.5的启动都出现同样错误，没办法网络找找吧，找到了两种解决方法，期中第一种我的机器有效，具体方法如下：</p>
+<p>原来eclipse.ini的配置如下：</p>
+<p>-showsplash<br>
+org.eclipse.platform<br>
+--launcher.XXMaxPermSize<br>
+256M<br>
+-framework<br>
+plugins\org.eclipse.osgi_3.4.2.R34x_v20080826-1230.jar<br>
+-vmargs<br>
+-Dosgi.requiredJavaVersion=1.5<br>
+-Xms40m<br>
+-Xmx512m</p>
+<p>修改后为：</p>
+<p>-showsplash<br>
+org.eclipse.platform<br>
+--launcher.XXMaxPermSize<br>
+256M<br>
+-framework<br>
+plugins\org.eclipse.osgi_3.4.2.R34x_v20080826-1230.jar<br>
+-vmargs<br>
+-Dosgi.requiredJavaVersion=1.5<br>
+-Xms128m<br>
+-Xmx256m</p>
+<p>此方法来自CSDN博客，转载请标明出处：<a href="http://blog.csdn.net/lxbhxwl/archive/2009/06/16/4272280.aspx">http://blog.csdn.net/lxbhxwl/archive/2009/06/16/4272280.aspx</a></p>
+<p>还有一种方法是这样描述的，但我的机器这没有通过(做为备选方案吧，肯定是应用过的)：</p>
+<p>查了一下，找到解决方案:<br>
+运行安装eclipse<br>
+修改eclipse.ini文件，添加<br>
+-vm<br>
+/opt/jdk1.6.0_03/jre/bin/java</p>
+<p>注意：此设置为linux版本的linux，如果是windows的版本添加内容可能为<br>
+-vm<br>
+/opt/jdk1.6.0_03/jre/bin/javaw.exe</p>
+<p>参考资料:http://blog.csdn.net/niubaobao/archive/2007/12/23/1961528.aspx<br>
+具体底层原因分析:http://www.eclipsezone.com/eclipse/forums/m92212393.html<br>
+估计只有大内存的机器出现这种问题。</p></div></body></html>

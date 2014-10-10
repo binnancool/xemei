@@ -1,0 +1,39 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Eclipse打包Java应用程序，及在Linux系统上的部署运行</title></head><body><h1>Eclipse打包Java应用程序，及在Linux系统上的部署运行</h1><div><p>1、Eclipse打包Java应用程序</p>
+<p>第一步： 在java项目上，单击右键，弹出菜单，选择&ldquo;Export&rdquo;</p>
+<p align="center" forimg="1"><a target="_blank" href="http://hiphotos.baidu.com/dd%5Ftaiyangxue/pic/item/9b8507349badb6a3a71e1258.jpg"><img style="width: 292px; height: 263px" class="blogimg" border="0" width="537" height="150" small="1" src="http://hiphotos.baidu.com/dd%5Ftaiyangxue/abpic/item/9b8507349badb6a3a71e1258.jpg"></a></p>
+<p align="left" forimg="1">第二步：选择导出为&ldquo;JAR file&rdquo;</p>
+<p align="left" forimg="1"> </p>
+<p align="center" forimg="1"><a target="_blank" href="http://hiphotos.baidu.com/dd%5Ftaiyangxue/pic/item/a5b9ecae4e6a7fd3faed502e.jpg"><img class="blogimg" border="0" small="1" src="http://hiphotos.baidu.com/dd%5Ftaiyangxue/abpic/item/a5b9ecae4e6a7fd3faed502e.jpg"></a></p>
+<p align="left" forimg="1">第三步：选择jar文件的安放目录和名称</p>
+<p align="center" forimg="1"> </p>
+<p align="center" forimg="1"><a target="_blank" href="http://hiphotos.baidu.com/dd%5Ftaiyangxue/pic/item/9ebafc91086c47a5a877a431.jpg"><img class="blogimg" border="0" small="1" src="http://hiphotos.baidu.com/dd%5Ftaiyangxue/abpic/item/9ebafc91086c47a5a877a431.jpg"></a></p>
+<p align="left" forimg="1">第四步：选择运行的main函数</p>
+<p align="center" forimg="1"> </p>
+<p align="center" forimg="1"><a target="_blank" href="http://hiphotos.baidu.com/dd%5Ftaiyangxue/pic/item/096615cd0ea3b93800e9283b.jpg"><img class="blogimg" border="0" small="1" src="http://hiphotos.baidu.com/dd%5Ftaiyangxue/abpic/item/096615cd0ea3b93800e9283b.jpg"></a></p>
+<p align="left" forimg="1"><strong>注：用winRAR压缩文件管理器打开jar文件，其中文件夹META-INF中的文件MANIFEST.MF，打开此文件，内容如下：Manifest-Version: 1.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Main-Class: com.channelsoft.sms.test.Test<br>
+可以手动修改Main-Class项，从而改变程序运行的入口函数。</strong></p>
+<p align="left" forimg="1">2、SMSAPI.jar文件在CentOS上的部署运行</p>
+<p align="left" forimg="1">1）在CentOS上建立新的目录：/dibin.把jar文件SMSAPI.jar拷贝到此文件夹下。</p>
+<p align="left" forimg="1"><strong>2）打开终端命令，输入：cd /dibin(进入dibin目录)</strong></p>
+<p align="left" forimg="1"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  java -jar SMSAPI.jar（运行SMSAPI）</strong></p>
+<p align="left" forimg="1"><strong>3）如2）所示，每次运行都得输入两行命令，其它情况可能更多，为此我把命令行，封装成shell程序，直接运行shell就可以运行SMSAPI。具体如下：</strong></p>
+<p align="left" forimg="1"><strong>shell程序sms，内容:#!/bin/bash （执行此shell的程序）<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  cd /dibin<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  java -jar SMSAPI.jar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></p>
+<p align="left" forimg="1"><strong>具体终端命令： chomd +x sms （转化成可执行文件）</strong></p>
+<p align="left" forimg="1"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  cd /dibin<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ./sms<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  或者<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  cd /dibin<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  nohup ./sms (后台运行)</strong></p>
+<p align="left" forimg="1"><strong>4)把shell程序sms在终端命令中设置如下：export PATH=&quot;$PATH:/dibin&quot;,则在终端命令中：sms或nohup sms就可运行。但是这样还存在一个问题，每次开启一个新的终端，需要重复输入export PATH=&quot;$PATH:/dibin&quot;,否则直接运行sms或nohup sms，应用程序不执行。</strong></p>
+<p align="left" forimg="1"><strong>因此</strong><strong>在/etc/profile环境变量配置文件中最后加上：export PATH=&quot;$PATH:/dibin&quot;（需要重启生效），这样在新的终端中，直接运行sms或nohup sms就OK了。</strong></p>
+<p align="left" forimg="1"><strong>2）、3)、4）三步，介绍了三种运行可执行程序的方法。</strong></p>
+<p align="left" forimg="1"><strong>5）终止SMSAPI</strong></p>
+<p align="left" forimg="1">第一步：ps -aux （显示所有进程，找出SMSAPI进程号）</p>
+<p align="left" forimg="1">第二步：kill 进程号</p>
+<p align="left" forimg="1"><strong>注：CentOS 系统自带的jdk版本为1.4，与SMSAPI的jdk版本不符，SMSAPI不能够正常运行，需要安装jdk1.6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></p>
+<p align="left" forimg="1"><strong>可以用以下命令来检查jdk版本,命令：rpm -qa|grep jdk或者java -version</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p align="left" forimg="1"> </p></div></body></html>

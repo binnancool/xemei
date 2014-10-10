@@ -1,0 +1,22 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java中Thread的子类多次运行start（）是否启动多个线程？</title></head><body><h1>java中Thread的子类多次运行start（）是否启动多个线程？</h1><div><p>答案：第二次运行同一实例的start函数是发送错误<br>
+举例：</p>
+<p>public class MyThread extends Thread{<br>
+ public void run(){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;++++++++++++++++++&quot;);<br>
+ }<br>
+ public static void main(String[] args) {<br>
+  MyThread mt=new MyThread();</p>
+<p>&nbsp;&nbsp;  System.out.println(&quot;0000000&quot;);<br>
+&nbsp;&nbsp;  mt.start();<br>
+&nbsp;&nbsp;  System.out.println(&quot;111111111&quot;);<br>
+&nbsp;&nbsp;  mt.start();<br>
+&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  }<br>
+}</p>
+<p>输出结果：</p>
+<p>Exception in thread &quot;main&quot; java.lang.IllegalThreadStateException<br>
+ at java.lang.Thread.start(Unknown Source)<br>
+ at TestThread.MyThread.main(MyThread.java:19)<br>
+0000000<br>
+111111111<br>
+++++++++++++++++++</p></div></body></html>

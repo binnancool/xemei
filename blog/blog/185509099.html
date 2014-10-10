@@ -1,0 +1,251 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>AJAX调用HttpServlet的例子</title></head><body><h1>AJAX调用HttpServlet的例子</h1><div><p><strong>lastalert.jsp（客户端源程序）</strong></p>
+<p>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=GB2312&quot;<br>
+pageEncoding=&quot;GB2312&quot;%&gt;<br>
+&lt;%@ page import=&quot;com.channelsoft.ivrmonitor.model.AlertEvent&quot;%&gt;<br>
+&lt;%<br>
+response.setHeader(&quot;Pragma&quot;, &quot;No-cache&quot;);<br>
+response.setHeader(&quot;Cache-Control&quot;, &quot;no-cache&quot;);<br>
+response.setDateHeader(&quot;Expires&quot;, 0);<br>
+%&gt;</p>
+<p>&lt;html&gt;</p>
+<p>&lt;head&gt;<br>
+&lt;meta http-equiv=&quot;Content-Language&quot; content=&quot;zh-cn&quot;&gt;<br>
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=gb2312&quot;&gt;<br>
+&lt;LINK href=&quot;images/ivr.css&quot; type=text/css rel=stylesheet&gt;<br>
+&lt;meta name=&quot;GENERATOR&quot; content=&quot;Microsoft FrontPage 4.0&quot;&gt;<br>
+&lt;meta name=&quot;ProgId&quot; content=&quot;FrontPage.Editor.Document&quot;&gt;</p>
+<p>&lt;script type=&quot;text/javascript&quot; language=&quot;javascript&quot;&gt;<br>
+<strong>setInterval(&quot;createObject();&quot;,5000); //每隔5秒执行一次createObject()函数<br>
+</strong>var i=0;<br>
+function createObject()<br>
+{<br>
+<strong>var xmlHttp;//创建XMLHttpRequest对象，根据浏览器的不同而不同</strong><br>
+<br>
+try<br>
+{<br>
+&nbsp;&nbsp;  // Firefox, Opera 8.0+, Safari<br>
+&nbsp;&nbsp;&nbsp;  xmlHttp=new XMLHttpRequest();<br>
+}<br>
+catch (e)<br>
+{<br>
+<br>
+&nbsp;&nbsp;  // Internet Explorer<br>
+&nbsp;&nbsp;&nbsp;  try<br>
+&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  xmlHttp=new ActiveXObject(&quot;Msxml2.XMLHTTP&quot;);<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;  catch (e)<br>
+&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  try<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  xmlHttp=new ActiveXObject(&quot;Microsoft.XMLHTTP&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  catch (e)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  alert(&quot;您的浏览器不支持AJAX！&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  return false;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }<br>
+}<br>
+xmlHttp.onreadystatechange=function()<br>
+&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  if(xmlHttp.readyState==4)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  if(xmlHttp.status==200)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  i++;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <strong>document.getElementById(&quot;txtHint&quot;).innerHTML=xmlHttp.responseText+i;//局部更新</strong><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;<strong> xmlHttp.open(&quot;GET&quot;,&quot;AlertManagerServlet?Command=ListLastAlert&quot;,true);//使用GET方式从AlertManagerServlet?Command=ListLastAlert获取返回数据<br>
+</strong>&nbsp;&nbsp;  xmlHttp.send(null); <br>
+}<br>
+&lt;/script&gt;</p>
+<p><br>
+&lt;title&gt;最近告警&lt;/title&gt;<br>
+&lt;/head&gt;</p>
+<p>&lt;body&gt;<br>
+&lt;table width=&quot;98%&quot; border=&quot;0&quot; align=&quot;center&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;<br>
+&lt;tr&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;td align=&quot;left&quot; class=&quot;a12&quot;&gt;<br>
+<strong>&lt;div id=&quot;txtHint&quot;&gt;&lt;/div&gt;//局部更新位置<br>
+</strong>&nbsp;&nbsp;&nbsp;  &lt;/td&gt;<br>
+&lt;/tr&gt;<br>
+&lt;/table&gt;<br>
+&lt;/body&gt;<br>
+&lt;/html&gt;</p>
+<p><strong>AlertManagerServlet（服务器端源代码）</strong></p>
+<p>package com.channelsoft.ivrmonitor.controller;</p>
+<p>import java.io.IOException;<br>
+import java.util.Vector;<br>
+import javax.servlet.ServletException;<br>
+import javax.servlet.http.HttpServletRequest;<br>
+import javax.servlet.http.HttpServletResponse;<br>
+import javax.servlet.http.HttpSession;<br>
+import com.channelsoft.ivrmonitor.model.AlertEvent;<br>
+import com.channelsoft.ivrmonitor.model.SystemModelFactory;<br>
+import com.channelsoft.ivrmonitor.model.config.AlertManager;</p>
+<p>/**<br>
+* Servlet implementation class for Servlet: AlertManagerServlet<br>
+*/<br>
+public class AlertManagerServlet extends javax.servlet.http.HttpServlet<br>
+&nbsp;&nbsp;  implements javax.servlet.Servlet<br>
+{<br>
+static final long serialVersionUID = 1L;</p>
+<p>/*<br>
+* (non-Java-doc)<br>
+* <br>
+* @see javax.servlet.http.HttpServlet#HttpServlet()<br>
+*/<br>
+public AlertManagerServlet()<br>
+{<br>
+&nbsp;&nbsp;  super();<br>
+}<br>
+/*<br>
+* (non-Javadoc)<br>
+* <br>
+* @see javax.servlet.http.HttpServlet#service(javax.servlet.http.HttpServletRequest,<br>
+*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  javax.servlet.http.HttpServletResponse)<br>
+*/<br>
+@Override<br>
+protected void service(HttpServletRequest request,<br>
+&nbsp;&nbsp;&nbsp;  HttpServletResponse response) throws ServletException, IOException<br>
+{</p>
+<p><strong><font size="5">//禁止缓存,否则服务器端将不执行，而把缓存内容提交给客户端<br>
+&nbsp;&nbsp; response.setHeader(&quot;Pragma&quot;, &quot;No-cache&quot;);<br>
+&nbsp;&nbsp; response.setHeader(&quot;Cache-Control&quot;, &quot;no-cache&quot;);<br>
+&nbsp;&nbsp; response.setDateHeader(&quot;Expires&quot;, 0);</font></strong></p>
+<p><br>
+&nbsp;&nbsp;  request.setCharacterEncoding(&quot;GB2312&quot;);<br>
+&nbsp;&nbsp;  String command = request.getParameter(&quot;Command&quot;);<br>
+&nbsp;&nbsp;  if (&quot;ListLastAlert&quot;.equals(command))<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  listLastAlert(request, response);<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  else if (&quot;ListAlertHistory&quot;.equals(command))<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  listAlertHistory(request, response);<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  else if (&quot;CloseAlertEvent&quot;.equals(command))<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  closeAlertEvent(request, response);<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  else if (&quot;ListAlertHistoryByType&quot;.equals(command))<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  listAlertHistoryByType(request, response);<br>
+&nbsp;&nbsp;  }<br>
+}</p>
+<p>public void listLastAlert(HttpServletRequest request,<br>
+&nbsp;&nbsp;&nbsp;  HttpServletResponse response) throws ServletException, IOException<br>
+{<br>
+&nbsp;&nbsp;  response.setContentType(&quot;text/html;charset=gb2312&quot;);&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;  HttpSession session = request.getSession(true);<br>
+&nbsp;&nbsp;  session.setAttribute(&quot;errorInfo&quot;, null);<br>
+&nbsp;&nbsp;  try<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  AlertManager am = SystemModelFactory.getAlertManager();<br>
+&nbsp;&nbsp;&nbsp;  AlertEvent ae = am.listLastAlert();<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;  System.out.println(&quot;显示的告警信息：&quot;+&quot;[&quot; + ae.elementName + &quot;]--告警Id为&quot; + ae.alertId + &quot;；告警内容为&quot; + ae.info + &quot;；告警发生的时间为&quot; + ae.time + &quot;；告警网元服务类型为&quot; + ae.serviceType);<br>
+&nbsp;&nbsp;&nbsp;  String gaojing=&quot;[&quot; + ae.elementName + &quot;]--告警Id为&quot; + ae.alertId + &quot;；告警内容为&quot; + ae.info + &quot;；告警发生的时间为&quot; + ae.time + &quot;；告警网元服务类型为&quot; + ae.serviceType;<br>
+&nbsp;&nbsp;&nbsp;  if(ae.isClosed)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  gaojing=&quot;；已关闭&quot;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  }</p>
+<p><strong>//给客户端发送字符串数据<br>
+&nbsp;&nbsp;&nbsp;  response.getWriter().println(gaojing);<br>
+&nbsp;&nbsp;&nbsp;  response.getWriter().flush();<br>
+&nbsp;&nbsp;&nbsp;  response.getWriter().close();<br>
+</strong>&nbsp;&nbsp;&nbsp;  System.out.println(&quot;=============&quot;);</p>
+<p>&nbsp;&nbsp;&nbsp;  session.setAttribute(&quot;alertEvent&quot;, ae);<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  catch (Exception e)<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;&nbsp;  session.setAttribute(&quot;errorInfo&quot;, e.getMessage());<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;<br>
+//&nbsp;&nbsp;  response.sendRedirect(&quot;lastalert.jsp&quot;);<br>
+}</p>
+<p>}</p>
+<p>附录：</p>
+<h3>XmlHttp是什么？</h3>
+<p>最通用的定义为：XmlHttp是一套可以在Javascript、VbScript、Jscript等脚本语言中通过http协议传送或从接收XML及其他数据的一套API。XmlHttp最大的用处是可以更新网页的部分内容而不需要刷新整个页面。<br>
+来自MSDN的解释：XmlHttp提供客户端同http服务器通讯的协议。客户端可以通过XmlHttp对象(MSXML2.XMLHTTP.3.0)向http服务器发送请求并使用微软XML文档对象模型Microsoft&reg; XML Document Object Model (DOM)处理回应。</p>
+<p>现在的绝对多数浏览器都增加了对XmlHttp的支持，IE中使用ActiveXObject方式创建XmlHttp对象，其他浏览器如：Firefox、Opera等通过window.XMLHttpRequest来创建xmlhttp对象。</p>
+<h3>XmlHttp对象参考：</h3>
+<h4>属性：</h4>
+<p>
+<table class="t1" border="1" cellpadding="3">
+    <tbody>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/onreadystatechange.html"><font color="#2c4f83">onreadystatechange*</font></a></td>
+            <td>指定当readyState属性改变时的事件处理句柄。只写</td>
+        </tr>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/readystate.html"><font color="#2c4f83">readyState</font></a></td>
+            <td>返回当前请求的状态，只读.</td>
+        </tr>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/responsebody.html"><font color="#2c4f83">responseBody</font></a></td>
+            <td>将回应信息正文以unsigned byte数组形式返回.只读</td>
+        </tr>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/responsestream.html"><font color="#2c4f83">responseStream</font></a></td>
+            <td>以Ado Stream对象的形式返回响应信息。只读</td>
+        </tr>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/responseText.html"><font color="#2c4f83">responseText</font></a></td>
+            <td>将响应信息作为字符串返回.只读</td>
+        </tr>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/responsexml.html"><font color="#2c4f83">responseXML</font></a></td>
+            <td>将响应信息格式化为Xml Document对象并返回，只读</td>
+        </tr>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/status.html"><font color="#2c4f83">status</font></a></td>
+            <td>返回当前请求的http状态码.只读</td>
+        </tr>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/statustext.html"><font color="#2c4f83">statusText</font></a></td>
+            <td>返回当前请求的响应行状态，只读</td>
+        </tr>
+    </tbody>
+</table>
+</p>
+<p>* 表示此属性是W3C文档对象模型的扩展.</p>
+<h4>方法：</h4>
+<p>
+<table class="t1" border="1" cellpadding="3">
+    <tbody>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/abort.html"><font color="#2c4f83">abort</font></a></td>
+            <td>取消当前请求</td>
+        </tr>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/getallresponseheaders.html"><font color="#2c4f83">getAllResponseHeaders</font></a></td>
+            <td>获取响应的所有http头</td>
+        </tr>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/getresponseheader.html"><font color="#2c4f83">getResponseHeader</font></a></td>
+            <td>从响应信息中获取指定的http头</td>
+        </tr>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/open.html"><font color="#2c4f83">open</font></a></td>
+            <td>创建一个新的http请求，并指定此请求的方法、URL以及验证信息(用户名/密码)</td>
+        </tr>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/send.html"><font color="#2c4f83">send</font></a></td>
+            <td>发送请求到http服务器并接收回应</td>
+        </tr>
+        <tr>
+            <td><a href="mk:@MSITStore:F: AJAX ajax教程.chm::/manual/setrequestheader.html"><font color="#2c4f83">setRequestHeader</font></a></td>
+            <td>单独指定请求的某个http头</td>
+        </tr>
+    </tbody>
+</table>
+</p></div></body></html>

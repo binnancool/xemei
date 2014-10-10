@@ -1,0 +1,24 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>vi命令</title></head><body><h1>vi命令</h1><div>vi 文本编辑器是visual edit 的缩写，是使用最为广泛的一种文本编辑器。<br>
+  Vi编辑器的基本使用方法！ <br>
+　　1、vi的基本概念 <br>
+　　　　基本上vi可以分为三种状态，分别是命令模式（command mode）、插入模式（Insert mode）和底行模式（last line mode），各模式的功能区分如下：　　<br>
+　　1) 命令行模式command mode） <br>
+　　　控制屏幕光标的移动，字符、字或行的删除，移动复制某区段及进入Insert mode下，或者到 last line mode。　　<br>
+　　2) 插入模式（Insert mode） <br>
+　　　只有在Insert mode下，才可以做文字输入，按「ESC」键可回到命令行模式。 <br>
+　　3) 底行模式（last line mode） <br>
+　　　将文件保存或退出vi，也可以设置编辑环境，如寻找字符串、列出行号……等。 <br>
+　　2、vi的基本操作 <br>
+　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  a) 进入vi <br>
+　　 　　在系统提示符号输入vi及文件名称后，就进入vi全屏幕编辑画面： <br>
+　　 　　$ vi myfile <br>
+　　　<br>
+　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  b) 切换至插入模式（Insert mode）编辑文件 <br>
+　　　　　在命令行模式（command mode）下按一下字母i就可以进入插入模式（Insert mode），这时候你就可以开始输入文字了。 　　<br>
+　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; c) Insert 的切换 <br>
+　　　　　按一下ESC键转到命令行模式（command mode）。 <br>
+　　  　d) 退出vi及保存文件 <br>
+　　　　　在命令行模式（command mode）下，按一下「：」冒号键进入「Last line mode」，例如： 　　<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  　　: w filename （输入 「w filename」将文章以指定的文件名filename保存） 　　<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  　　: wq (输入「wq」，存盘并退出vi) 　　<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  : q! (输入q!， 不存盘强制退出vi) 　</div></body></html>

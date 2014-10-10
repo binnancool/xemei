@@ -1,0 +1,38 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Html与jsp网页中书签的使用</title></head><body><h1>Html与jsp网页中书签的使用</h1><div><p>当网页内容太长或要导航到其它页面的一个具体位置时，可以使用 Html 或Jsp中书签。<br>
+1.同一个web页面链接<br>
+<br>
+首先设计书签<br>
+<br>
+&lt;a name=&rdquo;top&rdquo;&gt;&lt;/a&gt;<br>
+<br>
+<br>
+在不同位置定义<br>
+<br>
+&lt;a href=&rdquo;#top&rdquo;&gt;返回到top位置&lt;/a&gt;<br>
+<br>
+<br>
+2.不同的页面之间转接<br>
+<br>
+如果是在不同的页面之间链接时要在href属性中加上网页名称。<br>
+<br>
+First.html或者First.jsp中定义了书签<br>
+<br>
+&lt;a name=&rdquo;top&rdquo;&gt;Top的位置&lt;/a&gt;<br>
+<br>
+<br>
+现在要从Second.html或者Second.jsp中转入First.html或者First.jsp并且将位置定到top所在的位置<br>
+<br>
+可以设置<br>
+<br>
+&lt;a href=&rdquo;first.html#top&rdquo;&gt;return first Top&lt;/a&gt;</p>
+<p> </p>
+<p><strong>如果是按钮的submit，可以写JavaScript脚本：</strong></p>
+<p><strong>&lt;script type=&quot;text/javascript&quot; language=&quot;javascript&quot;&gt;<br>
+function ToTop()<br>
+{ <br>
+window.location.href=&quot;First.jsp#Top&quot;;<br>
+}</strong></p>
+<p><strong>&lt;/script&gt;</strong></p>
+<p> </p>
+<p><strong>&lt;input type=&quot;button&quot; value=&quot; 提交 &quot;<br>
+&nbsp;&nbsp;&nbsp;  onclick=&quot;ToTop()&quot; style=&quot;BACKGROUND-COLOR: #ffffff&quot;&gt;</strong></p></div></body></html>

@@ -1,0 +1,104 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Windows到Linux应用程序远程部署方案</title></head><body><h1>Windows到Linux应用程序远程部署方案</h1><div><p style="text-indent: -18pt; margin: 0cm 0cm 0pt 18pt; mso-list: l0 level1 lfo1" class="MsoNormal"><span><span style="mso-list: Ignore"><font face="Times New Roman">1、<span style="font: 7pt Times New Roman"> </span></font></span></span><span>环境描述</span></p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"><span><font face="Times New Roman">Windows XP</font></span><span>、</span><span><font face="Times New Roman">Windows XP</font></span><span>上的</span><span><font face="Times New Roman">VMware Workstation</font></span><span>虚拟机、虚拟机上安装的</span><span><font face="Times New Roman">CentOS5.0</font></span></p>
+<p style="text-indent: -18pt; margin: 0cm 0cm 0pt 18pt; mso-list: l0 level1 lfo1" class="MsoNormal"><span><span style="mso-list: Ignore"><font face="Times New Roman">2、<span style="font: 7pt Times New Roman"> </span></font></span></span><span>从</span><span><font face="Times New Roman">Windows XP</font></span><span>复制文件到</span><span><font face="Times New Roman">CentOS5.0</font></span><span>的方法</span></p>
+<p style="text-indent: -18pt; margin: 0cm 0cm 0pt 39pt; mso-list: l0 level2 lfo1" class="MsoNormal"><font face="Times New Roman"><span><span style="mso-list: Ignore">1）<span style="font: 7pt Times New Roman"> </span></span></span><span>ftp</span></font><span>方法：</span><span><font face="Times New Roman">Windows XP</font></span><span>自带</span><span><font face="Times New Roman">ftp</font></span><span>客户端程序；</span><span><font face="Times New Roman">CentOS5.0</font></span><span>上部署</span><span><font face="Times New Roman">ftp</font></span><span>服务器程序。</span></p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-list: l0 level2 lfo1" class="MsoNormal"><font face="Times New Roman"><span><span style="mso-list: Ignore">2）<span style="font: 7pt Times New Roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </span></span></span><span>Windows XP</span></font><span>：</span></p>
+<p style="text-indent: 26.35pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.5" class="MsoNormal"><strong style="mso-bidi-font-weight: normal"><span><font face="Times New Roman">putty(SSH</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>的</span><span><font face="Times New Roman">Windows</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>客户端，用于与</span><span><font face="Times New Roman">CentOS5.0</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>系统建立连接</span><span><font face="Times New Roman">)</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>；</span></strong></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><strong style="mso-bidi-font-weight: normal"><span><font face="Times New Roman"><span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;  </span>putty</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>自带的</span><span><font face="Times New Roman">pscp</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>、</span><span><font face="Times New Roman">psftp</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>、</span><span><font face="Times New Roman">plink</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>提供命令行的</span><span><font face="Times New Roman">Windows XP</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>和</span><span><font face="Times New Roman">CentOS5.0</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>文件互相复制；</span></strong></p>
+<p style="text-indent: 26.35pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.5" class="MsoNormal"><strong style="mso-bidi-font-weight: normal"><span><font face="Times New Roman">winscp</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>可视化界面的</span><span><font face="Times New Roman">Windows XP</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>和</span><span><font face="Times New Roman">CentOS5.0</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>文件互相复制软件；</span></strong></p>
+<p style="margin: 0cm 0cm 0pt 39pt" class="MsoNormal"><span><font face="Times New Roman">CentOS5.0</font></span><span>：</span></p>
+<p style="margin: 0cm 0cm 0pt 39pt" class="MsoNormal"><strong style="mso-bidi-font-weight: normal"><span>自带</span><span><font face="Times New Roman">SSH</font></span></strong><strong style="mso-bidi-font-weight: normal"><span>服务器程序。</span></strong></p>
+<p style="text-indent: -18pt; margin: 0cm 0cm 0pt 18pt; mso-list: l0 level1 lfo1" class="MsoNormal"><span><span style="mso-list: Ignore"><font face="Times New Roman">3、<span style="font: 7pt Times New Roman"> </span></font></span></span><span>示意图</span></p>
+<p style="text-indent: -18pt; margin: 0cm 0cm 0pt 18pt; mso-list: l0 level1 lfo1" class="MsoNormal"> </p>
+<span>
+<div forimg="1">
+<p><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd%5Ftaiyangxue/pic/item/fe887e947d8ac163d0135eca.jpg"></p>
+<p> </p>
+</div>
+</span>
+<p style="text-indent: -18pt; margin: 0cm 0cm 0pt 18pt; mso-list: l0 level1 lfo1" class="MsoNormal"> </p>
+<p style="text-indent: -18pt; margin: 0cm 0cm 0pt 18pt; mso-list: l0 level1 lfo1" class="MsoNormal"> </p>
+<p style="text-indent: -18pt; margin: 0cm 0cm 0pt 18pt; mso-list: l0 level1 lfo1" class="MsoNormal"> </p>
+<div forimg="1"> </div>
+<p style="text-indent: -18pt; margin: 0cm 0cm 0pt 18pt; mso-list: l0 level1 lfo1" class="MsoNormal"> </p>
+<p style="text-indent: -18pt; margin: 0cm 0cm 0pt 18pt; mso-list: l0 level1 lfo1" class="MsoNormal"> </p>
+<p style="text-indent: -18pt; margin: 0cm 0cm 0pt 18pt; mso-list: l0 level1 lfo1" class="MsoNormal"> </p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"> </p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"> </p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"> </p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"><span>注意事项：</span></p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"> </p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"><span><font face="Times New Roman">1）<strong>pscp、psftp、pslink（基于SSH）也可以单独下载，在cmd中运行时，需要设置环境变量PATH，使其包含pscp、psftp、plink可执行文件的目录。在cmd输入pscp，显示其用法，说明配置成功，psftp、plink相同。</strong></font></span></p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"> </p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"><span><font face="Times New Roman">2）<strong>使用putty或telnet登陆到CentOS上时，就是在Linux环境下，不能使用Windows下的命令。</strong></font></span></p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"> </p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"><span><font face="Times New Roman">3）<strong>如果在Windows XP上部署了SSH服务器程序，那么在putty登陆到CentOS5.0后，可以使用scp（基于SSH）进行Windows XP和CentOS5.0文件互相复制。</strong></font></span></p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"> </p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"><span><font face="Times New Roman">4）<strong>如果CentOS5.0配置了ftp服务器，Windows XP端可以通过ftp上传或下载CentOS5.0上的文件。</strong></font></span></p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"> </p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"><span><font face="Times New Roman">5）<strong>不同的Linux之间copy文件常用有3种方法 ：</strong></font></span></p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"><span><font face="Times New Roman"><strong><br>
+第一种就是ftp</strong>，也就是其中一台Linux安装ftp Server，这样可以另外一台使用ftp的client程序来进行文件的copy；</font></span></p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"><span><font face="Times New Roman"><br>
+<strong>第二种方法就是采用samba服务</strong>，类似Windows 文件copy的方式来操作，比较简洁方便；</font></span></p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"><span><font face="Times New Roman"><br>
+<strong>第三种就是利用scp命令来进行文件复制</strong>。</font></span></p>
+<p style="text-indent: 21pt; margin: 0cm 0cm 0pt; mso-char-indent-count: 2.0" class="MsoNormal"><span><font face="Times New Roman"><br>
+<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  scp是有Security的文件copy，基于ssh登录</strong>。操作起来比较方便，比如要把当前一个文件copy到远程另外一台主机上，可以如下命令。<br>
+<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  scp /home/daisy/full.tar.gz </strong><a href="mailto:root@172.19.2.75:/home/root"><strong>root@172.19.2.75:/home/root</strong></a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  然后会提示你输入另外那台172.19.2.75主机的root用户的登录密码，接着就开始cp和ungzip了<br>
+如果想反过来操作，把文件从远程主机copy到当前系统，也很简单如下：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <strong>scp </strong><a href="mailto:root@172.19.2.75:/home/root"><strong>root@172.19.2.75:/home/root</strong></a><strong> /home/daisy/full.tar.gz<br>
+</strong></font></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">4</font></span><span>、</span><span><font face="Times New Roman">pscp</font></span><span>、</span><span><font face="Times New Roman">psftp</font></span><span>命令的具体使用</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">1</font></span><span>）</span><span><font face="Times New Roman">pscp</font></span><span>在</span><span><font face="Times New Roman">cmd</font></span><span>中的命令行，实现把</span><span><font face="Times New Roman">Windows XP</font></span><span>上的文件复制到远程</span><span><font face="Times New Roman">CentOS5.0</font></span><span>上，具体命令</span><span><font face="Times New Roman">:</font></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">pscp e:\SMSAPI.jar </font><a href="mailto:root@192.168.150.128:/telnetTest"><font face="Times New Roman">root@192.168.150.128:/telnetTest</font></a></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><a href="mailto:root@192.168.150.128 s"><font face="Times New Roman">root@192.168.150.128&rsquo;s</font></a><font face="Times New Roman"> password:******</font></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>结果：把</span><span><font face="Times New Roman">Windows XP</font></span><span>上</span><span><font face="Times New Roman">E</font></span><span>盘根目录下的文件</span><span><font face="Times New Roman">SMSAPI.jar</font></span><span>，复制到了</span><span><font face="Times New Roman">CentOS5.0</font></span><span>上</span><span><font face="Times New Roman">/telnetTest</font></span><span>目录下。</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">2</font></span><span>）</span><span><font face="Times New Roman">psftp</font></span><span>在</span><span><font face="Times New Roman">cmd</font></span><span>中的命令行，实现把</span><span><font face="Times New Roman">Windows XP</font></span><span>上的文件复制到远程</span><span><font face="Times New Roman">CentOS5.0</font></span><span>上，具体命令</span><span><font face="Times New Roman">:</font></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">psftp</font></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">open 192.168.150.128</font></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">login as</font></span><span>：</span><span><font face="Times New Roman">root</font></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><a href="mailto:root@192.168.150.128 s"><font face="Times New Roman">root@192.168.150.128&rsquo;s</font></a><font face="Times New Roman"> password:******</font></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">cd /telnetTest (</font></span><span>改变</span><span><font face="Times New Roman">CentOS5.0</font></span><span>的当前目录</span><span><font face="Times New Roman">)</font></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">lcd e:\</font></span><span>（改变</span><span><font face="Times New Roman">Windows XP</font></span><span>的当前目录）</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">put SMSAPI.ja</font></span><span><font face="Times New Roman">r</font></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"> </p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman"><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd%5Ftaiyangxue/pic/item/79643bb0a15f2b7c08230255.jpg"></font></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"> </p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"> </p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"> </p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>结果：把</span><span><font face="Times New Roman">Windows XP</font></span><span>上</span><span><font face="Times New Roman">E</font></span><span>盘根目录下的文件</span><span><font face="Times New Roman">SMSAPI.jar</font></span><span>，复制到了</span><span><font face="Times New Roman">CentOS5.0</font></span><span>上</span><span><font face="Times New Roman">/telnetTest</font></span><span>目录下。</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"> </p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>5、putty远程登陆CentOS5.0系统</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;&nbsp;&nbsp;&nbsp;  1）直接运行</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  cd /telnetTest （进入SMSAPI.jar所在目录）</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  java -jar SMSAPI.jar(运行程序)</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;&nbsp;&nbsp;&nbsp;  2）把运行SMSAPI.jar的命令编辑为shell可执行文件sms</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  cd /telnetTest</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  vi sms(按<strong>i</strong>键，进入输入模式，输入：#！/bin/bash</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  cd /telnetTest</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  java -jar SMSAPI.jar</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  :wq(保存退出))</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  chmod +x sms（改成可执行文件）</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ./sms(运行程序)</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"> </p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"> </p>
+<p> </p>
+<div forimg="1"> </div>
+<p> </p>
+<div forimg="1"> </div>
+<p> </p>
+<div forimg="1"> </div>
+<p> </p>
+<div forimg="1">
+<p> </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;  3）把sms文件所在的目录，设置在环境变量的PATH中</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;  vi /etc/profile(打开配置文件所在的文件)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;  在最后一行加上：export PATH=&quot;$PATH:/telnetTest&quot;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;  :wq(保存退出)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  reboot(重启CentOS5.0，使配置文件生效)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  sms（在任何目录下，直接输入sms就可运行SMSAIPI.jar）</p>
+<p>至此远程部署完毕。</p>
+<p><strong>存在问题：</strong>在CentOS5.0上直接运行smsapi.jar正常运行，而通过putty或telnet远程运行CentOS5.0上的SMSAPI.jar就出现异常。smsapi.jar是有界面的，我有把smsapi.jar修改为无界面的可执行程序，可以远程运行。没有找到原因…………</p>
+</div></div></body></html>

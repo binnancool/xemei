@@ -1,0 +1,49 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>linux的grep命令</title></head><body><h1>linux的grep命令</h1><div><p> </p>
+<p><strong>实例：grep connect *。log</strong></p>
+<p><strong>显示当前文件夹中所有以。log结束的文件中包含connect的行</strong></p>
+<p> </p>
+<p><strong>1. grep简介<br>
+</strong>grep （global search regular expression_r_r(RE) and print out the line,全面搜索正则表达式并把行打印出来）是一种强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹配的行打印出来。Unix的grep家族包括grep、egrep和fgrep。egrep和fgrep的命令只跟grep有很小不同。egrep是grep的扩展，支持更多的re元字符， fgrep就是fixed grep或fast grep，它们把所有的字母都看作单词，也就是说，正则表达式中的元字符表示回其自身的字面意义，不再特殊。linux使用GNU版本的grep。它功能更强，可以通过-G、-E、-F命令行选项来使用egrep和fgrep的功能。<br>
+grep的工作方式是这样的，它在一个或多个文件中搜索字符串模板。如果模板包括空格，则必须被引用，模板后的所有字符串被看作文件名。搜索的结果被送到屏幕，不影响原文件内容。<br>
+grep可用于shell脚本，因为grep通过返回一个状态值来说明搜索的状态，如果模板搜索成功，则返回0，如果搜索不成功，则返回1，如果搜索的文件不存在，则返回2。我们利用这些返回值就可进行一些自动化的文本处理工作。<br>
+<strong>5. Grep命令选项<br>
+</strong>-?<br>
+同时显示匹配行上下的？行，如：grep -2 pattern filename同时显示匹配行的上下2行。<br>
+-b，--byte-offset<br>
+打印匹配行前面打印该行所在的块号码。<br>
+-c,--count<br>
+只打印匹配的行数，不显示匹配的内容。<br>
+-f File，--file=File<br>
+从文件中提取模板。空文件中包含0个模板，所以什么都不匹配。<br>
+-h，--no-filename<br>
+当搜索多个文件时，不显示匹配文件名前缀。<br>
+-i，--ignore-case<br>
+忽略大小写差别。<br>
+-q，--quiet<br>
+取消显示，只返回退出状态。0则表示找到了匹配的行。<br>
+-l，--files-with-matches<br>
+打印匹配模板的文件清单。<br>
+-L，--files-without-match<br>
+打印不匹配模板的文件清单。<br>
+-n，--line-number<br>
+在匹配的行前面打印行号。<br>
+-s，--silent<br>
+不显示关于不存在或者无法读取文件的错误信息。<br>
+-v，--revert-match<br>
+反检索，只显示不匹配的行。<br>
+-w，--word-regexp<br>
+如果被\引用，就把表达式做为一个单词搜索。<br>
+-V，--version<br>
+显示软件版本信息。<br>
+<strong>6. 实例</strong><br>
+要用好grep这个工具，其实就是要写好正则表达式，所以这里不对grep的所有功能进行实例讲解，只列几个例子，讲解一个正则表达式的写法。<br>
+$ ls -l | grep '^a'<br>
+通过管道过滤ls -l输出的内容，只显示以a开头的行。<br>
+$ grep 'test' d*<br>
+显示所有以d开头的文件中包含test的行。<br>
+$ grep 'test' aa bb cc<br>
+显示在aa，bb，cc文件中匹配test的行。<br>
+$ grep '[a-z]\{5\}' aa<br>
+显示所有包含每个字符串至少有5个连续小写字符的字符串的行。<br>
+$ grep 'w\(es\)t.*\1' aa<br>
+如果west被匹配，则es就被存储到内存中，并标记为1，然后搜索任意个字符（.*），这些字符后面紧跟着另外一个es（\1），找到就显示该行。如果用egrep或grep -E，就不用&quot;\&quot;号进行转义，直接写成'w(es)t.*\1'就可以了。</p></div></body></html>

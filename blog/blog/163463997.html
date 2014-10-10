@@ -1,0 +1,277 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>putty提供的两个文件传输工具PSCP、PSFTP详细介绍</title></head><body><h1>putty提供的两个文件传输工具PSCP、PSFTP详细介绍</h1><div><h2>用 SSH 来传输文件</h2>
+<p>PuTTY 提供了两个文件传输工具</p>
+<ul>
+    <li>PSCP (PuTTY Secure Copy client)</li>
+    <li>PSFTP (PuTTY SFTP client)</li>
+</ul>
+<p>PSCP 通过 SSH 连接，在两台机器之间安全的传输文件，可以用于任何 SSH（包括 SSH v1、SSH v2） 服务器。<br>
+PSFTP 则是 SSH-2 中新增的特性，使用的是新的 SFTP 协议，使用上与传统的 FTP 类似。事实上 PSCP 如果发现 SFTP 可用，PSCP就会使用 SFTP 协议来传输文件，否则还是 SCP 协议。PSFTP 与 PSCP 相比，PSFTP 的优点是可以与服务器进行交互，遍历服务器上的文件系统，在一个会话中上传或下载多个文件。而 PSCP 只能一次传输一个文件，传输完毕后立刻终止会话。</p>
+<h3>PSCP 的使用</h3>
+<p>在控制台直接执行 pscp 可以看到帮助</p>
+<blockquote>C:\&gt;pscp<br>
+PuTTY Secure Copy client<br>
+Release 0.58<br>
+Usage: pscp [options] [user@]host:source target<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  pscp [options] source [source...] [user@]host:target<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  pscp [options] -ls [user@]host:filespec<br>
+Options:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  print version information and exit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -pgpfp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  print PGP key fingerprints and exit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -p&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  preserve file attributes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -q&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  quiet, don't show statistics<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -r&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  copy directories recursively<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  show verbose messages<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -load sessname&nbsp;&nbsp;&nbsp;&nbsp;  Load settings from saved session<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -P port&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  connect to specified port<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -l user&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  connect with specified username<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -pw passw login with specified password<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -1 -2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  force use of particular SSH protocol version<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -4 -6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  force use of IPv4 or IPv6<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  enable compression<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -i key&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  private key file for authentication<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -batch&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  disable all interactive prompts<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -unsafe&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  allow server-side wildcards (DANGEROUS)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -sftp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  force use of SFTP protocol<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -scp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  force use of SCP protocol<br>
+<br>
+C:\&gt;<br>
+</blockquote>
+<p>可以看出 PSCP 的使用是很简单的，把常用的几个选项说一下：</p>
+<ul>
+    <li>-q 安静模式，传输文件时什么也不显示，否则会显示出文件的传输进度，默认是关闭的</li>
+    <li>-P port 指定服务器的 SSH 端口，注意这个是大写字母 P，默认是 -P 22，如果主机的 SSH 端口就是 22，就不用指定了</li>
+    <li>-l user 指定以哪个用户的身份登录主机，如果没有指定，则 PSCP 会在 PuTTY 保存的同名 Session 中获得默认的用户名称。用户名称也可以和主机名称写在一起，用 @ 分割开，比如：username@server</li>
+    <li>-pw passwd 指定登录时所用的口令为 passwd</li>
+    <li>-i keyfile 就是指定登录时所用的密钥文件</li>
+    <li>最后面指定的主机名也可以是 PuTTY 中保存的 Session 名称。比如我们在 PuTTY 中保存了一个名为 foobarserver 的会话，而我们所在的网络又的确没有名为 foobarserver 的主机名称。而在这个 foobarserver 会话中保存的主机名称是 demo-server，保存的自动登录的用户是 taylor。那么用命令<br>
+    <blockquote>pscp c:\autoexec.bat foobarserver:backup/<br>
+    </blockquote>就把本地的 c:\autoexec.bat 复制到了主机 demo-server 上的用户 taylor 所在的主目录下的 backup 子目录中（这个路径可能是 /home/taylor/backup</li>
+</ul>
+<p><br>
+所以 PSCP 大致用法的例子就是：<br>
+pscp -P 22 -i c:\path\your-private-key.ppk -C username@server:/remote/path/<br>
+下面还是用一些实例来说明会比较简单一些：<br>
+把本地的 C:\path\foo.txt 复制到远程主机 192.168.6.200 的 /tmp 目录下</p>
+<blockquote>pscp c:\path\foo.txt 192.168.6.200:/tmp<br>
+</blockquote>
+<p>把本地的 C:\path\foo.txt 复制到主机 192.168.6.200 的 /tmp 目录下，但是以主机上的用户 taylor 的权限执行</p>
+<blockquote>pscp c:\path\foo.txt <span style="font-weight: bold">taylor@</span>192.168.6.200:/tmp<br>
+</blockquote>
+<p>或者是</p>
+<blockquote>pscp <span style="font-weight: bold">-l taylor</span> c:\path\foo.txt 192.168.6.200:/tmp<br>
+</blockquote>
+<p>把本地的 C:\path\foo.txt 传送到主机 192.168.6.200 的 /tmp 目录下，但是主机的 SSH 端口是 3122</p>
+<blockquote>pscp <span style="font-weight: bold">-P 3122</span> c:\path\foo.txt 192.168.6.200:/tmp<br>
+</blockquote>
+<p>把本地的 C:\path\foo.txt 复制到主机 192.168.6.200 的用户 taylor 的主目录下</p>
+<blockquote>pscp c:\path\foo.txt taylor@192.168.6.200:.<br>
+</blockquote>
+<p>把主机 192.168.6.200 上的用户 taylor 主目录下的所有 *.tgz 文件拷贝到本地的 c:\backup 目录中，如果 SSH 版本是 SSH v1，那这个命令就会出错。</p>
+<blockquote>pscp taylor@192.168.6.200:*.tgz c:\backup<br>
+</blockquote>
+<h3>再来看看 PSFTP</h3>
+<p>在控制台执行命令 psftp -h，可以得到 psftp 的帮助</p>
+<blockquote>C:\&gt;psftp -h<br>
+PuTTY Secure File Transfer (SFTP) client<br>
+Release 0.58<br>
+Usage: psftp [options] [user@]host<br>
+Options:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  print version information and exit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -pgpfp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  print PGP key fingerprints and exit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -b file&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  use specified batchfile<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -bc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  output batchfile commands<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -be&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  don't stop batchfile processing if errors<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  show verbose messages<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -load sessname&nbsp;&nbsp;&nbsp;&nbsp;  Load settings from saved session<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -l user&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  connect with specified username<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -P port&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  connect to specified port<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -pw passw login with specified password<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -1 -2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  force use of particular SSH protocol version<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -4 -6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  force use of IPv4 or IPv6<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  enable compression<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -i key&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  private key file for authentication<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -batch&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  disable all interactive prompts<br>
+<br>
+C:\&gt;<br>
+</blockquote>
+<p>用法与 PSCP 大同小异，虽然有个 -load 选项，其实这个没啥用，后面用主机名的时候，与 PSCP 一样直接用上会话名称就可以了。<br>
+用 PSFTP 登录到服务器上以后，操作与 FTP 差不多，这里简单的说一下吧：</p>
+<div>
+<ul>
+    <li>open 登录主机<br>
+    open [username@]&lt;sessname|hostname|ip&gt; [port]<br>
+    比如：
+    <ul>
+        <li>open taylor@demo-server 3022<br>
+        就是以用户 taylor 的身份，登陆到主机 demo-server 上，SSH 端口是 3022</li>
+        <li>open demo-server<br>
+        登陆 demo-server，这里的 demo-server 可以是PuTTY 中已经保存的会话名称，也可以是主机的名称，如果主机名称与会话名称相同，以会话名称为准。</li>
+    </ul>
+    </li>
+    <li>close 关闭 SFTP 连接<br>
+    这个没啥说的，close 就关闭了 SFTP 连接</li>
+    <li>quit 结束本次的 SFTP 会话<br>
+    也没啥用法，就是关闭了 PSFTP 这个程序</li>
+    <li>help [command] 帮助<br>
+    直接打 help 就可以看到帮助指令，后面指定上 一个命令就可以查看该命令的帮助，比如： help open</li>
+    <li>cd [directory] 改变当前目录</li>
+    <li>pwd 察看当前目录</li>
+    <li>lcd [directory] 改变本地目录</li>
+    <li>lpwd 察看本地当前目录</li>
+    <li>get [-r] &lt;filename|directory&gt; 从服务器下载一个文件/目录，这个命令不能用通配符，参数 -r 可以递归下载整个目录</li>
+    <li>put [-r] &lt;filename|directory&gt; [dest] 把文件/目录上传到服务器，这个命令不能用通配符，参数 -r 可以递归上传整个目录</li>
+    <li>mget [-r] &lt;filename|directory&gt; 从服务器下载一批文件/目录，可以用通配符，-r 的含义与 get 一样</li>
+    <li>mget [-r] &lt;filename|directory&gt; [dest] 把一批文件/目录上传到服务器，可以用通配符，-r 的含义与 put 一样</li>
+    <li>reget [-r] &lt;filename|directory&gt; 从服务器续传下载一个文件/目录，这个命令不能用通配符，-r 的含义与 get 一样</li>
+    <li>reput [-r] &lt;filename|directory&gt; [dest] 把一批文件/目录续传上传到服务器，这个命令不能用通配符，-r 的含义与 put 一样</li>
+    <li>dir [directory] 列目录</li>
+    <li>ls 和 dir 一样</li>
+    <li>chmod [file|directory] 改变文件的权限，与 Unix 的 chmod 命令类似</li>
+    <li>del &lt;filename&gt; 删除文件，要注意的是 del 只能删除文件</li>
+    <li>rm 与 del 一样</li>
+    <li>mkdir &lt;new-directory-name&gt; 创建一个目录</li>
+    <li>rmdir &lt;directory&gt; 删除一个空目录，只有空目录才可以被删除</li>
+    <li>mv &lt;source-file|source-directory&gt; &lt;dest-file|dest-directory&gt; 改名/移动。如果源和目的都是文件或目录，则是改名。如果目的是目录的话，则是移动。</li>
+    <li>! 在本地命令前加一个感叹号，就可以直接执行</li>
+</ul>
+</div>
+<p> </p>
+<h3>其他可选的 SFTP 客户端</h3>
+<p>FileZilla : http://filezilla.sf.net<br>
+WinSCP : http://www.winscp.net</p>
+<h2>用 Plink 更方便快捷的执行远程主机上的命令</h2>
+<p>Plink 是 PuTTY 的命令行连接工具，主要用于自动化工作的处理。<br>
+直接在控制台执行 plink，可以看到 Plink 的帮助</p>
+<blockquote>C:\&gt;plink<br>
+PuTTY Link: command-line connection utility<br>
+Release 0.58<br>
+Usage: plink [options] [user@]host [command]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  (&quot;host&quot; can also be a PuTTY saved session name)<br>
+Options:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  print version information and exit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -pgpfp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  print PGP key fingerprints and exit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  show verbose messages<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -load sessname&nbsp;&nbsp;&nbsp;&nbsp;  Load settings from saved session<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -ssh -telnet -rlogin -raw<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  force use of a particular protocol<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -P port&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  connect to specified port<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -l user&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  connect with specified username<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -batch&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  disable all interactive prompts<br>
+The following options only apply to SSH connections:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -pw passw login with specified password<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -D [listen-IP:]listen-port<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Dynamic SOCKS-based port forwarding<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -L [listen-IP:]listen-port:host:port<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Forward local port to remote address<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -R [listen-IP:]listen-port:host:port<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Forward remote port to local address<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -X -x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  enable / disable X11 forwarding<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -A -a&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  enable / disable agent forwarding<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -t -T&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  enable / disable pty allocation<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -1 -2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  force use of particular protocol version<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -4 -6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  force use of IPv4 or IPv6<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  enable compression<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -i key&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  private key file for authentication<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -m file&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  read remote command(s) from file<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  remote command is an SSH subsystem (SSH-2 only)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  -N&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  don't start a shell/command (SSH-2 only)<br>
+<br>
+C:\&gt;<br>
+</blockquote>
+<p>看上去 Plink 的使用方法、参数与PSCP、PSFTP都很类似。</p>
+<ul>
+    <li>-P port 指定服务器的 SSH 端口，注意这个是大写字母 P，默认是 -P 22，如果主机的 SSH 端口就是 22，就不用指定了</li>
+    <li>-l user 指定以哪个用户的身份登录主机，如果没有指定，则 PSCP 会在 PuTTY 保存的同名 Session 中获得默认的用户名称。用户名称也可以和主机名称写在一起，用 @ 分割开，比如：username@server</li>
+    <li>-pw passwd 指定登录时所用的口令为 passwd</li>
+    <li>-i keyfile 就是指定登录时所用的密钥文件</li>
+    <li>-m file 如果执行的命令很多的话，可以把命令写到文件中，然后用这个参数来指定</li>
+</ul>
+<p>还是用一些实际的例子来说明一下 Plink 吧<br>
+还记得前面说到 PuTTY 的自动执行命令那个配置么？在说到那个配置的时候，我们演示了一个简单的 Tomcat 重新启动的命令，这个命令是要写在 PuTTY 的 Remote command 里面去。现在我们用 Plink 来实现同样的功能：<br>
+假设连接的主机是 192.168.6.200，SSH 的端口是 3022，用户是 taylor：</p>
+<blockquote>plink -P 3022 taylor@192.168.6.200 export CATALINA_HOME=&quot;~/apache-tomcat-5.5.17&quot;;export JAVA_HOME=&quot;~/jdk1.5.0_07&quot;;export PATH=$JAVA_HOME/bin;$PATH ; cd $CATALINA_HOME/bin;./shutdown.sh;./startup.sh;tail -f $CATALINA_HOME/logs/catalina.out<br>
+</blockquote>
+<p>如果在 PuTTY 中保存了一个名为 192.168.6.200 的会话，注意，这个会话的名称与主机 IP 一样，在会话中已经正确保存了端口 3022，指定了默认的用户是 taylor，现在这个命令就可以简化为：</p>
+<blockquote>plink 192.168.6.200 export CATALINA_HOME=&quot;~/apache-tomcat-5.5.17&quot;;export JAVA_HOME=&quot;~/jdk1.5.0_07&quot;;export PATH=$JAVA_HOME/bin;$PATH ; cd $CATALINA_HOME/bin;./shutdown.sh;./startup.sh;tail -f $CATALINA_HOME/logs/catalina.out<br>
+</blockquote>
+<p>用 date 命令查看一下主机上的时间，并且格式化输出：</p>
+<blockquote>plink 192.168.6.200 date &quot;+%F %T&quot;<br>
+</blockquote>
+<p>大家实际执行一下命令看看，会发现，这个命令并没有返回我们期望的结果，而是返回了一个错误：</p>
+<blockquote>C:\&gt;plink 192.168.6.200 date &quot;+%F %T&quot;<br>
+date: too many non-option arguments: %T<br>
+Try `date --help' for more information.<br>
+</blockquote>
+<p>可是在服务器上直接执行命令 date &quot;+%F %T&quot;，的确是正确无误的，哪里出了问题呢？这是因为Windows的控制台会把两个双引号之间的字符串作为一个参数传递给被执行的程序，而不会把双引号也传递给程序。我们做这样一个小小的实验来说明一下这个问题：<br>
+比如在 c:\tmp 文件夹里建立三个文件夹，名称分别为：&quot;foo&quot;、&quot;bar&quot;、&quot;foo bar&quot;。然后在 foo 这个文件夹里面建立一个名为&ldquo;foo.log&rdquo;的空文件，在&ldquo;bar&rdquo;这个文件夹里建立一个名为&ldquo;bar.log&rdquo;的空文件，在&ldquo;foo bar&rdquo;这个文件夹里建立一个名为&ldquo;foo-bar.log&rdquo;的空文件。<br>
+然后在控制台下进入 c:\tmp 这个文件夹，执行如下命令：</p>
+<blockquote>dir foo bar<br>
+</blockquote>
+<p>结果是列出&ldquo;foo bar&rdquo;这个文件夹里的内容，还是分别列出&ldquo;foo&rdquo;和&ldquo;bar&rdquo;文件夹里的东西呢？正确答案是后者。<br>
+要想正确列出&ldquo;foo bar&rdquo;文件夹里的东西，就需要用双引号把&quot;foo bar&quot;引起来</p>
+<blockquote>C:\tmp&gt;dir foo bar<br>
+Volume in drive C is System<br>
+Volume Serial Number is 9C51-A51C<br>
+<br>
+Directory of C:\tmp\foo<br>
+<br>
+2006-11-22&nbsp;&nbsp;&nbsp;&nbsp;  09:48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;DIR&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  .<br>
+2006-11-22&nbsp;&nbsp;&nbsp;&nbsp;  09:48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;DIR&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ..<br>
+2006-11-16&nbsp;&nbsp;&nbsp;&nbsp;  11:58&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  0 foo.log<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  1 File(s)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  0 bytes<br>
+<br>
+Directory of C:\tmp\bar<br>
+<br>
+2006-11-22&nbsp;&nbsp;&nbsp;&nbsp;  09:48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;DIR&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  .<br>
+2006-11-22&nbsp;&nbsp;&nbsp;&nbsp;  09:48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;DIR&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ..<br>
+2006-11-16&nbsp;&nbsp;&nbsp;&nbsp;  11:58&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  0 bar.log<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  1 File(s)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  0 bytes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  2 Dir(s)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  1,107,345,408 bytes free<br>
+<br>
+C:\tmp&gt;dir &quot;foo bar&quot;<br>
+Volume in drive C is System<br>
+Volume Serial Number is 9C51-A51C<br>
+<br>
+Directory of C:\tmp\foo bar<br>
+<br>
+2006-11-22&nbsp;&nbsp;&nbsp;&nbsp;  09:48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;DIR&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  .<br>
+2006-11-22&nbsp;&nbsp;&nbsp;&nbsp;  09:48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;DIR&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ..<br>
+2006-11-16&nbsp;&nbsp;&nbsp;&nbsp;  11:58&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  0 foo-bar.log<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  1 File(s)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  0 bytes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  2 Dir(s)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  1,107,345,408 bytes free<br>
+<br>
+C:\tmp&gt;<br>
+</blockquote>
+<p>说到这里，就会明白上面的那个命令 plink 192.168.6.200 date &quot;+%F %T&quot; 其实在主机上执行的真实命令是 date +%F %T，而不是命令行中指定的 date &quot;+%F %T&quot;。不过还好，Windows 的控制台可不认得单引号，所以上面那个命令的正确用法应该是：</p>
+<blockquote>c:\&gt;plink 192.168.6.200 date '+%F %T'<br>
+2006-11-22 09:39:57<br>
+</blockquote>
+<p>我经常需要登录到服务器上把 ADSL 重新拨号，可以把下面的命令写到一个文本文件中，比如保存到了 C:\adsl-restart.command.txt</p>
+<blockquote>echo &quot;stoping...&quot;<br>
+/sbin/adsl-stop<br>
+echo &quot;starting...&quot;<br>
+/sbin/adsl-start<br>
+echo &quot;done.&quot;<br>
+/sbin/adsl-status<br>
+</blockquote>
+<p>然后执行如下命令：</p>
+<blockquote>plink -m c:\adsl-restart.command.txt root@192.168.6.251<br>
+</blockquote>
+<p>我经常要查看 Tomcat 的运行日志</p>
+<blockquote>plink taylor@192.168.6.200 tail -f ~/apache-tomcat-5.5.17/logs/catalina.out<br>
+</blockquote>
+<p>每天都要看服务器上的剩余空间，就用这个命令：</p>
+<blockquote>plink taylor@192.168.6.200 df -k<br>
+</blockquote>
+<p>假设 www.chaifeng.com 连接着另外一个网段 10.204.26.0，有台内网IP 为 10.204.26.21 的 Solaris 8主机只能用 telnet 登录，为了防止被监听，我们可以用 Plink 建立一个隧道，隧道开放 120 秒钟，如果隧道没有被使用，就自动断开连接，然后我们在本地就可以用命令 telnet localhost 2623 的安全登录那台 Solaris 8 主机了。</p>
+<blockquote>plink -L 2623:10.204.26.21:23 www.chaifeng.com sleep 120<br>
+</blockquote>
+<p>在主机 www.chaifeng.com 上正在运行着 tor，默认的监听地址是 127.0.0.1:9050，用 Plink 建立一个隧道，然后浏览器上配置代理服务器为 127.0.0.1，端口是 9050，这样就能够安全的使用 tor 代理了，不用担心从我们的机器到主机 www.chaifeng.com 有被监听的可能了。</p>
+<blockquote>plink -C -N -L 9050:127.0.0.1:9050 taylor@www.chaifeng.com<br>
+</blockquote>
+<p>结合上 PSCP 我们还可以完成文件的每天备份</p>
+<blockquote>plink taylor@192.168.6.200 tar jcf $(date '+documents.%F.tar.bz2') ~/documents<br>
+pscp taylor@192.168.6.200:$(date '+documents.%F.tar.bz2') c:\backup\<br>
+plink taylor@192.168.6.200 rm -f $(date '+documents.%F.tar.bz2')<br>
+</blockquote>
+<p>如果把这些常用的操作写成批处理文件，到时候要重启一下 Tomcat，或者马上察看一下 Tomcat 日志，再或者只是要把 ADLS 重新拨号以下，只需要用鼠标一双击这个批处理文件，稍等一下就自动完成了。不比你打开 PuTTY，登录到服务器上，然后再一个一个的执行命令，最后还得注销来的方便快捷么？再</p></div></body></html>

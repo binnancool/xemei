@@ -1,0 +1,10 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>主机Windows XP，虚拟机Linux，主机文件Linux共享操作</title></head><body><h1>主机Windows XP，虚拟机Linux，主机文件Linux共享操作</h1><div><p>第一步：打开虚拟机 点vm-----install vmtools</p>
+<p>第二步：配置共享文件夹 vm-----settings--options 双击shared folders，在旁边添加文件夹，并选择always enable</p>
+<p>第三步：开始虚拟机Linux</p>
+<p>　　在终端键入一下命令</p>
+<p>　　cp /mnt/cdrom/VMwareTools-6.0.0-45731.tar.gz /usr/tmp</p>
+<p>　　cd /usr/tmp</p>
+<p>　　tar xzvf VMwareTools-6.0.0-45731.tar.gz</p>
+<p>　　cd vmware-tools-distrib</p>
+<p>　　./vmware-install.pl</p>
+<p>　　一路回车，等看到Enjoy Vmtools，成功。</p></div></body></html>

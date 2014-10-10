@@ -1,0 +1,8 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>VC的字符串处理，int转化为CString类型</title></head><body><h1>VC的字符串处理，int转化为CString类型</h1><div><p>1、 CString str；</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  itoa(num,str.GetBuffer(),10);num为int类型数值；10为代表十进制；str.GetBuffer()转化为char*类型；</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;  把num转化为str。</p>
+<p>2、CString类的方法：</p>
+<p>&nbsp;&nbsp;&nbsp;  <strong>Append（）：</strong>在字符串后连接其它字符串</p>
+<p>如：str=&ldquo;abc&rdquo;；str.ppend（&ldquo;cde&rdquo;）后，str为abcde；</p>
+<p><strong>Format（_T(%s%d),str,num）；</strong></p>
+<p>如：str=&ldquo;abc&rdquo;；num=100后，str为abc100</p></div></body></html>

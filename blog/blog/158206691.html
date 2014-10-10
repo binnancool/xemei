@@ -1,0 +1,12 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Windows系统Telnet访问VMware Workstation虚拟机上的CentOS系统</title></head><body><h1>Windows系统Telnet访问VMware Workstation虚拟机上的CentOS系统</h1><div><p>1、CentOS系统中，默认安装了telnet的客户端，但是没有安装telnet的服务器端。因此首先要做的是安装telnet服务器，我首先想到的是在网上下载了telnet-server-0.17-38.el5.i386，但是在安装过程中需要安装xinetd，于是我找到其官方网站：<a href="http://www.xinetd.org/">http://www.xinetd.org</a>下载；结果又出了问题，提示错误：no acceptable c compiler found in $PATH,我有到gcc的官方网站：<a href="http://gcc.gnu.org/">http://gcc.gnu.org</a>下载gcc-4.4.0版本，安装中又出现了错误。无奈………………</p>
+<p>2、请教高手后：</p>
+<p>1）安装xinetd命令：yum install xinetd</p>
+<p>2）安装telnet-server命令：yum install telnet-server</p>
+<p>以上两步也可以在见面上操作：应用程序----添加/删除程序，出现了&ldquo;软件包管理者&rdquo;，选择&ldquo;列表&rdquo;，从中选择要安装的telnet和xinetd，&ldquo;应用&rdquo;即可自动安装。</p>
+<p>3）service xinetd start（telnet需要此服务，启动此服务就可以使用telnet命令.停止的话为stop）</p>
+<p>4）service telnet start(此命令错误，telnet不是可标示的服务)</p>
+<p>启动服务。</p>
+<p>5）可以通过chkconfig设置服务启动、停止在各个执行等级的选项，<strong>设置Linux系统下次启动时服务是否启动，</strong>但是不实际的马上启动或停止服务。</p>
+<p>设置方法：chkconfig 服务名 on/off</p>
+<p>显示服务状态：chkconfig --list 服务名</p>
+<p>参考：<a href="http://blog.csdn.net/youyu_buzai/archive/2009/03/04/3956845.aspx">http://blog.csdn.net/youyu_buzai/archive/2009/03/04/3956845.aspx</a></p></div></body></html>

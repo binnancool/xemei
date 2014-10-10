@@ -1,0 +1,239 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>jsp内置对象</title></head><body><h1>jsp内置对象</h1><div><strong> 一, page 对象</strong> <br>
+<br>
+　　page对象代表JSP本身，更准确地说它代表JSP被转译后的Servlet，它可以调用Servlet类所定义的方法。 <br>
+<br>
+<strong>　　二、config 对象</strong> <br>
+<br>
+　　config 对象里存放着一些Servlet 初始的数据结构。 <br>
+<br>
+　　config 对象实现于javax.servlet.ServletConfig 接口，它共有下列四种方法： <br>
+<br>
+　　public String getInitParameter(name) <br>
+<br>
+　　public java.util.Enumeration getInitParameterNames( ) <br>
+<br>
+　　public ServletContext getServletContext( ) <br>
+<br>
+　　public Sring getServletName( ) <br>
+<br>
+<strong>　　三、request 对象 <br>
+</strong><br>
+　　request 对象包含所有请求的信息，如：请求的来源、标头、cookies和请求相关的参数值等等。 <br>
+<br>
+　　request 对象实现javax.servlet.http.HttpServletRequest接口的，所提供的方法可以将它分为四大类： <br>
+<br>
+　　1.储存和取得属性方法; <br>
+<br>
+　　void setAttribute(String name, Object value)设定name属性的值为value <br>
+<br>
+　　Enumeration getAttributeNamesInScope(int scope)取得所有scope 范围的属性 <br>
+<br>
+　　Object getAttribute(String name)取得name 属性的值 <br>
+<br>
+　　void removeAttribute(String name)移除name 属性的值 <br>
+<br>
+　　2.取得请求参数的方法 <br>
+<br>
+　　String getParameter(String name) 取得name 的参数值Enumeration <br>
+<br>
+　　getParameterNames( ) 取得所有的参数名称String[] <br>
+<br>
+　　getParameterValues(String name) 取得所有name 的参数值 <br>
+<br>
+　　Map getParameterMap( )取得一个要求参数的Map <br>
+<br>
+　　3.能够取得请求HTTP 标头的方法 <br>
+<br>
+　　String getHeader(String name)取得name 的标头 <br>
+<br>
+　　Enumeration getHeaderNames()取得所有的标头名称 <br>
+<br>
+　　Enumeration getHeaders(String name)取得所有name 的标头 <br>
+<br>
+　　int getIntHeader(String name)取得整数类型name 的标头 <br>
+<br>
+　　long getDateHeader(String name) 取得日期类型name 的标头 <br>
+<br>
+　　Cookie [] getCookies( ) 取得与请求有关的cookies <br>
+<br>
+　　4.其他的方法 <br>
+<br>
+　　String getContextPath( )取得Context 路径(即站台名称) <br>
+<br>
+　　String getMethod( )取得HTTP 的方法(GET、POST) <br>
+<br>
+　　String getProtocol( )取得使用的协议 HTTP/1.1、HTTP/1.0 ) <br>
+<br>
+　　String getQueryString( )取得请求的参数字符串，不过，HTTP的方法必须为GET <br>
+<br>
+　　String getRequestedSessionId( ) 取得用户端的Session ID <br>
+<br>
+　　String getRequestURI( )取得请求的URL，但是不包括请求的参数字符串 <br>
+<br>
+　　String getRemoteAddr( )取得用户的IP 地址 <br>
+<br>
+　　String getRemoteHost( )取得用户的主机名称 <br>
+<br>
+　　int getRemotePort( )取得用户的主机端口 <br>
+<br>
+　　String getRemoteUser( ) 取得用户的名称 <br>
+<br>
+　　void etCharacterEncoding(String encoding)设定编码格式，用来解决窗体传递中文的问题 <br>
+<br>
+　　<strong>四、response 对象</strong> <br>
+<br>
+　　response 对象主要将JSP 处理数据后的结果传回到客户端。 <br>
+<br>
+　　response 对象是实现javax.servlet.http.HttpServletResponse 接口。response对象所提供的方法。 <br>
+<br>
+　　1.设定表头的方法 <br>
+<br>
+　　void addCookie(Cookie cookie)新增cookie <br>
+<br>
+　　void addDateHeader(String name, long date)新增long类型的值到name标头 <br>
+<br>
+　　void addHeader(String name, String value)新增String类型的值到name标头 <br>
+<br>
+　　void addIntHeader(String name, int value)新增int类型的值到name标头 <br>
+<br>
+　　void setDateHeader(String name, long date)指定long类型的值到name标头 <br>
+<br>
+　　void setHeader(String name, String value)指定String类型的值到name标头 <br>
+<br>
+　　void setIntHeader(String name, int value)指定int类型的值到name标头 <br>
+<br>
+　　2.设定响应状态码的方法 <br>
+<br>
+　　void sendError(int sc)传送状态码(status code) <br>
+<br>
+　　void sendError(int sc, String msg)传送状态码和错误信息 <br>
+<br>
+　　void setStatus(int sc)设定状态码 <br>
+<br>
+　　3.用来URL 重写(rewriting)的方法 <br>
+<br>
+　　String encodeRedirectURL(String url)对使用sendRedirect( )方法的URL予以编码 <br>
+<br>
+<strong>　　五、out 对象</strong> <br>
+<br>
+　　out 对象能把结果输出到网页上。 <br>
+<br>
+　　out主要是用来控制管理输出的缓冲区(buffer)和输出流(output stream)。 <br>
+<br>
+　　void clear( )清除输出缓冲区的内容 <br>
+<br>
+　　void clearBuffer( )清除输出缓冲区的内容 <br>
+<br>
+　　void close( )关闭输出流，清除所有的内容 <br>
+<br>
+　　int getBufferSize( )取得目前缓冲区的大小(KB) <br>
+<br>
+　　int getRemaining( )取得目前使用后还剩下的缓冲区大小(KB) <br>
+<br>
+　　boolean isAutoFlush( )回传true表示缓冲区满时会自动清除;false表示不会自动清除并且产生异常处理 <br>
+<br>
+<strong>　　六、session 对象 <br>
+</strong><br>
+　　session对象表示目前个别用户的会话(session)状况。 <br>
+<br>
+　　session对象实现javax.servlet.http.HttpSession接口，HttpSession接口所提供的方法 <br>
+<br>
+　　long getCreationTime()取得session产生的时间，单位是毫秒 <br>
+<br>
+　　String getId()取得session 的ID <br>
+<br>
+　　long getLastAccessedTime()取得用户最后通过这个session送出请求的时间 <br>
+<br>
+　　long getMaxInactiveInterval()取得最大session不活动的时间，若超过这时间，session 将会失效 <br>
+<br>
+　　void invalidate()取消session 对象，并将对象存放的内容完全抛弃 <br>
+<br>
+　　boolean isNew()判断session 是否为&quot;新&quot;的 <br>
+<br>
+　　void setMaxInactiveInterval(int interval)设定最大session不活动的时间，若超过这时间，session 将会失效 <br>
+<br>
+　<strong>　七、application对象</strong> <br>
+<br>
+　　application对象最常被使用在存取环境的信息。 <br>
+<br>
+　　因为环境的信息通常都储存在ServletContext中，所以常利用application对象来存取ServletContext中的信息。 <br>
+<br>
+　　application 对象实现javax.servlet.ServletContext 接口，ServletContext接口容器所提供的方法 <br>
+<br>
+　　int getMajorVersion( )取得Container主要的Servlet API版本 <br>
+<br>
+　　int getMinorVersion( )取得Container次要的Servlet API 版本 <br>
+<br>
+　　String getServerInfo( )取得Container的名称和版本 <br>
+<br>
+　　String getMimeType(String file)取得指定文件的MIME 类型 <br>
+<br>
+　　ServletContext getContext(String uripath)取得指定Local URL的Application context <br>
+<br>
+　　String getRealPath(String path)取得本地端path的绝对路径 <br>
+<br>
+　　void log(String message)将信息写入log文件中 <br>
+<br>
+　　void log(String message, Throwable throwable)将stack trace 所产生的异常信息写入log文件中 <br>
+<br>
+<strong>　　八、pageContext对象</strong> <br>
+<br>
+　　pageContext对象能够存取其他隐含对象。 <br>
+<br>
+　　1.pageContext对象存取其他隐含对象属性的方法，此时需要指定范围的参数。 <br>
+<br>
+　　Object getAttribute(String name, int scope) <br>
+<br>
+　　Enumeration getAttributeNamesInScope(int scope) <br>
+<br>
+　　void removeAttribute(String name, int scope) <br>
+<br>
+　　void setAttribute(String name, Object value, int scope) <br>
+<br>
+　　范围参数有四个，分别代表四种范围：PAGE_SCOPE、REQUEST_SCOPE、SESSION_SCOPE、APPLICATION_SCOPE <br>
+<br>
+　　2.PageContext对象取得其他隐含对象的方法 <br>
+<br>
+　　Exception getException( )回传目前网页的异常，不过此网页要为error page， <br>
+<br>
+　　JspWriter getOut( )回传目前网页的输出流，例如：out <br>
+<br>
+　　Object getPage( )回传目前网页的Servlet 实体(instance)，例如：page <br>
+<br>
+　　ServletRequest getRequest( )回传目前网页的请求，例如：request <br>
+<br>
+　　ServletResponse getResponse( )回传目前网页的响应，例如：response <br>
+<br>
+　　ServletConfig getServletConfig( )回传目前此网页的ServletConfig 对象，例如：config <br>
+<br>
+　　ServletContext getServletContext( ) 回传目前此网页的执行环境(context)，例如：application <br>
+<br>
+　　HttpSession getSession( )回传和目前网页有联系的会话(session)，例如：session <br>
+<br>
+　　3.PageContext对象提供取得属性的方法 <br>
+<br>
+　　Object getAttribute(String name, int scope)回传name 属性，范围为scope的属性对象，回传类型为Object <br>
+<br>
+　　Enumeration getAttributeNamesInScope(int scope)回传所有属性范围为scope 的属性名称，回传类型为Enumeration <br>
+<br>
+　　int getAttributesScope(String name)回传属性名称为name 的属性范围 <br>
+<br>
+　　void removeAttribute(String name)移除属性名称为name 的属性对象 <br>
+<br>
+　　void removeAttribute(String name, int scope)移除属性名称为name，范围为scope 的属性对象 <br>
+<br>
+　　void setAttribute(String name, Object value, int scope)指定属性对象的名称为name、值为value、范围为scope <br>
+<br>
+　　Object findAttribute(String name)寻找在所有范围中属性名称为name 的属性对象 <br>
+<br>
+<strong>　　九、exception对象</strong> <br>
+<br>
+　　若要使用exception 对象时，必须在page 指令中设定。才能使用。 <br>
+<br>
+　　exception提供的三个方法： <br>
+<br>
+　　getMessage( ) <br>
+<br>
+　　getLocalizedMessage( )、 <br>
+<br>
+　　printStackTrace(new java.io.PrintWriter(out)) <br></div></body></html>

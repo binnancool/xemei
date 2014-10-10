@@ -1,0 +1,7 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>安装SQL Server 2000或SP3,出现错误“以前的某个程序安装已在安装计算机上创建挂起的文件操作”</title></head><body><h1>安装SQL Server 2000或SP3,出现错误“以前的某个程序安装已在安装计算机上创建挂起的文件操作”</h1><div>在安装SQL Server 2000或SP3补丁的时候，安装程序提示有一个挂起的安装实例，要求重起机器。例如：<br>
+&ldquo;以前的某个程序安装已在安装计算机上创建挂起的文件操作。运行安装程序之前必须重新启动计算机。&rdquo; <br>
+但实际情况是：重起多次操作系统都不起作用，把操作系统的Temp临时目录都清除，也不起作用。<br>
+<br>
+此问题的解决方法如下：<br>
+运行regedit打开注册表编辑器，在<br>
+HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Session Manager中找到PendingFileRenameOperations，删除该键值关闭注册表编辑器。就可以重新安装SQL Server 2000或SP3补丁了。 <img src="http://www.cnblogs.com/kay/aggbug/617097.html" width="1" height="1"><br></div></body></html>

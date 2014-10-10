@@ -1,0 +1,47 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux磁盘分区及挂载点</title></head><body><h1>Linux磁盘分区及挂载点</h1><div><p></p>
+<p><strong><font size="4">Linux磁盘分区命名方案</font></strong></p>
+<p>Linux 使用字母和数字的组合来指代磁盘分区。这可能有些使人迷惑不解，特别是如果你以前使用“C 驱动器”这种方法来指代硬盘及它们的分区。在 DOS/Windows 的世界里，分区是用下列方法命名的：</p>
+<p></p>
+<ul>
+<li style="LIST-STYLE-TYPE: disc">
+<p>每个分区都被检查过以便判定它是否可被 DOS/Windows 读取。</p>
+<li style="LIST-STYLE-TYPE: disc">
+<p>如果分区类型是兼容的，它会被指派给一个“驱动器字母”。驱动器字母从“C”开始，然后依据要标签的分区数量而按字母顺序推移。</p>
+<li style="LIST-STYLE-TYPE: disc">
+<p>驱动器字母可以用来指代那个分区，也可以用来指带分区所含的文件系统。</p></li></ul>
+<p>Red Hat Linux 使用一种更灵活的命名方案。它所传达的信息比其它操作系统采用的命名方案更多。该命名方案是基于文件的，文件名的格式为：</p>
+<p>
+<table class="SCREEN FCK__ShowTableBorders" width="100%" bgColor="#dcdcdc">
+<tbody>
+<tr>
+<td><pre class="SCREEN"><tt class="FILENAME"><font size="4"><strong>/dev/<tt class="REPLACEABLE"><em>xx</em></tt><tt class="REPLACEABLE"><em>y</em></tt><tt class="REPLACEABLE"><em>N</em></tt></strong></font></tt></pre></td></tr></tbody></table></p>
+<p>下面说明了解析分区命名方案的方法：</p>
+<p></p>
+<div class="VARIABLELIST">
+<dl>
+<dt><tt class="FILENAME"><font size="4" face="NSimsun"><strong>/dev/</strong></font></tt> 
+<dd>
+<p>这个字串是所有设备文件所在的目录名。因为分区在硬盘上，而硬盘是设备，所以这些文件代表了在<tt class="FILENAME"><font face="NSimsun">/dev/</font></tt>上所有可能的分区。</p>
+<dt><font size="4"><strong><tt class="FILENAME"><tt class="REPLACEABLE"><em><font face="NSimsun">xx</font></em></tt></tt> </strong></font>
+<dd>
+<p>分区名的前两个字母标明分区所在设备的类型。通常是 <tt class="FILENAME"><font face="NSimsun">hd</font></tt> （IDE 磁盘）或 <tt class="FILENAME"><font face="NSimsun">sd</font></tt>（SCSI 磁盘）。</p>
+<dt><font size="4"><strong><tt class="FILENAME"><tt class="REPLACEABLE"><em><font face="NSimsun">y</font></em></tt></tt> </strong></font>
+<dd>
+<p>这个字母标明分区所在的设备。例如，<tt class="FILENAME"><font face="NSimsun">/dev/hda</font></tt>（第一个 IDE 磁盘）或 <tt class="FILENAME"><font face="NSimsun">/dev/sdb</font></tt>（第二个 SCSI 磁盘）</p>
+<dt><tt class="FILENAME"><tt class="REPLACEABLE"><em><font size="4" face="NSimsun"><strong>N</strong></font></em></tt></tt> 
+<dd>
+<p>最后的数字代表分区。前四个分区（主分区或扩展分区）是用数字从 <tt class="FILENAME"><font face="NSimsun">1</font></tt> 排列到 <tt class="FILENAME"><font face="NSimsun">4</font></tt>。逻辑分区从 <tt class="FILENAME"><font face="NSimsun">5</font></tt> 开始。例如，<tt class="FILENAME"><font face="NSimsun">/dev/hda3</font></tt> 是在第一个 IDE 硬盘上的第三个主分区或扩展分区；<tt class="FILENAME"><font face="NSimsun">/dev/sdb6</font></tt> 是在第二个 SCSI 硬盘上的第二个逻辑分区。</p></dd></dl></div>
+<div class="NOTE">
+<p>该命名方案中没有表明分区类型的地方；与 DOS/Windows 不同，所有分区都可在 Red Hat Linux 下被识别。当然，这并不是说 Red Hat Linux 能够访问每一类分区上的数据，但是在许多情况下，访问专用于另一操作系统的分区上的数据是可能的。</p></div>
+<p>请切记以上信息；它会帮助你在设置 Red Hat Linux 所需分区时更容易地理解许多步骤。</p>
+<p><strong><font size="4">Linux磁盘分区与其它OS</font></strong></p>
+<p>如果 Red Hat Linux 会和 OS/2 在你的机器上并存，你必须使用 OS/2 分区软件来创建你的磁盘分区 — 否则，OS/2 可能不会识别磁盘分区。在安装中，不要创建任何新分区，但是请使用 Linux parted 为你的 Linux 分区设立正确的分区类型。</p>
+<p><font color="#ff0000">如果你想从 Red Hat Linux 中能够读写 Windows NT、2000、或 XP 分区，不要把 Windows 分区的文件系统类型设为 NTFS。若 Windows 分区的类型是 NTFS，它就不能在 Red Hat Linux 中被读取；若 Windows 分区的类型是 VFAT，它就能够在 Red Hat Linux 中被读取。</font></p>
+<p>如果你有多个 Windows 分区，它们不必都使用同一文件系统类型。如果你的 Windows 中有不止一个分区，你可以把其中之一设为 VFAT，并在其上贮存你想在 Windows 和 Red Hat Linux 间共享的文件。</p>
+<p>到了Red Hat Linux 安装筹备工作的这一步，你应该开始考虑一下你的新操作系统所要使用的分区数量及大小。“多少个分区”一直是 Linux 社区中的一个具有争议性的问题，在没有定论之前，可以说可用的分区布局与争论这一问题的人一样多。</p>
+<p>鉴于上述情况，除非另有原因，你至少应该创建以下几个分区：swap、/boot 以及 /（根）分区。</p>
+<p><strong><font size="4">Linux分区及挂载点</font></strong></p>
+<p>令许多 Linux 的新用户感到困惑的一个地方是各分区是如何被 Linux 操作系统使用及访问的。它在 DOS/Windows 中相对来说较为简单。每一分区有一个“驱动器字母”，你用恰当的驱动器字母来指代相应分区上的文件和目录。</p>
+<p>这与 Linux 处理分区及磁盘贮存问题的方法截然不同。其主要的区别在于，Linux 中的每一个分区都是构成支持一组文件和目录所必需的贮存区的一部分。它是通过挂载（mounting）来实现的<strong>，<span style="BACKGROUND-COLOR: #a1e6e6; COLOR: #ff0000; FONT-SIZE: 16px">挂载是将分区关联到某一目录的过程</span></strong>。挂载分区使起始于这个指定目录（通称为挂载点，mount point）的贮存区能够被使用。</p>
+<p>例如，如果分区 /dev/hda5 被 挂载在 /usr 上，这意味着所有在 /usr 之下的文件和目录在物理意义上位于 /dev/hda5 上。因此文件 /usr/share/doc/FAQ/txt/Linux-FAQ 被储存在 /dev/hda5上，而文件 /etc/X11/gdm/Sessions/Gnome 却不是。</p>
+<p>继续以上的例子，/usr 之下的一个或多个目录还有可能是其它分区的挂载点。例如，某个分区（假设为，/dev/hda7）可以被挂载到 /usr/local 下，这意味着 /usr/local/man/whatis 将位于 /dev/hda7 上而不是 /dev/hda5 上。</p></div></body></html>

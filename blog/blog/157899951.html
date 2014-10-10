@@ -1,0 +1,63 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux操作系统PS命令详细解析</title></head><body><h1>Linux操作系统PS命令详细解析</h1><div><p>转自：<a href="http://blog.sina.com.cn/s/blog_4cdc965f0100bs81.html">http://blog.sina.com.cn/s/blog_4cdc965f0100bs81.html</a></p>
+<p>要对进程进行监测和控制，首先必须要了解当前进程的情况，也就是<a style="font-size: 1em" class="qs_highlight1" href="http://clk.qunsee.com/click/click.php?cpid=12&amp;ads_id=24&amp;pid=99000124&amp;cid=124&amp;url=http%3A//www.dell.com.cn&amp;k=%u9700%u8981&amp;s=http%3A//www.xker.com/page/e2007/1019/36407.html&amp;rn=722634&amp;v=1&amp;ref=http%3A//www.google.cn/search%3Fcomplete%3D1%26hl%3Dzh-CN%26newwindow%3D1%26q%3Dlinux+ps%26meta%3D%26aq%3Df&amp;province=%u4E0A%u6D77&amp;city=%u4E0A%u6D77" target="_blank"><font color="#70593f">需要</font></a>查看当前进程，而 ps 命令就是最基本同时也是非常强大的进程查看命令。使用该命令可以确定有哪些进程正在运行和运行的状态、进程是否结束、进程有没有僵死、哪些进程占用了过多的资源等等。总之大部分信息都是可以通过执行该命令得到的。</p>
+<p>ps 为我们提供了进程的一次性的查看，它所提供的查看结果并不动态连续的；如果想对进程时间监控，应该用 top 工具。</p>
+<p>kill 用于杀死进程。</p>
+<p><strong>1、ps 的参数说明</strong></p>
+<p>ps 提供了很多的选项参数，常用的有以下几个：</p>
+<p>l 长格式输出；</p>
+<p>u 按用户名和启动时间的顺序来显示进程；</p>
+<p>j 用任务格式来显示进程；</p>
+<p>f 用树形格式来显示进程；</p>
+<p>a 显示所有<a style="font-size: 1em" class="qs_highlight1" href="http://clk.qunsee.com/click/click.php?cpid=510&amp;ads_id=46&amp;pid=99000124&amp;cid=124&amp;url=http%3A//www.qunsee.com/sitepage.php&amp;k=%u7528%u6237&amp;s=http%3A//www.xker.com/page/e2007/1019/36407.html&amp;rn=26338&amp;v=1&amp;ref=http%3A//www.google.cn/search%3Fcomplete%3D1%26hl%3Dzh-CN%26newwindow%3D1%26q%3Dlinux+ps%26meta%3D%26aq%3Df&amp;province=%u4E0A%u6D77&amp;city=%u4E0A%u6D77" target="_blank"><font color="#70593f">用户</font></a>的所有进程（包括其它用户）；</p>
+<p>x 显示无控制终端的进程；</p>
+<p>r 显示运行中的进程；</p>
+<p>ww 避免详细参数被截断；</p>
+<p>我们常用的选项是组合是 aux 或 lax，还有参数 f 的应用。</p>
+<p> <wbr></wbr></p>
+<p><strong>2、ps aux 或 lax 输出的解释</strong></p>
+<p>USER 进程的属主；</p>
+<p>PID 进程的ID；</p>
+<p>PPID 父进程；</p>
+<p>%CPU 进程占用的CPU百分比；</p>
+<p>%MEM 占用内存的百分比；</p>
+<p>NI 进程的NICE值，数值大，表示较少占用CPU时间；</p>
+<p>VSZ 进程<a style="font-size: 1em" class="qs_highlight1" href="http://clk.qunsee.com/click/click.php?cpid=1021&amp;ads_id=319&amp;pid=99000124&amp;cid=124&amp;url=http%3A//www.chanet.com.cn/click.cgi%3Fa%3D59068%26d%3D7568%26u%3D%26e%3D&amp;k=%u865A%u62DF&amp;s=http%3A//www.xker.com/page/e2007/1019/36407.html&amp;rn=892181&amp;v=1&amp;ref=http%3A//www.google.cn/search%3Fcomplete%3D1%26hl%3Dzh-CN%26newwindow%3D1%26q%3Dlinux+ps%26meta%3D%26aq%3Df&amp;province=%u4E0A%u6D77&amp;city=%u4E0A%u6D77" target="_blank"><font color="#70593f">虚拟</font></a>大小；</p>
+<p>RSS 驻留中页的数量；</p>
+<p>TTY 终端ID</p>
+<p>STAT 进程状态（有以下几种）</p>
+<p>D 无法中断的休眠状态（通常 IO 的进程）；</p>
+<p>R 正在运行可中在队列中可过行的；</p>
+<p>S 处于休眠状态；</p>
+<p>T 停止或被追踪；</p>
+<p>W 进入内存交换（从内核2.6开始无效）；</p>
+<p>X 死掉的进程（从来没见过）；</p>
+<p>Z 僵尸进程；</p>
+<p>&lt; 优先级高的进程</p>
+<p>N 优先级较低的进程</p>
+<p>L 有些页被锁进内存；</p>
+<p>s 进程的领导者（在它之下有子进程）；</p>
+<p>l 多进程的（使用 CLONE_THREAD, 类似 NPTL pthreads）；</p>
+<p>+ 位于后台的进程组；</p>
+<p>WCHAN 正在等待的进程资源；</p>
+<p>START 启动进程的时间；</p>
+<p>TIME 进程消耗CPU的时间；</p>
+<p>COMMAND 命令的名称和参数；</p>
+<p> <wbr></wbr></p>
+<p><strong>3、应用举例</strong></p>
+<p>[root@localhost ~]# ps -aux |more</p>
+<p>可以用 | 管道和 more <a style="font-size: 1em" class="qs_highlight1" href="http://clk.qunsee.com/click/click.php?cpid=12&amp;ads_id=33&amp;pid=99000124&amp;cid=124&amp;url=http%3A//ad.sina.com.cn/minisite/anmum/anmum/index.html&amp;k=%u8FDE%u63A5&amp;s=http%3A//www.xker.com/page/e2007/1019/36407.html&amp;rn=702263&amp;v=1&amp;ref=http%3A//www.google.cn/search%3Fcomplete%3D1%26hl%3Dzh-CN%26newwindow%3D1%26q%3Dlinux+ps%26meta%3D%26aq%3Df&amp;province=%u4E0A%u6D77&amp;city=%u4E0A%u6D77" target="_blank"><font color="#70593f">连接</font></a>起来分页查看。</p>
+<p>[root@localhost ~]# ps -aux &gt; ps001.txt</p>
+<p>[root@localhost ~]# more ps001.txt</p>
+<p>这里是把所有进程显示出来，并输出到ps001.txt文件，然后再通过more 来分页查看。</p>
+<p> <wbr></wbr></p>
+<p><strong>4、kill 终止进程</strong></p>
+<p>有十几种控制进程的方法，下面是一些常用的方法:</p>
+<p>kill -STOP [pid]</p>
+<p>发送SIGSTOP (17,19,23)停止一个进程，而并不消灭这个进程。</p>
+<p>kill -CONT [pid]</p>
+<p>发送SIGCONT (19,18,25)重新开始一个停止的进程。</p>
+<p>kill -KILL [pid]</p>
+<p>发送SIGKILL (9)强迫进程立即停止，并且不实施清理操作。</p>
+<p>kill -9 -1</p>
+<p>终止你拥有的全部进程。</p>
+<p>SIGKILL 和 SIGSTOP 信号不能被捕捉、封锁或者忽略，但是，其它的信号可以。所以这是你的终极武器。</p></div></body></html>

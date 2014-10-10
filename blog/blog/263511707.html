@@ -1,0 +1,56 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Java程序最小化，内存突然减小的原因分析</title></head><body><h1>Java程序最小化，内存突然减小的原因分析</h1><div><h3><a href="http://astarring.javaeye.com/blog/525692"><font color="#108ac6">Task Manager的Mem Usage数据 与 VM Size</font></a></h3>
+<div class="blog_content">下面是我分析这问题的一些思路，希望对对这个问题感兴趣的朋友有所帮助: <br>
+<br>
+<br>
+　　Q: Is .NET Alone? <br>
+<br>
+<br>
+　　A: Nope! 前面Saucer说过了，这不是.NET的问题，所有Windows程序都有类似的行为。例如下面的C程序： <br>
+<br>
+<br>
+<br>
+　　void main { while(1); } //死循环，便于我们察看Task Manager <br>
+<br>
+　　初次运行在我的机器上Mem Usage是632K，把Console最小化以后再恢复，Mem Usage变成了36K。显然，这不是一个.NET独有的问题，而是Windows Memory Management的问题。那么和.NET的GC机制也不会有太大的关系&mdash;&mdash;虽然问题的表现形式很容易让人联想到GC。 <br>
+<br>
+　　Q: How much memory does my program use? <br>
+<br>
+http://www.mscto.com <br>
+<br>
+　　A: 回答这个问题并不容易。先来看看操作系统虚拟内存管理的一些基本概念：每个Windows进程都拥有4G的地址空间，但是你的机器显然没有4G的物理内存。在多任务环境下，所有进程使用的内存总和可以超过计算机的物理内存。在特定的情况下，进程的一部分可能会从物理内存中删除而被暂存在硬盘的文件里(pagefile)，当进程试图访问这些被交换到pagefile里的内存的时候，系统会产生一个缺页中断(page fault)，这时候Windows内存管理器会负责把对应的内存页重新从硬盘调入物理内存。 <br>
+<br>
+<br>
+　　在某个时间内，一个进程可以直接访问到的物理内存(不发生缺页中断)叫做这个进程的 Working Set ;而一个进程从4G的地址空间当中实际分配(commit)了的、可访问的内存称为 Committed Virtual Memory 。Committed VM可能存在于Page File当中，WorkingSet则一定位于物理内存。 <br>
+<br>
+<br>
+<br>
+　　所以要回答上面的问题先要反问一句：What're you talking about? Physical Memory or Committed Memory? <br>
+<br>
+<br>
+　　Q: What is this &quot;Mem Usage&quot; data? 软件开发网 <br>
+<br>
+　　A: From Task Manager Help: In Task Manager, the current Working Set of a process, in kilobytes. 软件开发网 <br>
+<br>
+　　Mem Usage这个名字多少有些误导。它只表示这个进程当前占用的物理内存，也就是WorkingSet。WorkingSet不表示进程当前&ldquo;占用&rdquo;的所有虚拟内存，该进程可能还有一部分数据被交换到pagefile当中。这些数据只有在被访问的时候才会被加载到物理内存。 <br>
+<br>
+　　Task Manager有另一列数据：VM Size，表示了一个进程分配的虚存(Committed Visual Memory)&mdash;&mdash;实际的定义要比这个复杂一些，但这个定义对我们目前分析的问题已经足够了。以前面的C程序为例，在最小化前后的VM Size都是176K，并没有变化。 <br>
+<br>
+<br>
+　　<strong><font color="#ff0000">所以，结论很简单： 当一个Windows程序被最小化的时候，Windows内存管理器把该进程的WorkingSet减到最小(根据先进先出FIFO或者最近最少使用LRU)，把大部分数据交换到pagefile里。 这很容易理解：我们通常总是希望为前台的应用程序留出更多物理内存，从而具有更好的性能。 当该程序从最小化恢复的时候，Windows也不会完全加载程序的所有虚存，只是加载了必要的部分。 这也很容易理解：程序启动阶段的代码通常在启动之后很少访问(对.NET程序尤其如此，向fusion这样的模块在程序正常加载之后如果没有用到Reflection通常用不到)。 <br>
+</font><br>
+</strong>　　Q: So, Do we want a smaller workingset, or a larger one? <br>
+<br>
+<br>
+　　A: It depends. Conventional Wisdom tells us: The smaller, the better. 但是在虚存的问题上却没这么简单。如果WorkingSet太小，程序运行过程中会产生很多缺页中断，这会严重影响程序的性能。另一方面，WorkingSet太大会浪费&ldquo;宝贵的&rdquo;物理内存，降低整个系统的性能。 通常情况下(除非是对性能非常敏感的应用程序，并且你对Windows的内存管理了如指掌)，建议不要在程序中自己调整WorkingSet的大小，而把这个任务交给Windows内存管理器。调整的方法Saucer有提到: SetProcessWorkingSetSize (); <br>
+<br>
+<br>
+Q: Final Question, Does my program really occupy that much physical memory? http://www.mscto.com <br>
+<br>
+　　A: 这个问题看上去土了点&mdash;&mdash;那个数字明明白白的写在Task Manager里面。 <br>
+<br>
+<br>
+　　sam1111 用vadump检查的结果显示进程WorkingSet减小的主要原因是很多DLL在从最小化恢复的时候没有被加载到物理内存。我们知道DLL的一个特点是代码共享，以NTDLL.DLL为例，整个Windows系统的几乎所有应用程序(具体地说，Win32子系统的所有程序)都需要引用NTDLL.DLL，如果每人一份，光这个文件就的占用几十兆内存。Windows地解决办法是只在物理内存中保存一份NTDLL.DLL的COPY，所有引用这个DLL的程序都把这一份COPY映射到自己的内存空间里面，共享NTDLL.DLL的代码段(每个进程的数据段仍然是独立的)。所以虽然NTDLL.DLL的大小被计算在你的程序的WorkingSet里面，但是从你的程序中去掉对这个DLL的引用并不会真的释放多少物理内存&mdash;&mdash;你不用，别人还在用呢! <br>
+<br>
+　　所以，你的程序&ldquo;独占&rdquo;的物理内存远没有Mem Usage所表示的那么多，需要从Mem Usage里面扣除很多Shared Code Page (vadump里面可以看到)。 http://www.mscto.com <br>
+<br>
+　　结论?不要参考Task Manager的Mem Usage数据，那个数据的大小对程序性能没有直接影响。 用Perfomence Monitor里面与.NET相关的Counter要容易、准确的多。</div></div></body></html>

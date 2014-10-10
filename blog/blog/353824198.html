@@ -1,0 +1,323 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>OpenVPN安装配置</title></head><body><h1>OpenVPN安装配置</h1><div><p>一. OpenVPN 安装环境</p>
+<p>Server 端的环境 </p>
+<p>redhat, kernel版本: 2.6.18.8-128.el5, IP 为 192.168.0.166 </p>
+<p>kernel 需要支持 tun 设备, 需要加载 iptables 模块. <br>检查 tun 是否安装: <br>代码: </p>
+<p>[root@sever160 ~]# modinfo tun</p>
+<p>&nbsp;</p>
+<p>如果没有 modinfo 命令, 直接找一下, 看看 kernel 里是否有 tun.o 文件,但是本机的确是tun.ko，如果你找不到tun.o，那么你可以查找tun.ko: <br>代码: </p>
+<p>&nbsp;</p>
+<p>检查iptables 模块, 查看是否有下列文件: <br>/etc/init.d/iptables </p>
+<p>更多版本：<a href="http://openvpn.net/release/">http://openvpn.net/release/</a> </p>
+<p>Client 端的环境: Windows XP PRO SP2 </p>
+<p>openvpn-2.0.9-install.exe, </p>
+<p>可在<a href="http://openvpn.net/release/openvpn-2.0.9-install.exe">http://openvpn.net/release/openvpn-2.0.9-install.exe</a> 下载 <br>注意: openvpn-2.0.9-install.exe 的版本要和 OpenVPN Server 的版本配套. <br>例如, 服务器装的是openvpn-2.0.9-, 那么下载的 OpenVPN GUI fow windows 应该是: openvpn-2.0.9-install.exe </p>
+<p>OpenVPN GUI的所有历史版本: <a href="http://openvpn.se/files/install_packages/">http://openvpn.se/files/install_packages/</a></p>
+<p>二. OpenVPN 服务端安装过程 </p>
+<p>用 SecureCRT或者SSH登录到Linux服务器, 进入根目录</p>
+<p>代码: </p>
+<p>cd /usr/local/src/tarbag </p>
+<p>下载 LZO，解压到lzo-2.02. </p>
+<p>下载 OpenVPN, 解压到openvpn-2.0.9 </p>
+<p>安装 LZO 代码:</p>
+<p>#tar -zxvf lzo-2.03.tar.gz -C ../software</p>
+<p>#cd ../software/lzo-2.03 <br>#./configure –prefix=/usr/local/lzo //设置安装路径 <br>#make //编译 <br>#make check //编译检查 <br>#make install //安装</p>
+<p>安装 OpenVPN </p>
+<p><br>#tar -xzvf openvpn-2.0.9.tar.gz -C ../software/</p>
+<p>#cd /usr/local/src/software/openvpn-2.0.9 <br>#./configure --with-lzo-headers=/usr/local/lzo/include --with-lzo-lib=/usr/local/lzo/lib --with-ssl-headers=/usr/include/openssl --with-ssl-lib=/usr/lib </p>
+<p>//以下为配置的输出内容</p>
+<p>checking for ifconfig... /sbin/ifconfig</p>
+<p>checking for ip... /sbin/ip</p>
+<p>checking for route... /sbin/route</p>
+<p>checking build system type... i686-pc-linux</p>
+<p>checking host system type... i686-pc-linux</p>
+<p>checking target system type... i686-pc-linux</p>
+<p>checking for a BSD-compatible install... /usr/bin/install –c</p>
+<p>………………</p>
+<p>//检查LZO文件，如果这边没通过则无法安装OpenVPN</p>
+<p>configure: checking for LZO Library and Header files...</p>
+<p>checking lzo/lzo1x.h usability... yes</p>
+<p>checking lzo/lzo1x.h presence... yes</p>
+<p>checking for lzo/lzo1x.h... yes</p>
+<p>checking for lzo1x_1_15_compress in -llzo2... yes</p>
+<p>//检查SSL文件如果这边没通过则无法安装OpenVPN</p>
+<p>configure: checking for OpenSSL Crypto Library and Header files...</p>
+<p>checking openssl/evp.h usability... yes</p>
+<p>checking openssl/evp.h presence... yes</p>
+<p>checking for openssl/evp.h... yes</p>
+<p>checking for EVP_CIPHER_CTX_init in -lcrypto... yes</p>
+<p>//OpenSSL版本至少是0.9.6，如果不成功查查你的OpenSSL的版本</p>
+<p>configure: checking that OpenSSL Library is at least version 0.9.6...</p>
+<p>checking for EVP_CIPHER_CTX_set_key_length... yes</p>
+<p>checking openssl/engine.h usability... yes</p>
+<p>checking openssl/engine.h presence... yes</p>
+<p>checking for openssl/engine.h... yes</p>
+<p>checking for ENGINE_load_builtin_engines... yes</p>
+<p>checking for ENGINE_register_all_complete... yes</p>
+<p>checking for ENGINE_cleanup... yes</p>
+<p>configure: checking for OpenSSL SSL Library and Header files...</p>
+<p>checking openssl/ssl.h usability... yes</p>
+<p>checking openssl/ssl.h presence... yes</p>
+<p>checking for openssl/ssl.h... yes</p>
+<p>checking for SSL_CTX_new in -lssl... yes</p>
+<p>configure: creating ./config.status</p>
+<p>config.status: creating Makefile</p>
+<p>config.status: creating openvpn.spec</p>
+<p>config.status: creating config-win32.h</p>
+<p>config.status: creating install-win32/openvpn.nsi</p>
+<p>config.status: creating config.h</p>
+<p>config.status: executing depfiles commands <br>#make //编译，输出的内容就不粘贴了 <br>#make install //最后一步，安装。</p>
+<p>生成证书Key </p>
+<p>初始化 PKI</p>
+<p>代码:</p>
+<p>#cd /usr/local/src/software/openvpn-2.0.9/easy-rsa/2.0</p>
+<p>#vi vars</p>
+<p>修改以下内容</p>
+<p>-------------开始------------------ <br>export EASY_RSA="`pwd`" <br>export KEY_CONFIG=`$EASY_RSA/whichopensslcnf $EASY_RSA` <br>export KEY_CONFIG=$EASY_RSA/openssl.cnf <br>export KEY_DIR=$EASY_RSA/keys </p>
+<p>export KEY_SIZE=1024 <br>export KEY_COUNTRY=CN <br>export KEY_PROVINCE=FJ <br>export KEY_CITY=FZ <br>export KEY_ORG="netgaming" <br>export KEY_EMAIL="<a href="mailto:support@766.com">support@766.com</a>" </p>
+<p>-----------结束-------------------</p>
+<p>Build: </p>
+<p>代码:</p>
+<p>#source ./vars</p>
+<p>#./clean-all //删除keys文件夹 <br>#./build-ca //建立根证书</p>
+<p>代码： <br>[root@sever160 2.0]# ./build-ca </p>
+<p>Generating a 1024 bit RSA private key</p>
+<p>..++++++</p>
+<p>...........................................++++++</p>
+<p>writing new private key to 'ca.key'</p>
+<p>-----</p>
+<p>You are about to be asked to enter information that will be incorporated</p>
+<p>into your certificate request.</p>
+<p>What you are about to enter is what is called a Distinguished Name or a DN.</p>
+<p>There are quite a few fields but you can leave some blank</p>
+<p>For some fields there will be a default value,</p>
+<p>If you enter '.', the field will be left blank.</p>
+<p>-----</p>
+<p>Country Name (2 letter code) [CN]:CN </p>
+<p>State or Province Name (full name) [FJ]:FJ</p>
+<p>Locality Name (eg, city) [FZ]:FZ</p>
+<p>Organization Name (eg, company) [netgaming]:netgaming</p>
+<p>Organizational Unit Name (eg, section) []:766</p>
+<p>Common Name (eg, your name or your server's hostname) [netgaming CA]:server</p>
+<p>Email Address [support@766.com]:support@766.com </p>
+<p># 建立 server key 代码: </p>
+<p>代码: </p>
+<p>#./build-key-server server <br>[root@sever160 2.0]# ./build-key-server server</p>
+<p>Generating a 1024 bit RSA private key</p>
+<p>....................++++++</p>
+<p>.............................++++++</p>
+<p>writing new private key to 'server.key'</p>
+<p>-----</p>
+<p>You are about to be asked to enter information that will be incorporated</p>
+<p>into your certificate request.</p>
+<p>What you are about to enter is what is called a Distinguished Name or a DN.</p>
+<p>There are quite a few fields but you can leave some blank</p>
+<p>For some fields there will be a default value,</p>
+<p>If you enter '.', the field will be left blank.</p>
+<p>-----</p>
+<p>Country Name (2 letter code) [CN]:CN</p>
+<p>State or Province Name (full name) [FJ]:FJ</p>
+<p>Locality Name (eg, city) [FZ]:FZ</p>
+<p>Organization Name (eg, company) [netgaming]:netgaming</p>
+<p>Organizational Unit Name (eg, section) []:766</p>
+<p>Common Name (eg, your name or your server's hostname) [server]:server</p>
+<p>Email Address [support@766.com]:support@766.com</p>
+<p>Please enter the following 'extra' attributes</p>
+<p>to be sent with your certificate request</p>
+<p>A challenge password []:ty12245^Hc1</p>
+<p>An optional company name []:766</p>
+<p>Using configuration from /usr/local/src/software/openvpn-2.0.9/easy-rsa/2.0/openssl.cnf </p>
+<p>Check that the request matches the signature</p>
+<p>Signature ok</p>
+<p>The Subject's Distinguished Name is as follows</p>
+<p>countryName :PRINTABLE:'CN'</p>
+<p>stateOrProvinceName :PRINTABLE:'FJ'</p>
+<p>localityName :PRINTABLE:'FZ'</p>
+<p>organizationName :PRINTABLE:'netgaming'</p>
+<p>organizationalUnitName:PRINTABLE:'766'</p>
+<p>commonName :PRINTABLE:'server'</p>
+<p>emailAddress :IA5STRING:'support@766.com'</p>
+<p>Certificate is to be certified until Sep 1 06:11:47 2019 GMT (3650 days)</p>
+<p>Sign the certificate? [y/n]:y</p>
+<p>1 out of 1 certificate requests certified, commit? [y/n]y</p>
+<p>Write out database with 1 new entries</p>
+<p>Data Base Updated </p>
+<p>#生成客户端 key</p>
+<p>代码:</p>
+<p>#./build-key client1 <br>[root@sever160 2.0]# ./build-key client1</p>
+<p>Generating a 1024 bit RSA private key</p>
+<p>...........................................++++++</p>
+<p>.......++++++</p>
+<p>writing new private key to 'client1.key'</p>
+<p>-----</p>
+<p>You are about to be asked to enter information that will be incorporated</p>
+<p>into your certificate request.</p>
+<p>What you are about to enter is what is called a Distinguished Name or a DN.</p>
+<p>There are quite a few fields but you can leave some blank</p>
+<p>For some fields there will be a default value,</p>
+<p>If you enter '.', the field will be left blank.</p>
+<p>-----</p>
+<p>Country Name (2 letter code) [CN]:CN</p>
+<p>State or Province Name (full name) [FJ]:FJ</p>
+<p>Locality Name (eg, city) [FZ]:FZ</p>
+<p>Organization Name (eg, company) [netgaming]:netgaming</p>
+<p>Organizational Unit Name (eg, section) []:766</p>
+<p>Common Name (eg, your name or your server's hostname) [client1]:client1</p>
+<p>Email Address [support@766.com]:support@766.com</p>
+<p>Please enter the following 'extra' attributes</p>
+<p>to be sent with your certificate request</p>
+<p>A challenge password []:ty12245^Hc1</p>
+<p>An optional company name []:766</p>
+<p>Using configuration from /usr/local/src/software/openvpn-2.0.9/easy-rsa/2.0/openssl.cnf</p>
+<p>Check that the request matches the signature</p>
+<p>Signature ok</p>
+<p>The Subject's Distinguished Name is as follows</p>
+<p>countryName :PRINTABLE:'CN'</p>
+<p>stateOrProvinceName :PRINTABLE:'FJ'</p>
+<p>localityName :PRINTABLE:'FZ'</p>
+<p>organizationName :PRINTABLE:'netgaming'</p>
+<p>organizationalUnitName:PRINTABLE:'766'</p>
+<p>commonName :PRINTABLE:'client1'</p>
+<p>emailAddress :IA5STRING:'support@766.com'</p>
+<p>Certificate is to be certified until Sep 1 06:19:03 2019 GMT (3650 days)</p>
+<p>Sign the certificate? [y/n]:y</p>
+<p>1 out of 1 certificate requests certified, commit? [y/n]y</p>
+<p>Write out database with 1 new entries</p>
+<p>Data Base Updated </p>
+<p>依次类推生成其他客户端证书/key</p>
+<p>代码:</p>
+<p>#./build-key client2 //和client1的做法相同 <br>#./build-key client3 //和client1的做法相同</p>
+<p>注意在进入 Common Name (eg, your name or your server's hostname) []: 的输入时, 每个证书输入的名字必须不同. </p>
+<p>build: </p>
+<p>代码: <br>./build-dh //这步很重要</p>
+<p>[root@sever160 2.0]# ./build-dh </p>
+<p>Generating DH parameters, 1024 bit long safe prime, generator 2</p>
+<p>This is going to take a long time</p>
+<p>...+...........................................+.....+......+.+....................+.....................................................................+.......................+................+..+..................+.+.............................................................+.+..............+........................................................+...+.........................................+.................++*++*++*</p>
+<p>使用ssh的FTP功能将keys下的所有文件下载到本地，以及把keys拷贝到/usr/local/openvpn/keys中</p>
+<p>创建服务端配置文件 </p>
+<p>从样例文件创建:</p>
+<p>代码:</p>
+<p>#cd sample-config-files/ //进入源代码解压目录下的sample-config-files子目录 </p>
+<p>#mkdir /usr/local/openvpn/etc //新建openvpn配置文件存放目录 <br>#cp server.conf /usr/local/openvpn/etc //cp服务器配置文件到/usr/local/etc <br>#vi /usr/local/openvpn/etc/server.conf </p>
+<p>我建立的server.conf 的内容稍后另附. </p>
+<p>创建客户端配置文件 </p>
+<p>代码:</p>
+<p>#cd sample-config-files/ #进入源代码解压目录下的sample-config-files子目录 <br>#cp client.conf /usr/local/etc #cp客户端配置文件到/usr/local/etc <br>#vi /usr/local/etc/client.conf </p>
+<p>我建立的client.conf 的内容稍后另附. </p>
+<p>启动Openvpn:</p>
+<p>#cd /usr/local/openvpn/sbin/</p>
+<p>#./openvpn --daemon --config /usr/local/openvpn/etc/server.conf</p>
+<p>三. OpenVPN For Windows 客户端安装过程</p>
+<p>安装 OpenVPN For Windows, 到 <a href="http://openvpn.se">http://openvpn.se</a> 下载. 目前的版本是 1.0.3. 注意: OpenVPN 的版本要和 OpenVPN Server 的版本配套. </p>
+<p>配置 openvpn gui </p>
+<p>安装结束后, 进入安装文件夹下的 config 目录, 然后将上面第 10 步建立的 client.conf 文件从 server 上下载到此文件夹, 并更名为 client.ovpn</p>
+<p>同时, 将第8 步打包的 mykeys.tar 中的下列证书文件解压到此文件夹:</p>
+<p>代码:</p>
+<p>ca.crt <br>ca.key <br>client1.crt <br>client1.csr <br>client1.key </p>
+<p>然后双击 client.ovpn 即可启动 openvpn, 或者通过 OpenVPN GUI 的控制启动 VPN. </p>
+<p>如果双击 client.ovpn 没有反应, 则在任务栏点 OpenVPN GUI 的小图标右键, 选择 edit config, 将内容复制过去再保存. 然后再点右键中的 connect即可.</p>
+<p>如果需要第二台机器上使用 vpn , 进行同样的配置, 只需要将 client1.crt, client1.csr, client1.key 换成对应的 client2.xxx 即可, 然后将 client.ovpn 中的对应key文件值改掉.</p>
+<p>四. OpenVPN 配置样例文件</p>
+<p>OpenVPN 服务端：server.conf </p>
+<p>代码:</p>
+<p>local 192.168.50.160</p>
+<p>port 1194 <br>proto udp <br>dev tun <br>ca /usr/local/openvpn/keys/ca.crt</p>
+<p>cert /usr/local/openvpn/keys/server.crt</p>
+<p>key /usr/local/openvpn/keys/server.key # This file should be kept secret</p>
+<p>dh /usr/local/openvpn/keys/dh1024.pem</p>
+<p>server 10.8.0.0 255.255.255.0 <br>client-to-client <br>keepalive 10 120 <br>comp-lzo <br>persist-key <br>persist-tun <br>status /usr/local/openvpn/openvpn-status.log <br>verb 4 <br>push "dhcp-option DNS 218.85.157.99" # name server 地址, 如何获取见随后说明 <br>push "dhcp-option DNS 218.85.152.99" # name server 地址, 如何获取见随后说明 </p>
+<p>上面示例中的 dns ip: 218.85.157.99, 218.85.152.99, 可以在 /etc/resolv.conf 中找到</p>
+<p>#vi /etc/resolv.conf <br>nameserver 218.85.157.99 <br>nameserver 218.85.152.99</p>
+<p>OpenVPN 客户端: client.ovpn </p>
+<p>代码:</p>
+<p>client <br>dev tun <br>proto udp <br>remote 218.66.36.119 1194 <br>persist-key <br>persist-tun <br>ca ca.crt <br>cert client1.crt //可以换成相应的client2.crt <br>key client1.key //可以换成相应的client2.key <br>ns-cert-type server <br>comp-lzo <br>verb 3 <br>redirect-gateway def1 //这个非常重要，前几次一直失败的原因</p>
+<p>五. OpenVPN 访问外网的设置</p>
+<p>打开路由 VPN连接成功后, 还需要设置路由, 才能透过VPN访问Internet. 在 linux服务器上添加路由： </p>
+<p>（备注：如果openvpn服务器不是直接接外网，只是接在局域网交换机上的一台普通线路上，则需要在路由器上添加一条到192.168.50.160的1194端口映射）</p>
+<p>代码: </p>
+<p>#iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j SNAT --to-source 192.168.50.160 （出口IP地址，和server.conf中local 192.168.50.160这个IP相同） <br>#/etc/init.d/iptables save <br>#/etc/init.d/iptables restart </p>
+<p>不同的机器，-o eth0 参数可能不一样，具体可输入 ifconfig 查看，搞清 ip(192.168.50.160)所在的网卡号. </p>
+<p>同时, 需要将 ip forward 打开. 不要用 echo 1 &gt; /proc/sys/net/ipv4/ip_forward 的方式, 这种方式重启后无效. 先查看一下:</p>
+<p>代码:</p>
+<p>#sysctl -a | grep for <br>#查看结果: <br>net.ipv4.conf.tun0.mc_forwarding = 0 <br>net.ipv4.conf.tun0.forwarding = 1 <br>net.ipv4.conf.eth0.mc_forwarding = 0 <br>net.ipv4.conf.eth0.forwarding = 1 <br>net.ipv4.conf.lo.mc_forwarding = 0 <br>net.ipv4.conf.lo.forwarding = 1 <br>net.ipv4.conf.default.mc_forwarding = 0 <br>net.ipv4.conf.default.forwarding = 1 <br>net.ipv4.conf.all.mc_forwarding = 0 <br>net.ipv4.conf.all.forwarding = 1 <br>net.ipv4.ip_forward = 1 </p>
+<p>如果你的主机上列数值（*.forwarding）不是为1, 则要将其改成1。 </p>
+<p>代码:</p>
+<p>#sysctl -w net.ipv4.conf.tun0.forwarding = 1 </p>
+<p>#sysctl -w net.ipv4.conf.eth0.forwarding = 1 </p>
+<p>#sysctl -w net.ipv4.conf.lo.forwarding = 1 </p>
+<p>#sysctl -w net.ipv4.conf.default.forwarding = 1</p>
+<p>#sysctl -w net.ipv4.conf.all.forwarding = 1</p>
+<p>#sysctl -w net.ipv4.ip_forward=1</p>
+<p>（系统重启后所有forwarding又重置为0，所以把这些命令加入rc.local中）</p>
+<p>//以下内容766可选</p>
+<p>-----------开始--------------</p>
+<p>开启域名服务器 </p>
+<p>如果你需要访问一些已经被GFW封掉了域名的网站, 但你的 OpenVPN 服务器没有被封的话，那么你需要在你的主机上开启 name server, 并将 dns push 给 client。 一般的独立主机, 都带有 private dns server.</p>
+<p>代码:</p>
+<p>rpm -qa | grep bind <br>/etc/init.d/named start </p>
+<p>另外, 必须保证 server.conf 配置中, 有这三个配置: </p>
+<p>代码:</p>
+<p>push "dhcp-option DNS 10.8.0.1" <br>push "dhcp-option DNS 218.85.157.99" # name server 地址 <br>push "dhcp-option DNS 218.85.152.99" # name server 地址</p>
+<p>--------结束------------- </p>
+<p><br>当 client 连接成功后, 在 cmd 下执行 ipconfig /all, 应该有这类似这样的输出: </p>
+<p>代码:</p>
+<p>Ethernet adapter 本地连接 4:</p>
+<p>Connection-specific DNS Suffix . :</p>
+<p>Description . . . . . . . . . . . : TAP-Win32 Adapter V8</p>
+<p>Physical Address. . . . . . . . . : 00-FF-2B-EA-C0-89</p>
+<p>Dhcp Enabled. . . . . . . . . . . : Yes</p>
+<p>Autoconfiguration Enabled . . . . : Yes</p>
+<p>IP Address. . . . . . . . . . . . : 10.8.0.26</p>
+<p>Subnet Mask . . . . . . . . . . . : 255.255.255.252</p>
+<p>Default Gateway . . . . . . . . . : 10.8.0.25</p>
+<p>DHCP Server . . . . . . . . . . . : 10.8.0.25</p>
+<p>DNS Servers . . . . . . . . . . . : 218.85.157.99</p>
+<p>218.85.152.99</p>
+<p>Lease Obtained. . . . . . . . . . : 2009年9月4日星期五 9:15:42</p>
+<p>Lease Expires . . . . . . . . . . : 2010年9月4日星期六 9:15:42六. 设置 OpenVPN 服务器 reboot后自动启动 openvpn</p>
+<p>执行命令: </p>
+<p>代码:</p>
+<p>vi /etc/rc.local 然后在最后面加入此行: </p>
+<p>代码:</p>
+<p>#/usr/local/openvpn/sbin/openvpn --daemon --config /usr/local/openvpn/etc/server.conf &gt; /dev/null 2&gt;&amp;1 &amp; </p>
+<p>七. OpenVPN 测试</p>
+<p>1、你可以用 VPN 登录上去之后, 测试 MSN, QQ, IE 等网络应用, 也可以尝试访问一些被 GFW 禁掉的网站, 当然, 前提是你的 VPN 服务器不在境内. </p>
+<p>2、不连接VPN，打开<a href="http://www.ip138.com">www.ip138.com</a>查看本机IP外网ip地址，然后连接VPN再打开一次，对比两次的IP地址。</p>
+<p><br>七、常见问题：</p>
+<p>1、 客户端本地连接没有网关</p>
+<p>检查client.ovpn配置文件中是否有redirect-gateway def1</p>
+<p>2、 可以拨内网的IP地址192.168.50.160，无法拨通218.66.36.119</p>
+<p>检查客户端是否被限制访问外部网络</p>
+<p>3、 提示证书无效</p>
+<p>检查openvpn服务器的时间是否正确，如果不正确，请在修改时间后重新制作证书</p>
+<p>4、 如何检查所有网络是否走VPN线路</p>
+<p>Windows下使用命令tracert 218.85.157.99或者pathping 218.85.157.99</p>
+<p>例如：</p>
+<p>C:\&gt;tracert 218.85.157.99</p>
+<p>Tracing route to FJ-DNS.fz.fj.cn [218.85.157.99]</p>
+<p>over a maximum of 30 hops:</p>
+<p>1 1 ms &lt;1 ms &lt;1 ms 10.8.0.1</p>
+<p>（第一跳是VPN服务器网关，如果不是这个说明失败）</p>
+<p>2 1 ms 1 ms 1 ms 192.168.50.254（VPN所在网络网关）</p>
+<p>3 2 ms 2 ms 2 ms 218.66.36.254</p>
+<p>4 4 ms 1 ms 1 ms 220.160.92.105</p>
+<p>5 2 ms 2 ms 2 ms 202.109.204.161</p>
+<p>6 2 ms 1 ms 2 ms 218.85.156.90</p>
+<p>7 * * * Request timed out.</p>
+<p>8 3 ms 3 ms 4 ms FJ-DNS.fz.fj.cn [218.85.157.99]</p>
+<p>Trace complete.</p>
+<p>Linux下使用命令tracert 218.85.157.99或者tracertpaht 218.85.157.99</p>
+<p>5、 为什么我在不同的电脑上拨VPN客户端得ip地址都是一样的呢？</p>
+<p>检查你是否使用了同一个客户端证书</p>
+<p>6、 为什么一台电脑拨号可以正常使用，当两台同时拨号就不行呢？</p>
+<p>检查你是否使用了同一个客户端证书。</p>
+<p>7、 断开VPN马上连接发现连接不上？</p>
+<p>连接还未释放所以连不上，你修改本机的ip地址就能重新连接VPN了。</p>
+<p>8、 OPENVPN有段时间没有使用，今天重新建证书，一切完毕之后发现连接上了却无法上网</p>
+<p>现在的IP地址从160修改为222，NAT没有重新设置，于是打开/etc/sysconfig/iptables把NAT转发规则从：</p>
+<p>-A POSTROUTING -s 10.8.0.0/255.255.255.0 -o eth0 -j SNAT --to-source 192.168.50.160</p>
+<p>改为：</p>
+<p>-A POSTROUTING -s 10.8.0.0/255.255.255.0 -o eth0 -j SNAT --to-source 192.168.50.222</p>
+<p>搞定~~~~~</p>
+<p>&nbsp;</p>
+<p>本文来自CSDN博客，转载请标明出处：<a href="http://blog.csdn.net/deccmtd/archive/2010/04/26/5529652.aspx">http://blog.csdn.net/deccmtd/archive/2010/04/26/5529652.aspx</a></p></div></body></html>

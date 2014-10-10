@@ -1,0 +1,196 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java命令使用方法和dos2unix、unix2dos命令用法</title></head><body><h1>java命令使用方法和dos2unix、unix2dos命令用法</h1><div><p><strong>一、例子（执行ivradmin.jar中的包含main函数的Setup和Check类）</strong></p>
+<p><strong>文件setup.sh，内容如下，在Windows环境下编辑：</strong></p>
+<p><strong>$JAVA_HOME/jdk/bin/java -classpath ./lib/ivradmin.jar com.channelsoft.ivradmin.setup.Setup<br>
+$JAVA_HOME/jdk/bin/java -classpath ./lib/ivradmin.jar com.channelsoft.ivradmin.setup.Check</strong></p>
+<p><strong>复制到Linux环境下执行出现错误，千辛万苦的找语法错误，结果是由于Windows环境下编写的setup.sh具有格式需要进行格式转化：</strong></p>
+<p><strong>dos2unix setup.sh</strong></p>
+<p><strong>运行正常。</strong></p>
+<p>在命令行中输入 $JAVA_HOME\bin\java 就可得到基本参数列表; <br>
+在命令行输入 $JAVA_HOME\bin\java &ndash;X 就可得到扩展参数列表.</p>
+<p>二、  基本参数说明： <br>
+ <br>
+1.  -client，-server <br>
+ <br>
+这两个参数用于设置虚拟机使用何种运行模式，client 模式启动比较快，但运行时性能和内存管理效率不如 server 模式，通常用于客户端应用程序。相反，server 模式启动比 client慢，但可获得更高的运行性能。 <br>
+ <br>
+在 windows上，缺省的虚拟机类型为 client 模式，如果要使用 server模式，就需要在启动虚拟机时加-server 参数，以获得更高性能，对服务器端应用，推荐采用 server 模式，尤其是多个 CPU 的系统。在 Linux，Solaris 上缺省采用 server模式。 <br>
+ <br>
+ 2.  -hotspot <br>
+ <br>
+含义与 client 相同，jdk1.4 以前使用的参数，jdk1.4 开始不再使用，代之以 client。 <br>
+&nbsp;&nbsp;<br>
+3.  -classpath,-cp <br>
+虚拟机在运行一个类时，需要将其装入内存，虚拟机搜索类的方式和顺序如下： <br>
+ <br>
+Bootstrap classes，Extension classes，User classes。 <br>
+ <br>
+Bootstrap 中的路径是虚拟机自带的 jar 或 zip 文件，虚拟机首先搜索这些包文件，用System.getProperty(&quot;sun.boot.class.path&quot;)可得到虚拟机搜索的包名。 <br>
+ <br>
+Extension 是位于 jre\lib\ext 目录下的 jar 文件，虚拟机在搜索完 Bootstrap 后就搜索该目录下的 jar 文件。用 System. getProperty(&quot;java.ext.dirs&rdquo;)可得到虚拟机使用Extension 搜索路径。 <br>
+ <br>
+User classes 搜索顺序为当前目录、环境变量 CLASSPATH、-classpath。 <br>
+ <br>
+ <strong>4.  -classpath <br>
+告知虚拟机搜索目录名、jar 文档名、zip 文档名，之间用分号;分隔。 <br>
+</strong> <br>
+例如当你自己开发了公共类并包装成一个 common.jar 包，在使用 common.jar 中的类时，就需要用-classpath common.jar 告诉虚拟机从 common.jar 中查找该类，否则虚拟机就会抛出 java.lang.NoClassDefFoundError异常，表明未找到类定义。 <br>
+ <br>
+在运行时可用 System.getProperty(&ldquo;java.class.path&rdquo;)得到虚拟机查找类的路径。 <br>
+ <br>
+ 使用-classpath 后虚拟机将不再使用 CLASSPATH 中的类搜索路径，如果-classpath 和CLASSPATH 都没有设置，则虚拟机使用当前路径(.)作为类搜索路径。 <br>
+ <br>
+推荐使用-classpath 来定义虚拟机要搜索的类路径，而不要使用环境变量 CLASSPATH 的搜索路径，以减少多个项目同时使用 CLASSPATH 时存在的潜在冲突。例如应用 1 要使用a1.0.jar 中的类 G，应用 2 要使用 a2.0.jar 中的类 G,a2.0.jar 是 a1.0.jar 的升级包，当a1.0.jar，a2.0.jar 都在 CLASSPATH 中，虚拟机搜索到第一个包中的类 G 时就停止搜索，如果应用1应用2的虚拟机都从CLASSPATH中搜索，就会有一个应用得不到正确版本的类G。 <br>
+&nbsp;&nbsp;<br>
+5.  -D&lt;propertyName&gt;=value <br>
+在虚拟机的系统属性中设置属性名/值对，运行在此虚拟机之上的应用程序可用</p>
+<p> 当虚拟机报告类找不到或类冲突时可用此参数来诊断来查看虚拟机从装入类的情况。 <br>
+ <br>
+ 7.  -verbose:gc <br>
+在虚拟机发生内存回收时在输出设备显示信息，格式如下： <br>
+ <br>
+[Full GC 268K-&gt;168K(1984K), 0.0187390 secs] <br>
+ <br>
+该参数用来监视虚拟机内存回收的情况。 <br>
+ <br>
+ 8.  -verbose:jni <br>
+在虚拟机调用 native 方法时输出设备显示信息，格式如下： <br>
+ <br>
+[Dynamic-linking native method HelloNative.sum ... JNI] <br>
+ <br>
+该参数用来监视虚拟机调用本地方法的情况，在发生 jni错误时可为诊断提供便利。 <br>
+ <br>
+ 9.  -version <br>
+显示可运行的虚拟机版本信息然后退出。一台机器上装有不同版本的 JDK 时 <br>
+ <br>
+ 10. -showversion <br>
+显示版本信息以及帮助信息。 <br>
+ <br>
+ 11. -ea[:&lt;packagename&gt;...|:&lt;classname&gt;] <br>
+12. -enableassertions[:&lt;packagename&gt;...|:&lt;classname&gt;] <br>
+ <br>
+从 JDK1.4 开始，java 可支持断言机制，用于诊断运行时问题。通常在测试阶段使断言有效，在正式运行时不需要运行断言。断言后的表达式的值是一个逻辑值，为 true 时断言不运行，为 false 时断言运行，抛出 java.lang.AssertionError 错误。 <br>
+ <br>
+上述参数就用来设置虚拟机是否启动断言机制，缺省时虚拟机关闭断言机制，用-ea 可打开断言机制，不加&lt;packagename&gt;和 classname 时运行所有包和类中的断言，如果希望只运行某些包或类中的断言，可将包名或类名加到-ea 之后。例如要启动包 com.foo.util 中的断言，可用命令 &ndash;ea:com.foo.util 。 <br>
+&nbsp;&nbsp;<br>
+13. -da[:&lt;packagename&gt;...|:&lt;classname&gt;] <br>
+14. -disableassertions[:&lt;packagename&gt;...|:&lt;classname&gt;] <br>
+ 用来设置虚拟机关闭断言处理，packagename和classname 的使用方法和-ea 相同。 <br>
+&nbsp;&nbsp;<br>
+15. -esa | -enablesystemassertions <br>
+设置虚拟机显示系统类的断言。 <br>
+ <br>
+ 16. -dsa | -disablesystemassertions <br>
+设置虚拟机关闭系统类的断言。 <br>
+ <br>
+ 17. -agentlib:&lt;libname&gt;[=&lt;options&gt;] <br>
+该参数是 JDK5 新引入的，用于虚拟机装载本地代理库。 <br>
+ <br>
+Libname 为本地代理库文件名，虚拟机的搜索路径为环境变量 PATH 中的路径，options 为传给本地库启动时的参数，多个参数之间用逗号分隔。在 Windows 平台上虚拟机搜索本地库名为 libname.dll 的文件，在 Unix 上虚拟机搜索本地库名为 libname.so 的文件，搜索路径环境变量在不同系统上有所不同，Linux、SunOS、IRIX上为LD_LIBRARY_PATH，AIX上为LIBPATH，<br>
+HP-UX 上为SHLIB_PATH。 <br>
+&nbsp;&nbsp;<br>
+例如可使用-agentlib:hprof 来获取虚拟机的运行情况，包括 CPU、内存、线程等的运行数据，并可输出到指定文件中，可用-agentlib:hprof=help 来得到使用帮助列表。在 jre\bin目录下可发现 hprof.dll 文件。 <br>
+&nbsp;&nbsp;<br>
+18. -agentpath:&lt;pathname&gt;[=&lt;options&gt;] <br>
+设置虚拟机按全路径装载本地库，不再搜索 PATH 中的路径。其他功能和 agentlib 相同。 <br>
+ <br>
+ 19. -javaagent:&lt;jarpath&gt;[=&lt;options&gt;] <br>
+虚拟机启动时装入java语言设备代理。Jarpath文件中的mainfest文件必须有Agent-Class属性。代理类要实现 public static void premain(String agentArgs, Instrumentation inst)方法。当虚拟机初始化时，将按代理类的说明顺序调用 premain方法。</p>
+<p><br>
+<strong>三、dos2unix, unix2dos 用来实现 DOS &lt;=&gt; UNIX text file 转换</strong> <br>
+aptitude install sysutils <br>
+行末： <br>
+DOS 格式 0d 0a <br>
+UNIX 格式 0a</p>
+<p>可用功能相同的指令組合 <br>
+dos2unix: <br>
+sed -i'' &quot;s/\r//&quot; file <br>
+或 <br>
+cat file | col -b &gt; newfile <br>
+或 <br>
+cat file | tr -d &quot;\r&quot; &gt; newfile <br>
+或 <br>
+cat file | tr -d &quot;\015&quot; &gt; newfile</p>
+<p>unix2dos: <br>
+sed -i'' &quot;s/$/\r/&quot; file <br>
+或 <br>
+sed -i'' &quot;s/$/\x0d/&quot; file</p>
+<p>-i后面的是单引号组成</p>
+<p>以上适用 GNU sed, FreeBSD 下的 sed 不适用<br>
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－<br>
+dos2unix 命令<br>
+这是一个很简单的命令.功能是将DOS/MAC下的文件转化为UNIX的文本文件格式.用法详见下面.<br>
+就是这样一个简单的命令折腾了我大半天.我在用mysql查询数据库,执行的批处理放在了一个文件里.如果我执行这个文件,那个存放查询结果的 文件名字总是在后面附加一个?号.而如果我一行一行敲入命令,执行就正常.而且比较了两个文件后没有差别.还有一个奇怪的事情就是总是出现一个类似 &quot;quit&quot;出现mysql语法错误的提示.这个奇怪的现象使我很困惑.后来在一位老大的帮助下想到了是不是由于文件格式的差别.因为我这个文件在 windows下编辑过,后来一试,果然很灵啊.<br>
+SYNOPSYS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix [options] [-c convmode] [-o file ...] [-n infile outfile ...]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Options:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  [-hkqV] [--help] [--keepdate] [--quiet] [--version]</p>
+<p><br>
+DESCRIPTION<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix, the program that converts plain<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  text files in DOS/MAC format to UNIX format.</p>
+<p>OPTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  The following options are available:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  -h --help<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Print online help.</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  -k --keepdate<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Keep the date stamp of output file same as input file.</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  -q --quiet<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Quiet mode. Suppress all warning and messages.</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  -V --version<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Prints version information.</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  -c --convmode convmode<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Sets conversion mode. Where convmode is one of: ASCII, 7bit,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ISO, Mac with ASCII being the default. Simulates dos2unix under<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  SunOS.<br>
+-o --oldfile file ...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Old file mode. Convert the file and write output to it. The pro-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  gram default to run in this mode. Wildcard names may be used.</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  -n --newfile infile outfile ...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  New file mode. Convert the infile and write output to outfile.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  File names must be given in pairs and wildcard names should NOT<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  be used or you WILL lost your files.</p>
+<p><br>
+EXAMPLES<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Get input from stdin and write output to stdout.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Convert and replace a.txt. Convert and replace b.txt.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix a.txt b.txt</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix -o a.txt b.txt</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Convert and replace a.txt in ASCII conversion mode.<br>
+dos2unix a.txt -c iso b.txt</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Convert and replace b.txt in ISO conversion mode.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix -c ascii a.txt -c iso b.txt</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Convert c.txt from Mac to Unix ascii format.</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix -c mac c.txt b.txt</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Convert and replace a.txt while keeping original date stamp.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix -k a.txt</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix -k -o a.txt</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Convert a.txt and write to e.txt.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix -n a.txt e.txt</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Convert a.txt and write to e.txt, keep date stamp of e.txt <br>
+same as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  a.txt.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix -k -n a.txt e.txt</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Convert and replace a.txt. Convert b.txt and write to e.txt.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix a.txt -n b.txt e.txt</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix -o a.txt -n b.txt e.txt</p>
+<p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Convert c.txt and write to e.txt. Convert and replace a.txt. Convert<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  and replace b.txt. Convert d.txt and write to f.txt.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dos2unix -n c.txt e.txt -o a.txt b.txt -n d.txt f.txt</p>
+<p><br>
+本文来自CSDN博客，转载请标明出处：<a href="http://blog.csdn.net/cchaha/archive/2009/03/25/4022329.aspx">http://blog.csdn.net/cchaha/archive/2009/03/25/4022329.aspx</a></p></div></body></html>

@@ -1,0 +1,29 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ICE简介</title></head><body><h1>ICE简介</h1><div><p style="text-indent: 2em">ICE(Internet Communications Engine)是一个为现实中程序员而写的中间件平台。作为一个高性能的互联网通信平台，ICE包含了很多分层的服务和插件(Plug-ins)，并且简单、高效和强大。</p>
+<p style="text-indent: 2em">ICE的自由使用遵从GNU的GPL(GNU General Public Licens)许可的条款。ICE也有商业的许可证，如果你想将ICE使用在你的私有产品中，那么你应该使用ICE的商业许可证。可以联系<a href="mailto:sales@zeroc.com"><font color="#f7f9fd">sales@zeroc.com</font></a>来获得这方面的更多信息。</p>
+<p style="text-indent: 2em">ICE当前支持C++、Java、C#、Visual Basic、Python和PHP编程语言，并支持在多种操作系统上运行。更多的操作系统和编程语言将会在以后的发布中支持。</p>
+<p style="text-indent: 2em">ICE有以下几部分组成：</p>
+<p style="text-indent: 2em">Slice</p>
+<p style="text-indent: 2em">ICE的规范语言，跟CORBA的IDL(Interface Definition Language)等价的东西。Slice建立了客户端和服务器端共同遵守的契约：接口。Slice也用来描述对象持久数据。</p>
+<p style="text-indent: 2em">Slice Compilers</p>
+<p style="text-indent: 2em">Slice的规范语言可以影射成多种编程语言。目前ICE支持C++，Java，Python，PHP，C#和VB的语言影射。Ice的客户端和服务器端协同工作，而不会知道分别实现的是何种编程语言。</p>
+<p style="text-indent: 2em">Ice</p>
+<p style="text-indent: 2em">Ice的核心库。在众多的特性当中，Ice核心库通过一个高效的协议(包含TCP/UDP层上协议压缩)来管理所有的通信任务，为多线程服务器提供了一个灵活的线程池，并且有特别的功能来支持上百万对象的可扩展性。</p>
+<p style="text-indent: 2em">IceUtil</p>
+<p style="text-indent: 2em">一些常用的功能函数集。例如Unicode处理和多线程编程，是用C++写成。</p>
+<p style="text-indent: 2em">IceBox</p>
+<p style="text-indent: 2em">一个专用于ICE应用的应用服务器。ICEBox可以方便地运行和管理动态加载、共享库或java类的形式Ice的服务。</p>
+<p style="text-indent: 2em">IcePack</p>
+<p style="text-indent: 2em">一个成熟的服务激活和部署工具。IcePack能大大简化在异构网络之间部署应用的复杂性。只要简单的编写XML格式的一个部署描述文件，IcePack就能自动处理剩下的工作。</p>
+<p style="text-indent: 2em">Freeze</p>
+<p style="text-indent: 2em">Freeze提供了Ice Servants对象的自动持久性。通过几行代码，一个应用就可以生成一个高度可扩展的逐出器(evictor)来高效地管理持久对象。</p>
+<p style="text-indent: 2em">FreezeScript</p>
+<p style="text-indent: 2em">在大的软件项目里，持久对象的数据类型改变很常见。为了最小化这些变化的影响，FreezeScript提供了相应的工具来检查和移植Freeze生成的数据库。这些工具支持XML格式的配置脚本，易于使用。</p>
+<p style="text-indent: 2em">IceSSL</p>
+<p style="text-indent: 2em">用于Ice核心的动态的SSL传输插件。提供了认证、加密和消息完整性，使用工业标准的SSL协议来实现。</p>
+<p style="text-indent: 2em">Glacier</p>
+<p style="text-indent: 2em">面向对象中间件平台的一个最大的挑战是安全性和防火墙。Glacier是Ice的防火墙解决方案，它大大简化了安全程序的部署。Glacier认证和过滤客户的请求并允许服务器通过安全的方式回调客户端对象。结合IceSSL的使用，Glacier提供了强大的安全解决方案，即安全，又易于配置管理。</p>
+<p style="text-indent: 2em">IceStorm</p>
+<p style="text-indent: 2em">一个支持联盟的消息服务。和大多数的其他消息和事件服务相比，IceStorm支持有类型的事件，这意味着通过联盟广播一个消息和调用一个接口上的一个方法一样容易。</p>
+<p style="text-indent: 2em">IcePatch</p>
+<p style="text-indent: 2em">一个软件修补和分发的服务。为确保运行的软件是最新的版本，要经常更新软件，这是一件乏味的工作。IcePatch自动更新在某个目录层次下的文件。只有需要更新的文件会下作到客户端，为了快速的下载更新，IcePatch使用的高效的压缩算法。</p>
+<p style="text-indent: 2em"><strong>如想了解更多的详细信息，可以到</strong><a href="http://www.zeroc.com/"><font color="#f7f9fd"><strong>http://www.zeroc.com</strong></font></a><strong>上下载关于Ice的更多文档。</strong></p></div></body></html>

@@ -1,0 +1,111 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux 绑定(bond或team)多个网口作为一个网口</title></head><body><h1>Linux 绑定(bond或team)多个网口作为一个网口</h1><div><p></p>
+<p><span style="FONT-SIZE: 16px">英文原文参考:</span><a href="http://www.cyberciti.biz/tips/linux-bond-or-team-multiple-network-interfaces-nic-into-single-interface.html" target="_blank"><font color="#003366"><span style="FONT-SIZE: 16px">Linux bond or team multiple network interfaces (NIC) into single interface</span></font></a><span style="FONT-SIZE: 16px">–</span><a href="http://www.nixway.net/" target="_blank"><font color="#003366"><span style="FONT-SIZE: 16px">nixway.net</span></font></a></p>
+<p><span style="FONT-SIZE: 16px">将多个Linux网络端口绑定为一个，可以提升网络的性能，比如对于备份服务器，需要在一个晚上备份几个T的数据，如果使用单个的千兆网口将会是很严重的瓶颈。其它的应用，比如ftp服务器，高负载的下载网站, 都有类似的问题。因此使用Linux teaming或bond来绑定多个网卡作为一个逻辑网口，配置单个的IP地址，会大幅提升服务器的网络吞吐(I/O).</span></p>
+<p><span style="FONT-SIZE: 16px">Linux的多网卡绑定功能使用的是内核中的"bonding"模块，关于此模块可以参考</span><a href="http://www.cyberciti.biz/howto/question/static/linux-ethernet-bonding-driver-howto.php"><font color="#003366"><span style="FONT-SIZE: 16px">Linux Ethernet Bonding Driver</span></font></a><span style="FONT-SIZE: 16px">文档, 但是目前发布各个Linux版本内核均已包含了此模块，大多数情况下不需要重新编译内核。 Linux 的 bonding 驱动提供了绑定/集成(bond)多个网卡为一个虚拟逻辑网口的功能。并请注意绑定的网口(bonded)有多种工作模式; 一般来说，分为 热后备(hot standby) 和 负载均衡(load balancing). 在Redhat/Fedora和其它类Redhat Linux中是比较容易配置的.</span></p>
+<h3><span style="FONT-SIZE: 16px">第一步: 创建 bond0 配置文件</span></h3>
+<p><span style="FONT-SIZE: 16px">Red Hat Linux的网络配置文件在目录: /etc/sysconfig/network-scripts/ . 首先，需要创建 bond0 配置文件:</span></p>
+<p><pre><span style="FONT-SIZE: 16px">[root@nixway.net etc]# vi /etc/sysconfig/network-scripts/ifcfg-bond0</span></pre>
+<p></p>
+<p><span style="FONT-SIZE: 16px">如下参考配置:</span></p>
+<p><pre><span style="FONT-SIZE: 16px">DEVICE=bond0        --物理设备名字
+IPADDR=192.168.1.20  --IP地址
+NETWORK=192.168.1.0  --所属子网
+NETMASK=255.255.255.0 --子网掩码
+USERCTL=no           --是否允许非root用户控制该设备
+BOOTPROTO=none     --一般是在做网卡绑定的时候用到，通常情况下就dhcp或者static</span></pre><pre><span style="FONT-SIZE: 16px">ONBOOT=yes         --开机自动激活网卡</span></pre>
+<p></p>
+<p><span style="FONT-SIZE: 16px">将如上的IP替换为实际的IP地址.</span></p>
+<h3><span style="FONT-SIZE: 16px">第二步: 修改 eth0 和 eth1 配置文件:</span></h3>
+<p><span style="FONT-SIZE: 16px">使用vi修改eth0和eth1的配置文件</span></p>
+<p><pre><span style="FONT-SIZE: 16px">[root@nixway.net etc]# vi /etc/sysconfig/network-scripts/ifcfg-eth0</span></pre>
+<p></p>
+<p><span style="FONT-SIZE: 16px">如下为参考配置</span></p>
+<p><pre><span style="FONT-SIZE: 16px">DEVICE=eth0
+USERCTL=no
+ONBOOT=yes
+MASTER=bond0
+SLAVE=yes
+BOOTPROTO=none</span></pre>
+<p></p>
+<p><span style="FONT-SIZE: 16px">修改eth1配置文件</span></p>
+<p><pre><span style="FONT-SIZE: 16px">[root@nixway.net etc]# vi /etc/sysconfig/network-scripts/ifcfg-eth1</span></pre>
+<p></p>
+<p><span style="FONT-SIZE: 16px">如下为参考配置</span></p>
+<p><pre><span style="FONT-SIZE: 16px">DEVICE=eth1
+USERCTL=no
+ONBOOT=yes
+MASTER=bond0
+SLAVE=yes
+BOOTPROTO=none</span></pre>
+<p></p>
+<p><span style="FONT-SIZE: 16px">保存退出.</span></p>
+<h3><span style="FONT-SIZE: 16px">第三步: 装载 bond 模块驱动</span></h3>
+<p><span style="FONT-SIZE: 16px">在使bond0网口能够工作之前，需要首先装载内核bond模块的驱动, 修改/etc/modprobe.conf:</span></p>
+<p><pre><span style="FONT-SIZE: 16px">[root@nixway.net etc]# vi /etc/modprobe.conf</span></pre>
+<p></p>
+<p><span style="FONT-SIZE: 16px">将如下两行附加到文件末尾:</span></p>
+<p><pre><span style="FONT-SIZE: 16px">alias bond0 bonding
+options bond0 mode=balance-alb miimon=100</span></pre><pre><span style="FONT-SIZE: 16px">mode=balance-alb ---f负载均衡</span></pre><pre><span style="FONT-SIZE: 16px">miimon=100       ---用来进行链路监测的。 比如:miimon=100，那么系统每100ms监测一次链路连接状态，如果有一条线路不通就转入另一条线路</span></pre>
+<p></p>
+<p><span style="FONT-SIZE: 16px">保存退出vi编辑。更多关于bond内核模块的文档，请参考</span><a href="http://www.cyberciti.biz/howto/question/static/linux-ethernet-bonding-driver-howto.php#section_4"><font color="#003366"><span style="FONT-SIZE: 16px">Linux Ethernet Bonding Driver Howto</span></font></a> </p>
+<h3><span style="FONT-SIZE: 16px">第四步: 测试配置</span></h3>
+<p><span style="FONT-SIZE: 16px">首先装载bonding模块</span></p>
+<p><pre><span style="FONT-SIZE: 16px">[root@nixway.net etc]# modprobe bonding</span></pre>
+<p></p>
+<p><span style="FONT-SIZE: 16px">重启网络服务，确认bond0已经启动:</span></p>
+<p><pre><span style="FONT-SIZE: 16px">[root@nixway.net etc]# service network restart</span></pre>
+<p></p>
+<p><span style="FONT-SIZE: 16px">确认设备已经正确加载:</span></p>
+<p><pre><span style="FONT-SIZE: 16px">[root@nixway.net etc]# less /proc/net/bonding/bond0</span></pre>
+<p></p>
+<p><span style="FONT-SIZE: 16px">输出:</span></p><pre><span style="FONT-SIZE: 16px">Bonding Mode: load balancing (round-robin)
+MII Status: up
+MII Polling Interval (ms): 0
+Up Delay (ms): 0
+Down Delay (ms): 0 
+
+Slave Interface: eth0
+MII Status: up
+Link Failure Count: 0
+Permanent HW addr: 00:0c:29:c6:be:59 
+
+Slave Interface: eth1
+MII Status: up
+Link Failure Count: 0
+Permanent HW addr: 00:0c:29:c6:be:63</span></pre>
+<p><span style="FONT-SIZE: 16px">列出所有网口:</span></p>
+<p><pre><span style="FONT-SIZE: 16px">[root@nixway.net etc]# ifconfig</span></pre>
+<p></p>
+<p><span style="FONT-SIZE: 16px">输出:</span></p><pre><span style="FONT-SIZE: 16px">bond0     Link encap:Ethernet  HWaddr 00:0C:29:C6:BE:59
+ inet addr:192.168.1.20  Bcast:192.168.1.255  Mask:255.255.255.0
+ inet6 addr: fe80::200:ff:fe00:0/64 Scope:Link
+ UP BROADCAST RUNNING MASTER MULTICAST  MTU:1500  Metric:1
+ RX packets:2804 errors:0 dropped:0 overruns:0 frame:0
+ TX packets:1879 errors:0 dropped:0 overruns:0 carrier:0
+ collisions:0 txqueuelen:0
+ RX bytes:250825 (244.9 KiB)  TX bytes:244683 (238.9 KiB) 
+
+eth0      Link encap:Ethernet  HWaddr 00:0C:29:C6:BE:59
+ inet addr:192.168.1.20  Bcast:192.168.1.255  Mask:255.255.255.0
+ inet6 addr: fe80::20c:29ff:fec6:be59/64 Scope:Link
+ UP BROADCAST RUNNING SLAVE MULTICAST  MTU:1500  Metric:1
+ RX packets:2809 errors:0 dropped:0 overruns:0 frame:0
+ TX packets:1390 errors:0 dropped:0 overruns:0 carrier:0
+ collisions:0 txqueuelen:1000
+ RX bytes:251161 (245.2 KiB)  TX bytes:180289 (176.0 KiB)
+ Interrupt:11 Base address:0x1400 
+
+eth1      Link encap:Ethernet  HWaddr 00:0C:29:C6:BE:59
+ inet addr:192.168.1.20  Bcast:192.168.1.255  Mask:255.255.255.0
+ inet6 addr: fe80::20c:29ff:fec6:be59/64 Scope:Link
+ UP BROADCAST RUNNING SLAVE MULTICAST  MTU:1500  Metric:1
+ RX packets:4 errors:0 dropped:0 overruns:0 frame:0
+ TX packets:502 errors:0 dropped:0 overruns:0 carrier:0
+ collisions:0 txqueuelen:1000
+ RX bytes:258 (258.0 b)  TX bytes:66516 (64.9 KiB)
+ Interrupt:10 Base address:0x1480</span></pre>
+<p><span style="FONT-SIZE: 16px">如果已经输出类似上述的端口，说明你的bond已经成功了. 更多细节，请参考官方文档</span><br><a href="http://www.cyberciti.biz/howto/question/static/linux-ethernet-bonding-driver-howto.php"><font color="#003366"><span style="FONT-SIZE: 16px">official howto</span></font></a><span style="FONT-SIZE: 16px">包含了如下的内容:</span></p>
+<ul>
+<li><span style="FONT-SIZE: 16px">VLAN Configuration</span></li>
+<li><span style="FONT-SIZE: 16px">Cisco switch related configuration</span></li>
+<li><span style="FONT-SIZE: 16px">Advanced routing and troubleshooting </span></li></ul></div></body></html>

@@ -1,0 +1,20 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>JBPM4.4项目和tomcat6.0.X的兼容问题</title></head><body><h1>JBPM4.4项目和tomcat6.0.X的兼容问题</h1><div>基于JBPM4的web项目jsp页面发布出错，错误如下:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<p><strong>exception</strong></p>
+<pre>javax.servlet.ServletException: java.lang.LinkageError: loader constraint violation: when resolving interface method &quot;javax.servlet.jsp.JspApplicationContext.getExpressionFactory()Ljavax/el/ExpressionFactory;&quot; the class loader (instance of org/apache/jasper/servlet/JasperLoader) of the current class, org/apache/jsp/OnDuty/wfmanage_jsp, and the class loader (instance of org/apache/catalina/loader/StandardClassLoader) for resolved class, javax/servlet/jsp/JspApplicationContext, have different Class objects for the type javax/el/ExpressionFactory used in the signature
+ org.apache.jasper.servlet.JspServlet.service(JspServlet.java:275)
+ javax.servlet.http.HttpServlet.service(HttpServlet.java:717)</pre>
+<p> </p>
+<p><strong>root cause</strong></p>
+<pre>java.lang.LinkageError: loader constraint violation: when resolving interface method &quot;javax.servlet.jsp.JspApplicationContext.getExpressionFactory()Ljavax/el/ExpressionFactory;&quot; the class loader (instance of org/apache/jasper/servlet/JasperLoader) of the current class, org/apache/jsp/OnDuty/wfmanage_jsp, and the class loader (instance of org/apache/catalina/loader/StandardClassLoader) for resolved class, javax/servlet/jsp/JspApplicationContext, have different Class objects for the type javax/el/ExpressionFactory used in the signature
+ org.apache.jsp.OnDuty.wfmanage_jsp._jspInit(wfmanage_jsp.java:27)
+ org.apache.jasper.runtime.HttpJspBase.init(HttpJspBase.java:52)
+ org.apache.jasper.servlet.JspServletWrapper.getServlet(JspServletWrapper.java:159)
+ org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:329)
+ org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:342)
+ org.apache.jasper.servlet.JspServlet.service(JspServlet.java:267)
+ javax.servlet.http.HttpServlet.service(HttpServlet.java:717)</pre>
+<pre>原因是项目中WEB-INF\lib中的三个jar包(<span style="color: red">juel.jar, juel-engine.jar, juel-impl.jar</span>)和tomcat6下lib中jar包(<span style="color: red">el-api.jar</span>)冲突</pre>
+<pre>解决方法：</pre>
+<pre>方法一：换成tomcat5.5 一点问题也没有了</pre>
+<pre>方法二：将<span style="color: red">juel.jar, juel-engine.jar, juel-impl.jar</span>这三个包复制到tomcat6下lib中，并删除原来的<span style="color: red">el-api.jar，切记要把WEB-INF\lib中的juel.jar, juel-engine.jar, juel-impl.jar删除。不然还是要冲突。</span></pre></div></body></html>

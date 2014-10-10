@@ -1,0 +1,24 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>公司IT系统中遇到的问题总结</title></head><body><h1>公司IT系统中遇到的问题总结</h1><div><p><strong><font color="#ff0000" size="3">1、IIS6或者Tomcat假死问题</font></strong></p>
+<p><font color="#000000" size="2">问题描述：按下&ldquo;F5&rdquo;键，刷新调用Sqlserver2005数据库的页面，刷新N（大约10次）次，页面无法显示，IIS6假死。</font></p>
+<p><font color="#000000" size="2">原因：数据库的链接没有释放。<strong><font color="#ff0000">要在代码中强制关闭数据库链接</font><font color="#ff0000">。</font></strong></font></p>
+<p><strong><font color="#ff0000" size="3">2、JS文件通过SSL VPN下载速度慢的问题</font></strong></p>
+<p><font color="#000000" size="2">问题描述：页面中引用Jquery.js，大约70k，通过ssl VPN访问，下载Jquery.js文件需要很长的时间，原因是SSL VPN对Jquery.js进行了处理，导致，页面加载像蜗牛一样慢。</font></p>
+<p><font color="#000000" size="2">解决方案：把Jquery.js文件放到SSL VPN之外的公网上（例如：<a href="http://211.111.1.111/js/Jquery.js">http://211.111.1.111/js/Jquery.js</a>），使Jquery.js的加载不通过SSL VPN，这样Jquery.js的加载速度很快，但是安全性稍差。</font></p>
+<p><font color="#000000" size="2">VPN过滤使用：<a href="http://*jquery.js/">http://*Jquery.js</a></font></p>
+<p><font color="#000000" size="2"><a href="http://211.111.1.111/js/Jquery.js">http://211.111.1.111/js/Jquery.js</a>经过SSL VPN的处理后的格式：<a href="https://vpn/">https://vpn</a>的IP地址/+CSCO+kh3231312E3131312E312E313131/js/Jquery.js</font></p>
+<p><font color="#000000" size="2">这样会导致新的问题：访问网页时会有https和http的双重链接，IE8会有安全提示：</font></p>
+<p align="center"><font color="#000000" size="2"><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/6d2b40020c1d1d493812bbe8.jpg"></span></font></p>
+<p><font style="background-color: #ff0000" color="#000000" size="3"><span><strong>修改方法如下：</strong></span></font></p>
+<p><font color="#000000" size="2"><span><strong>1、把（公网IP地址和VPN的IP地址）添加信任站点</strong></span></font></p>
+<p><font color="#000000" size="2"><span><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/950c66a3efc08a93caefd054.jpg"><br>
+</span></span></font></p>
+<p><font color="#000000" size="2"><span><strong>2、IE8安全设置</strong></span></font></p>
+<p><font color="#000000" size="2"><span><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/2e4c26532fb6c6300df3e3f4.jpg"><br>
+</span></span></font></p>
+<p><font color="#000000" size="2"><span><font color="#ff0000"><strong>注：</strong></font></span></font></p>
+<p><font color="#ff0000" size="2"><span><strong>安全和不安全内容或混合内容表示某个网页试图同时使用安全 (HTTPS/SSL) 和不安全 (HTTP) Web 服务器连接来显示元素。这通常在显示来自不安全的服务器的图像、横幅或脚本的在线商店或金融站点上出现。</strong></span></font></p>
+<p><font color="#ff0000" size="2"><span>显示混合内容的风险在于，不安全网页或脚本可能能够访问安全内容中的信息。</span></font></p>
+<p><font color="#000000" size="2"><span><font color="#ff0000">Internet Explorer 使用一种称为安全套接字层 (SSL) 的加密协议访问安全网页。这些页面使用 HTTPS 前缀，而普通网页使用 HTTP 前缀。 <br>
+</font></span></font></p>
+<p> </p>
+<p> </p></div></body></html>

@@ -1,0 +1,160 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ps -o pid,args -u $LOGNAME|grep sleedaemon|grep -v &amp;#34;grep&amp;#34;|wc -l</title></head><body><h1>ps -o pid,args -u $LOGNAME|grep sleedaemon|grep -v &amp;#34;grep&amp;#34;|wc -l</h1><div><p>命令行：<strong>ps -o pid,args -u $LOGNAME|grep sleedaemon|grep -v &quot;grep&quot;|wc -</strong>l</p>
+<p>含义：查找用户￥LOGNAME的sleedaemon进行，并统计行数</p>
+<p><strong>wc命令</strong><br>
+　　wc命令的功能为统计指定文件中的字节数、字数、行数, 并将统计结果显示输出。<br>
+　　语法：wc [选项] 文件…<br>
+　　说明：该命令统计给定文件中的字节数、字数、行数。如果没有给出文件名，<br>
+则从标准输入读取。wc同时也给出所有指定文件的总统计数。字是由空格字符区分开的最大字符串。</p>
+<p>　　该命令各选项含义如下：</p>
+<p>　　- c 统计字节数。<br>
+　　- l 统计行数。<br>
+　　- w 统计字数。</p>
+<pre class="xmp"><h3 >PS示例</h3><ol type="1"><li>要显示所有进程，请输入： <pre class="xmp">ps -e -f</pre>
+</li>
+<li>要列出用户&ldquo;guest&rdquo;拥有的进程，请输入：
+<pre class="xmp">ps -f -l -u guest</pre>
+</li>
+<li>要列出与 <strong>/dev/pts/0</strong> 和 <strong>/dev/pts/1</strong> 终端相关的进程，请输入：
+<pre class="xmp">ps -t pts/0,pts/1</pre>
+</li>
+<li>要列出与终端无关的进程，请输入：
+<pre class="xmp">ps -t -</pre>
+</li>
+<li>要使用字段说明符显示指定的格式，请输入：
+<pre class="xmp">ps -o ruser,pid,ppid,args</pre>
+</li>
+<li>要显示关于进程中所有内核线程的信息，请输入：
+<pre class="xmp">ps -L</pre>
+</li>
+<li>要显示所有进程的会话标识和进程组标识，请输入：
+<pre class="xmp">ps -jA</pre>
+</li>
+<li>要显示调度类和进程的优先级，请输入：
+<pre class="xmp">ps -c -l</pre>
+</li>
+<li>要显示进程中内核线程的信息及内核线程数，请输入：
+<pre class="xmp">ps -L -f</pre>
+</li>
+<li>要显示进程或内核线程绑定到的处理器，请输入：
+<pre class="xmp">ps  -P</pre>
+</li>
+<li>要显示给定进程（以下示例中的 <tt class="xph"><font face="新宋体">inetd</font></tt>）的 ASCII 技术，请输入：
+<pre class="xmp">ps -T 14220</pre>
+输出将类似于以下内容：
+<pre class="xmp">PID    TTY  TIME CMD
+   14220      -  0:00 inetd
+   16948      -  0:00    |\--telnetd
+   32542  pts/4  0:00    |    \--ksh
+   26504      -  0:00    |\--telnetd
+   41272  pts/5  0:00    |    \--ksh
+   26908  pts/5  0:00    |        \--vi
+   28602      -  0:00    |\--telnetd
+   24830  pts/0  0:00    |    \--ksh
+  676416  pts/0  0:00    |        \--ksh
+   29984      -  0:00    |\--telnetd
+   38546  pts/6  0:00    |    \--ksh
+   32126      -  0:00    |\--telnetd
+   11162  pts/7  0:00    |    \--ksh
+   34466      -  0:00    |\--rpc.ttdbserver
+   35750      -  0:00    |\--telnetd
+   23612  pts/3  0:00    |    \--ksh
+   36294      -  0:00    |\--telnetd
+   38096  pts/8  0:00    |    \--ksh
+   39740      -  0:00    |\--telnetd
+   42226  pts/9  0:01    |    \--ksh
+   40632      -  0:00    |\--telnetd
+   40232  pts/2  0:00    |    \--ksh
+   32910  pts/2  0:00    |        \--dbx
+  987990  pts/2  0:00    |            \--a.out
+   40722      -  0:00    |\--telnetd
+   16792 pts/10  0:00    |    \--ksh
+   37886 pts/10  0:00    |        \--ps
+  105716      -  0:00     \--telnetd
+   29508  pts/1  0:00         \--ksh
+   39478  pts/1  0:00             \--ksh
+   38392  pts/1  0:00                 \--vi</pre>
+</li>
+<li>要显示关于位于给定 pid 的所有进程的信息，请输入：
+<pre class="xmp">ps -fL 14220</pre>
+输出将类似于以下内容：
+<pre class="xmp">UID   PID  PPID   C    STIME    TTY  TIME CMD
+root 14220  8676   0   Apr 07      -  0:00 /usr/sbin/inetd
+root 16948 14220   0   Apr 06      -  0:00 telnetd -a
+root 23612 35750   0   Apr 10  pts/3  0:00 -ksh
+root 24830 28602   1 18:30:56  pts/0  0:00 -ksh
+root 28602 14220   0 18:30:55      -  0:00 telnetd -a
+root 32542 16948   0   Apr 06  pts/4  0:00 -ksh
+root 34466 14220   0   Apr 10      -  0:00 rpc.ttdbserver 100083 1
+root 35750 14220   0   Apr 10      -  0:00 telnetd -a
+root 40228 24830   8 18:36:01  pts/0  0:00 ps -fL 14220</pre>
+</li>
+<li>要显示带有扩展用户名的所有进程，请输入：
+<pre class="xmp">ps -X -e -f</pre>
+</li>
+</ol>
+<a name="wq1778"></a>
+<h3 >
+<table class="FCK__ShowTableBorders" border="0" rules="none" width="100%" frame="void">
+    <tbody valign="top">
+        <tr>
+            <td width="18%"><strong>/usr/sysv/bin/ps</strong></td>
+            <td width="81%">包含 System V R4 <strong>ps</strong> 命令。</td>
+        </tr>
+        <tr>
+            <td><strong>/etc/passwd</strong></td>
+            <td>包含用户标识信息。</td>
+        </tr>
+        <tr>
+            <td><strong>/dev/pty*</strong></td>
+            <td>指示终端（PTY）名称。</td>
+        </tr>
+        <tr>
+            <td><strong>/dev/tty*</strong></td>
+            <td>指示终端（TTY）名称。</td>
+        </tr>
+    </tbody>
+</table>
+</h3>
+<div> </div>
+<a name="wq1779"></a>
+<table class="FCK__ShowTableBorders" border="0" rules="none" width="100%" frame="void">
+    <tbody valign="top">
+        <tr>
+            <td width="18%"><strong>/usr/sysv/bin/ps</strong></td>
+            <td width="81%">包含 System V R4 <strong>ps</strong> 命令。</td>
+        </tr>
+        <tr>
+            <td><strong>/etc/passwd</strong></td>
+            <td>包含用户标识信息。</td>
+        </tr>
+        <tr>
+            <td><strong>/dev/pty*</strong></td>
+            <td>指示终端（PTY）名称。</td>
+        </tr>
+        <tr>
+            <td><strong>/dev/tty*</strong></td>
+            <td>指示终端（TTY）名称。</td>
+        </tr>
+    </tbody>
+</table>
+<table class="FCK__ShowTableBorders" border="0" rules="none" width="100%" frame="void">
+    <tbody valign="top">
+        <tr>
+            <td width="18%"><strong>/usr/sysv/bin/ps</strong></td>
+            <td width="81%">包含 System V R4 <strong>ps</strong> 命令。</td>
+        </tr>
+        <tr>
+            <td><strong>/etc/passwd</strong></td>
+            <td>包含用户标识信息。</td>
+        </tr>
+        <tr>
+            <td><strong>/dev/pty*</strong></td>
+            <td>指示终端（PTY）名称。</td>
+        </tr>
+        <tr>
+            <td><strong>/dev/tty*</strong></td>
+            <td>指示终端（TTY）名称。</td>
+        </tr>
+    </tbody>
+</table>
+</pre></div></body></html>

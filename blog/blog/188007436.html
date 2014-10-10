@@ -1,0 +1,44 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>attrib命令详细解释</title></head><body><h1>attrib命令详细解释</h1><div><p><strong>attrib</strong>指令用于修改文件的属性.文件的常见属性有:只读.存档.隐藏和系统.<br>
+只读属性是指文件只可以做读的操作.不能对文件进行写的操作.就是文件的写保护.<br>
+存档属性是用来标记文件改动的.即在上一次备份后文件有所改动.一些备份软件在备份的时候会只去备份带有存档属性的文件.<br>
+隐藏属性顾名思义即为隐藏文件.在通常情况下.在资源管理器中不显示带有隐藏属性的文件.<br>
+系统属性是指标注文件为系统文件.是系统需要调用的文件.系统属性包括隐藏和只读属性，且在WINDOWS GUI模式下不能更改。<br>
+<br>
+外部命令：Attrib.exe<br>
+<br>
+<strong>attrib</strong>指令的格式和常用参数为<br>
+<br>
+<strong>ATTRIB [+R | -R] [+A | -A ] [+S | -S] [+H | -H] [[drive:] [path] filename] [/S [/D]]<br>
+<br>
++ 设置属性。<br>
+- 清除属性。<br>
+R 只读文件属性。<br>
+A 存档文件属性。<br>
+S 系统文件属性。<br>
+H 隐藏文件属性。<br>
+[drive:][path][filename]<br>
+指定要处理的文件属性。<br>
+/S 处理当前文件夹及其子文件夹中的匹配文件。<br>
+/D 也处理文件夹。</strong><br>
+<br>
+attrib的用途不是很广泛.不过有的时候可以利用它来做一些方便的文件处理.比如U盘中感染了病毒.会在U盘的驱动器里建立多个隐藏的文件.其中会有一个名为autorun.inf的文件.这个文件会为U盘添加一个自动运行的菜单.如果把默认打开操作改成关联病毒程序.那么在你双击U盘的时候.就会感染U盘所带的病毒.通常情况下无法看到这些文件就没办法删除.可以用下面的步骤来清除.<br>
+以下假设我的U盘驱动器的盘符是L:.&quot;/*&quot;与&quot;*/&quot;之间的内容为注释.在运行中敲入CMD确定便可以快速打开系统的命令提示符.运行的快捷键为&quot;WIN&quot;+&quot;R&quot;.<br>
+<br>
+<strong>C:\Documents and Settings\Administrator&gt;L:</strong> /*进入L盘目录*/<br>
+<strong>L:\&gt;dir/a</strong> /*这个指令是查看当前目录全部的文件.包括有隐藏属性的.可以用来查看是否有autorun.inf等文件.*/<br>
+<strong>L:\&gt;attrib autorun.inf -a -s -r -h</strong> /*去掉autorun.inf的四种属性*/<br>
+<strong>L:\&gt;del autorun.inf</strong> /*删除autorun.inf*/<br>
+<br>
+然后拔掉U盘.再一次连接的时候U盘的自动运行菜单就没有了.当然.其他的病毒程序也可以如此操作.如果把autorun.inf换成*.*就可以一次对当前目录下全部文件进行操作了.如:<br>
+<br>
+<strong>L:\&gt;attrib *.* -a -s -r -h</strong> <br>
+<br>
+<br>
+进入E盘 然后输入命令还恢复显示文件<br>
+attrib /d /s -s -h -a -r 这条命令可以恢复U盘所有文件夹<br>
+病毒的原理：<br>
+把所有文件夹设置为隐藏的系统文件 然后复制出病毒样本 他们都是文件夹图标<br>
+名字都是被隐藏的正常文件夹 这样就造成一种假象 当你运行正常的文件夹时就会无法打开<br>
+因为他就是一个设计好的病毒 正常文件夹都无法显示 一旦中了U盘病毒就没办法在恢复了</p>
+<p>【注:】要是在使用attrib命令里出现这样的提示：&ldquo;未重设隐藏文件&rdquo;,那么可以使用如下方法解决：<br>
+先把文件的每个属性都去除（即：-a -s -r -h），如图所示，再添加需要的属性即可。</p></div></body></html>

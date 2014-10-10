@@ -1,0 +1,448 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HTML中的table标签，在网页中的布局最重要的标签</title></head><body><h1>HTML中的table标签，在网页中的布局最重要的标签</h1><div><table class="FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="0" width="100%" height="30">
+    <tbody>
+        <tr>
+            <td><strong><font size="2">一、表格中单元格之间分隔线的隐藏方法</font></strong></td>
+        </tr>
+    </tbody>
+</table>
+<table class="t FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="8" width="100%">
+    <tbody>
+        <tr>
+            <td width="220">
+            <table border="1" rules="cols" cellspacing="0" cellpadding="0" width="200">
+                <tbody>
+                    <tr align="center">
+                        <td><font size="2">第</font></td>
+                        <td><font size="2">一</font></td>
+                        <td><font size="2">行</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td><font size="2">第</font></td>
+                        <td><font size="2">二</font></td>
+                        <td><font size="2">行</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td><font size="2">第</font></td>
+                        <td><font size="2">三</font></td>
+                        <td><font size="2">行</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            </td>
+            <td width="380"><font size="2">这个表格去掉了单元格之间的纵向分隔线</font></td>
+        </tr>
+        <tr>
+            <td><br>
+            <table border="1" rules="rows" cellspacing="0" cellpadding="0" width="200">
+                <tbody>
+                    <tr align="center">
+                        <td><font size="2">第</font></td>
+                        <td><font size="2">第</font></td>
+                        <td><font size="2">第</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td><font size="2">一</font></td>
+                        <td><font size="2">二</font></td>
+                        <td><font size="2">三</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td><font size="2">列</font></td>
+                        <td><font size="2">列</font></td>
+                        <td><font size="2">列</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            </td>
+            <td><font size="2">这个表格去掉了单元格之间的横向分隔线</font></td>
+        </tr>
+        <tr>
+            <td>
+            <table border="1" rules="none" cellspacing="0" cellpadding="0" width="200">
+                <tbody>
+                    <tr align="center">
+                        <td><font size="2">横</font></td>
+                        <td> </td>
+                        <td><font size="2">线</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td><font size="2">竖</font></td>
+                        <td> </td>
+                        <td><font size="2">线</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td><font size="2">都</font></td>
+                        <td><font size="2">没</font></td>
+                        <td><font size="2">了</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            </td>
+            <td><font size="2">这个表格去掉了单元格之间的纵向分隔线和横向分隔线</font></td>
+        </tr>
+        <tr>
+            <td colspan="2"><font size="2"><hr color="#000000" size="1">
+            　　其实上面的三个表格都有三行三列，隐藏分隔线的诀窍在于rules，察看这三个表格的源代码，我们可以看到&lt;TABLE&gt;标签中都有rules。 它有三个参数(cols,rows,none)，当rules=cols时，表格会隐藏纵向的分隔线，这样我们就只能看到表格的行；当rules=rows时，则 隐藏了横向的分隔线，这样我们只能看到表格的列；而当rules=none时，纵向分隔线和横向分隔线将全部隐藏。</font></td>
+        </tr>
+    </tbody>
+</table>
+<br>
+<br>
+<br>
+<table class="FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="0" width="100%" height="30">
+    <tbody>
+        <tr>
+            <td><strong><font size="2">二、表格边框的隐藏</font></strong></td>
+        </tr>
+    </tbody>
+</table>
+<table class="t FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="8" width="100%">
+    <tbody>
+        <tr>
+            <td>
+            <table border="1" cellspacing="0" cellpadding="0" width="200">
+                <tbody>
+                    <tr align="center">
+                        <td><font size="2">普</font></td>
+                        <td><font size="2">表</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td><font size="2">通</font></td>
+                        <td><font size="2">格</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            </td>
+            <td><font size="2">这是一普通的表格</font></td>
+        </tr>
+        <tr>
+            <td><br>
+            <table border="1" cellspacing="0" cellpadding="0" width="200" frame="above">
+                <tbody>
+                    <tr align="center">
+                        <td><font size="2">不怕</font></td>
+                        <td><font size="2">下雨</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td> </td>
+                        <td> </td>
+                    </tr>
+                </tbody>
+            </table>
+            </td>
+            <td><font size="2">只显示上边框</font></td>
+        </tr>
+        <tr>
+            <td>
+            <table border="1" cellspacing="0" cellpadding="0" width="200" frame="below">
+                <tbody>
+                    <tr>
+                        <td> </td>
+                        <td> </td>
+                    </tr>
+                    <tr>
+                        <td align="center"><font size="2">下起雨来</font></td>
+                        <td align="center"><font size="2">该怎么办</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            </td>
+            <td><font size="2">只显示下边框</font></td>
+        </tr>
+        <tr>
+            <td><br>
+            <table border="1" cellspacing="0" cellpadding="0" width="200" frame="vsides">
+                <tbody>
+                    <tr>
+                        <td align="center"><font size="2">上不着天</font></td>
+                        <td> </td>
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td align="center"><font size="2">下不着地</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            </td>
+            <td><font size="2">只显示左、右边框</font></td>
+        </tr>
+        <tr>
+            <td>
+            <table border="1" cellspacing="0" cellpadding="0" width="200" frame="hsides">
+                <tbody>
+                    <tr>
+                        <td> </td>
+                        <td align="center"><font size="2">两边走开</font></td>
+                    </tr>
+                    <tr>
+                        <td align="center"><font size="2">老子姓王</font></td>
+                        <td> </td>
+                    </tr>
+                </tbody>
+            </table>
+            </td>
+            <td><font size="2">只显示上、下边框</font></td>
+        </tr>
+        <tr>
+            <td><br>
+            <table border="1" cellspacing="0" cellpadding="0" width="200" frame="lhs">
+                <tbody>
+                    <tr>
+                        <td width="100"><font size="2">左右</font></td>
+                        <td width="100"> </td>
+                    </tr>
+                    <tr>
+                        <td><font size="2">为难</font></td>
+                        <td> </td>
+                    </tr>
+                </tbody>
+            </table>
+            </td>
+            <td><font size="2">只显示左边框</font></td>
+        </tr>
+        <tr>
+            <td>
+            <table border="1" cellspacing="0" cellpadding="0" width="200" frame="rhs">
+                <tbody>
+                    <tr>
+                        <td width="100"> </td>
+                        <td width="100" align="right"><font size="2">左右</font></td>
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td align="right"><font size="2">为难</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            </td>
+            <td><font size="2">只显示右边框</font></td>
+        </tr>
+        <tr>
+            <td><br>
+            <table border="1" cellspacing="0" cellpadding="0" width="200" frame="void">
+                <tbody>
+                    <tr>
+                        <td align="right"><font size="2">光秃秃</font></td>
+                        <td> </td>
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td align="left"><font size="2">全脱了</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            </td>
+            <td><font size="2">不显示任何边框</font></td>
+        </tr>
+        <tr>
+            <td colspan="2"><font size="2"><hr color="#000000" size="1">
+            表格边框的显示与隐藏，是可以用frame参数来控制的。请注意它只控制表格的边框图，而不影晌单元格。<br>
+            只显示上边框 &lt;table frame=above&gt;<br>
+            只显示下边框 &lt;table frame=below&gt; <br>
+            只显示左、右边框 &lt;table frame=vsides&gt;<br>
+            只显示上、下边框 &lt;table frame=hsides&gt;<br>
+            只显示左边框 &lt;table frame=lhs&gt;<br>
+            只显示右边框 &lt;table frame=rhs&gt;<br>
+            不显示任何边框 &lt;table frame=void&gt;</font></td>
+        </tr>
+    </tbody>
+</table>
+<p> </p>
+<table class="FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="0" width="100%" height="30">
+    <tbody>
+        <tr>
+            <td><strong><font size="2">三、表格边框</font></strong></td>
+        </tr>
+    </tbody>
+</table>
+<table class="t FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="8" width="100%">
+    <tbody>
+        <tr valign="top">
+            <td>
+            <table border="1" cellspacing="0" cellpadding="0" width="200">
+                <tbody>
+                    <tr align="center">
+                        <td><font size="2">普</font></td>
+                        <td><font size="2">表</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td><font size="2">通</font></td>
+                        <td><font size="2">格</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            <font size="2">这是一普通的表格</font></td>
+            <td>&lt;table border=&quot;1&quot; width=&quot;200&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt; &lt;tr align=&quot;center&quot;&gt; &lt;td&gt;普&lt;/td&gt; &lt;td&gt;表&lt;/td&gt; &lt;/tr&gt; &lt;tr align=&quot;center&quot;&gt; &lt;td&gt;通&lt;/td&gt; &lt;td&gt;格&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</td>
+        </tr>
+        <tr valign="top">
+            <td>
+            <table class="FCK__ShowTableBorders" border="0" cellspacing="1" cellpadding="0" width="200" bgcolor="#000000">
+                <tbody>
+                    <tr align="center" bgcolor="#ffffff">
+                        <td bgcolor="#ffffff"><font size="2">细</font></td>
+                        <td bgcolor="#ffffff"><font size="2">表</font></td>
+                    </tr>
+                    <tr align="center" bgcolor="#ffffff">
+                        <td bgcolor="#ffffff"><font size="2">线</font></td>
+                        <td bgcolor="#ffffff"><font size="2">格</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            <font size="2">表格加上了漂亮的细线<br>
+            (利用cellspacing1像素间隙和表格与单元格背景的不同)</font></td>
+            <td>&lt;table border=&quot;0&quot; width=&quot;200&quot; cellspacing=&quot;1&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#000000&quot; &gt; &lt;tr align=&quot;center&quot; bgcolor=&quot;#FFFFFF&quot;&gt; &lt;td bgcolor=&quot;#FFFFFF&quot;&gt;细&lt;/td&gt; &lt;td bgcolor=&quot;#FFFFFF&quot;&gt;表&lt;/td&gt; &lt;/tr&gt; &lt;tr align=&quot;center&quot; bgcolor=&quot;#FFFFFF&quot;&gt; &lt;td bgcolor=&quot;#FFFFFF&quot;&gt;线&lt;/td&gt; &lt;td bgcolor=&quot;#FFFFFF&quot;&gt;格&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</td>
+        </tr>
+        <tr valign="top">
+            <td>
+            <table class="FCK__ShowTableBorders" cellspacing="0" cellpadding="0" width="200">
+                <tbody>
+                    <tr align="center">
+                        <td style="border-bottom: rgb(0,0,0) 1px groove; border-left: rgb(0,0,0) 1px groove; border-top: rgb(0,0,0) 1px groove; border-right: rgb(0,0,0) 1px groove"><font size="2">细</font></td>
+                        <td style="border-bottom: rgb(0,0,0) 1px groove; border-top: rgb(0,0,0) 1px groove; border-right: rgb(0,0,0) 1px groove"><font size="2">表</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td style="border-bottom: rgb(0,0,0) 1px groove; border-left: rgb(0,0,0) 1px groove; border-right: rgb(0,0,0) 1px groove"><font size="2">线</font></td>
+                        <td style="border-bottom: rgb(0,0,0) 1px groove; border-right: rgb(0,0,0) 1px groove"><font size="2">格</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            <font size="2">这和上面那个可不一样，它用的是CSS，效果却一样。<br>
+            (对单元格border的定义)</font></td>
+            <td>&lt;table width=&quot;200&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt; &lt;tr align=&quot;center&quot;&gt; &lt;td style=&quot;BORDER-top: rgb(0,0,0) 1px groove; BORDER-bottom: rgb(0,0,0) 1px groove; BORDER-left: rgb(0,0,0) 1px groove; BORDER-right: rgb(0,0,0) 1px groove&quot;&gt;细&lt;/td&gt; &lt;td style=&quot;BORDER-top: rgb(0,0,0) 1px groove; BORDER-bottom: rgb(0,0,0) 1px groove; BORDER-right: rgb(0,0,0) 1px groove&quot;&gt;表&lt;/td&gt; &lt;/tr&gt; &lt;tr align=&quot;center&quot;&gt; &lt;td style=&quot;BORDER-bottom: rgb(0,0,0) 1px groove; BORDER-left: rgb(0,0,0) 1px groove; BORDER-right: rgb(0,0,0) 1px groove&quot;&gt;线&lt;/td&gt; &lt;td style=&quot;BORDER-bottom: rgb(0,0,0) 1px groove; BORDER-right: rgb(0,0,0) 1px groove&quot;&gt;格&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</td>
+        </tr>
+        <tr valign="top">
+            <td>
+            <table class="FCK__ShowTableBorders" cellspacing="0" cellpadding="0" width="200">
+                <tbody>
+                    <tr align="center">
+                        <td style="border-bottom: rgb(0,0,0) 1px dotted; border-left: rgb(0,0,0) 1px dotted; border-top: rgb(0,0,0) 1px dotted; border-right: rgb(0,0,0) 1px dotted"><font size="2">细</font></td>
+                        <td style="border-bottom: rgb(0,0,0) 1px dotted; border-top: rgb(0,0,0) 1px dotted; border-right: rgb(0,0,0) 1px dotted"><font size="2">表</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td style="border-bottom: rgb(0,0,0) 1px dotted; border-left: rgb(0,0,0) 1px dotted; border-right: rgb(0,0,0) 1px dotted"><font size="2">线</font></td>
+                        <td style="border-bottom: rgb(0,0,0) 1px dotted; border-right: rgb(0,0,0) 1px dotted"><font size="2">格</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            <font size="2">再进一步，把边框变成虚线，同样是CSS的神奇作用。</font></td>
+            <td>&lt;table width=&quot;200&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt; &lt;tr align=&quot;center&quot;&gt; &lt;td style=&quot;BORDER-top: rgb(0,0,0) 1px dotted; BORDER-bottom: rgb(0,0,0) 1px dotted; BORDER-left: rgb(0,0,0) 1px dotted; BORDER-right: rgb(0,0,0) 1px dotted&quot;&gt;细&lt;/td&gt; &lt;td style=&quot;BORDER-top: rgb(0,0,0) 1px dotted; BORDER-bottom: rgb(0,0,0) 1px dotted; BORDER-right: rgb(0,0,0) 1px dotted&quot;&gt;表&lt;/td&gt; &lt;/tr&gt; &lt;td style=&quot;BORDER-bottom: rgb(0,0,0) 1px dotted; BORDER-left: rgb(0,0,0) 1px dotted; BORDER-right: rgb(0,0,0) 1px dotted&quot;&gt;线&lt;/td&gt; &lt;td style=&quot;BORDER-bottom: rgb(0,0,0) 1px dotted; BORDER-right: rgb(0,0,0) 1px dotted&quot;&gt;格&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</td>
+        </tr>
+        <tr valign="top">
+            <td>
+            <table class="FCK__ShowTableBorders" border="0" cellspacing="2" cellpadding="0" width="200">
+                <tbody>
+                    <tr>
+                        <td>
+                        <table class="FCK__ShowTableBorders" border="0" cellspacing="1" cellpadding="0" width="100%" bgcolor="#000000">
+                            <tbody>
+                                <tr>
+                                    <td bgcolor="#ffffff"> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </td>
+                        <td>
+                        <table class="FCK__ShowTableBorders" border="0" cellspacing="1" cellpadding="0" width="100%" bgcolor="#000000">
+                            <tbody>
+                                <tr>
+                                    <td bgcolor="#ffffff"> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        <table class="FCK__ShowTableBorders" border="0" cellspacing="1" cellpadding="0" width="100%" bgcolor="#000000">
+                            <tbody>
+                                <tr>
+                                    <td bgcolor="#ffffff"> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </td>
+                        <td>
+                        <table class="FCK__ShowTableBorders" border="0" cellspacing="1" cellpadding="0" width="100%" bgcolor="#000000">
+                            <tbody>
+                                <tr>
+                                    <td bgcolor="#ffffff"> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <font size="2">细线表格的扩展应用，奥妙就是在第个单元格中再套入一个表格。</font></td>
+            <td>&lt;table width=&quot;200&quot; border=&quot;0&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt; &lt;tr&gt; &lt;td&gt; &lt;table width=&quot;100%&quot; border=&quot;0&quot; cellspacing=&quot;1&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#000000&quot;&gt; &lt;tr&gt; &lt;td bgcolor=&quot;#FFFFFF&quot;&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/table&gt; &lt;/td&gt; &lt;td&gt; &lt;table width=&quot;100%&quot; border=&quot;0&quot; cellspacing=&quot;1&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#000000&quot;&gt; &lt;tr&gt; &lt;td bgcolor=&quot;#FFFFFF&quot;&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/table&gt; &lt;/td&gt; &lt;/tr&gt; &lt;tr&gt; &lt;td&gt; &lt;table width=&quot;100%&quot; border=&quot;0&quot; cellspacing=&quot;1&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#000000&quot;&gt; &lt;tr&gt; &lt;td bgcolor=&quot;#FFFFFF&quot;&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/table&gt; &lt;/td&gt; &lt;td&gt; &lt;table width=&quot;100%&quot; border=&quot;0&quot; cellspacing=&quot;1&quot; cellpadding=&quot;0&quot; bgcolor=&quot;#000000&quot;&gt; &lt;tr&gt; &lt;td bgcolor=&quot;#FFFFFF&quot;&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/table&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</td>
+        </tr>
+        <tr valign="top">
+            <td>
+            <table border="1" cellspacing="0" bordercolorlight="#ffffff" bordercolordark="#ffffff" cellpadding="0" width="200">
+                <tbody>
+                    <tr align="center">
+                        <td bgcolor="#b7b7b7" bordercolorlight="#000000" bordercolordark="#eeeeee"><font size="2">立</font></td>
+                        <td bgcolor="#b7b7b7" bordercolorlight="#000000" bordercolordark="#eeeeee"><font size="2">表</font></td>
+                    </tr>
+                    <tr align="center">
+                        <td bgcolor="#b7b7b7" bordercolorlight="#000000" bordercolordark="#eeeeee"><font size="2">体</font></td>
+                        <td bgcolor="#b7b7b7" bordercolorlight="#000000" bordercolordark="#eeeeee"><font size="2">格</font></td>
+                    </tr>
+                </tbody>
+            </table>
+            <font size="2">立体感的表格<br>
+            (简单的亮暗边框设置，注意只有IE支持这种效果)</font></td>
+            <td>&lt;table border=&quot;1&quot; bordercolorlight=&quot;#ffffff&quot; bordercolordark=&quot;#ffffff&quot; width=&quot;200&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt; &lt;tr align=&quot;center&quot;&gt; &lt;td bgcolor=&quot;#B7B7B7&quot; bordercolorlight=&quot;#000000&quot; bordercolordark=&quot;#eeeeee&quot; &gt;立&lt;/td&gt; &lt;td bgcolor=&quot;#B7B7B7&quot; bordercolorlight=&quot;#000000&quot; bordercolordark=&quot;#eeeeee&quot; &gt;表&lt;/td&gt; &lt;/tr&gt; &lt;tr align=&quot;center&quot;&gt; &lt;td bgcolor=&quot;#B7B7B7&quot; bordercolorlight=&quot;#000000&quot; bordercolordark=&quot;#eeeeee&quot; &gt;体&lt;/td&gt; &lt;td bgcolor=&quot;#B7B7B7&quot; bordercolorlight=&quot;#000000&quot; bordercolordark=&quot;#eeeeee&quot; &gt;格&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</td>
+        </tr>
+        <tr valign="top">
+            <td>
+            <table class="FCK__ShowTableBorders" cellspacing="0" cellpadding="0" width="200">
+                <tbody>
+                    <tr>
+                        <td><fieldset style="width: 200px" align="center"><legend>无名表格 </legend>
+                        <p align="right"> </p>
+                        </fieldset></td>
+                    </tr>
+                </tbody>
+            </table>
+            <font size="2">给表格加上一个表头<br>
+            (应用&lt;fieldset&gt;和&lt;/legend&gt;标签)</font></td>
+            <td>&lt;table width=&quot;200&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt; &lt;tr&gt; &lt;td&gt;&lt;fieldset style=&quot;width:200&quot; align=&quot;center&quot;&gt; &lt;legend&gt; 无名表格 &lt;/legend&gt; &lt;p align=&quot;right&quot;&gt; &lt;/fieldset&gt;&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</td>
+        </tr>
+        <tr valign="top">
+            <td>
+            <table class="FCK__ShowTableBorders" cellspacing="0" cellpadding="0" width="200">
+                <tbody>
+                    <tr>
+                        <td><fieldset style="border-bottom-style: groove; border-right-style: groove; width: 200px; border-top-style: groove; color: #b7b7b7; border-left-style: groove" align="center"><legend style="border-bottom: #000000 1px solid; border-left: #000000 1px solid; color: blue; border-top: #000000 1px solid; border-right: #000000 1px solid">表中表效果Ⅰ</legend><br>
+                        </fieldset><font size="2"> </font></td>
+                    </tr>
+                </tbody>
+            </table>
+            <font size="2">给表头再加个框<br>
+            (用CSS为&lt;legnd&gt;定义一个边框)</font></td>
+            <td>&lt;table width=&quot;200&quot;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt; &lt;tr&gt; &lt;td&gt; &lt;fieldset style=&quot;width: 200; color: #B7B7B7; border-style: groove&quot; align=&quot;center&quot;&gt; &lt;legend style=&quot;color: blue; border: 1 solid #000000&quot;&gt; 表中表效果Ⅰ&lt;/legend&gt; &lt;br&gt; &lt;/fieldset&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</td>
+        </tr>
+        <tr valign="top">
+            <td>
+            <table class="FCK__ShowTableBorders" width="200">
+                <tbody>
+                    <tr>
+                        <td><fieldset style="width: 200px" align="center"><legend>
+                        <table style="border-bottom: #000000 1px solid; border-left: #000000 1px solid; border-top: #000000 1px solid; border-right: #000000 1px solid" class="FCK__ShowTableBorders" cellspacing="1" cellpadding="0" width="80" height="20">
+                            <tbody>
+                                <tr>
+                                    <td><font color="#0000ff">表中表效果Ⅱ</font></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </legend><br>
+                        </fieldset><font size="2"> </font></td>
+                    </tr>
+                </tbody>
+            </table>
+            <font size="2">看起来和上面的一样，可是这个才是真正的表中表哦。<br>
+            (在&lt;legnd&gt;中插入一个表格)</font></td>
+            <td>&lt;table width=&quot;200&quot;&gt; &lt;tr&gt; &lt;td&gt;&lt;fieldset style=&quot;width:200&quot; align=&quot;center&quot;&gt; &lt;legend&gt; &lt;table style=&quot;border: 1 solid #000000&quot; width=&quot;80&quot; cellspacing=&quot;1&quot; cellpadding=&quot;0&quot; height=&quot;20&quot;&gt; &lt;tr&gt; &lt;td&gt;&lt;font color=blue&gt;表中表效果Ⅱ&lt;/font&gt;&lt;/td&gt; &lt;/tr&gt; &lt;/table&gt; &lt;/legend&gt;&lt;br&gt; &lt;/fieldset&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;</td>
+        </tr>
+    </tbody>
+</table></div></body></html>

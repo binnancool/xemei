@@ -1,0 +1,72 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>HTML中的标签textarea的属性及用法</title></head><body><h1>HTML中的标签textarea的属性及用法</h1><div><p>1、cols，垂直列。在没有做样式表设置的情况下，它表示一行中可容纳下的字节数。例如cols=60，表示一行中最多可容纳60个字节，也就是30个汉字。另外要注意的是，文本框的宽度就是通过这个来调整，输入好cols的数值，然后再定义输入文字字体的大小（不定义的话，会采用默认值），那么文本框的宽度就确定了。&nbsp;&nbsp;</p>
+<p><br>
+ </p>
+<p>2、rows，水平列。表示可显示的行数，例如rows=10，表示可显示10行。超过10行，则需要拖动滚动条来浏览了。（同上，文本框的高度就是通过这个来控制的。）&nbsp;&nbsp;</p>
+<p><br>
+ </p>
+<p>3、name，文本框的名称，这项必不可省，因为存储文本的时候必须用到。&nbsp;&nbsp;</p>
+<p><br>
+ </p>
+<p>4、warp，当warp=&quot;off&quot;表示该文本区域中不自动换行，当然不写默认是自动换行的。这个参数一般用得比较少。</p>
+<p><br>
+ </p>
+<p>5、style，这是个非常实用的参数，可以用来设置文本框的背景色，滚动条颜色及形式，边框色，输入字体的大小颜色等等。&nbsp;&nbsp;</p>
+<p><br>
+ </p>
+<p>6、class,一般用来调用外部css里边的设置。&nbsp;&nbsp;</p>
+<p><br>
+ </p>
+<p>例1：设置文本框的行数为40，列数为10。名称为text。表达形式 &lt;textarea cols=40 rows=10 name=text&gt;&lt;/textarea&gt;&nbsp;&nbsp;</p>
+<p><br>
+ </p>
+<p>例2：取消文本框右边的滚动条。表达形式&lt;textarea cols=40 rows=10 name=text style=&quot;overflow:auto&quot;&gt;&lt;/textarea&gt;。style=&quot;overflow:auto&quot;的意思就是当输入的文本超出设置的行数时才自动显示滚动条。&nbsp;&nbsp;</p>
+<p><br>
+ </p>
+<p>例3：设置文本框的背景色。&lt;textarea cols=40 rows=10 name=text style=&quot;background-color:BFCEDC&quot;&gt;&lt;/textarea&gt;。&nbsp;&nbsp;</p>
+<p><br>
+ </p>
+<p>例4：另外设置文本框的滚动条颜色，边框色，以及字体大小，颜色，行距等，都可以直接在style里设置。不过这些一般都习惯在CSS里设置，直接调用就好了。下面是一段CSS设置代码：应该比较容易看懂，textbox里边依次设置的是文本框的背景色，上下左右边框色和厚度，以及输入字体的大小等。&nbsp;&nbsp;</p>
+<p><br>
+ </p>
+<p> </p>
+<p>
+<table style="border-bottom: #cccccc 1px dotted; border-left: #cccccc 1px dotted; table-layout: fixed; border-top: #cccccc 1px dotted; border-right: #cccccc 1px dotted" class="FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="6" width="95%" align="center">
+    <tbody>
+        <tr>
+            <td style="word-wrap: break-word" bgcolor="#fdfddf">&lt;style&gt;<br>
+            .textbox { BACKGROUND: #BFCEDC; BORDER-TOP: #7F9DB9 1px solid; BORDER-LEFT: #7F9DB9 1px solid; BORDER-RIGHT: #7F9DB9 1px solid; BORDER-BOTTOM: #7F9DB9 1px solid; FONT-FAMILY: &quot;宋体&quot;, &quot;Verdana&quot;, &quot;Arial&quot;, &quot;Helvetica&quot;; FONT-SIZE: 12px; TEXT-ALIGN: LIFT;}<br>
+            &lt;/style&gt;</td>
+        </tr>
+    </tbody>
+</table>
+<br>
+&nbsp;&nbsp;</p>
+<p> </p>
+<p><br>
+ </p>
+<p>把上面一段代码插到页面的&lt;head&gt;与&lt;/head&gt;之间。调用方式：&lt;textarea cols=40 rows=10 name=text class=&quot;textbox&quot;&gt;&lt;/textarea&gt;。 class=&quot;&quot;中的名字对应css里边要用到的设置的名字。熟悉了这些参数，修改和美化文本输入框就很方便了。&nbsp;&nbsp;</p>
+<p> </p>
+<p>例子：</p>
+<p>&lt;textarea  name=file rows=20 cols=30&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmf_0.pcm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmf_1.pcm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmf_2.pcm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmf_3.pcm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmf_4.pcm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmf_5.pcm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmf_6.pcm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dtmf/script_dtmf_7.pcm</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmf_8.pcm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmf_9.pcm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmf_x.pcm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmf_h.pcm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmf_,.pcm<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dtmf/script_dtmg_gg.pcm</p>
+<p>&lt;/textarea&gt;</p>
+<p>在提交网页或java类（继承javax.servlet.http.HttpServlet，在其service方法中处理）中获取textarea的值</p>
+<p>&nbsp;&nbsp;&nbsp;  String tempFile=request.getParameter(&quot;file&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp; String tempFilex[]=tempFile.split(&quot;\n&quot;);//以换行符拆分<br>
+&nbsp;&nbsp;&nbsp;&nbsp; for (i = 0; i &lt; umgcfg.umgISXDSPCacheFile.total; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; umgcfg.umgISXDSPCacheFile.filex.add(tempFilex[i]);<br>
+&nbsp;&nbsp;&nbsp;&nbsp; }</p></div></body></html>

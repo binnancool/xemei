@@ -1,0 +1,61 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java.lang.ThreadLocal类的用法，及与同步机制的比较</title></head><body><h1>java.lang.ThreadLocal类的用法，及与同步机制的比较</h1><div><p>一、ThreadLocal类</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;  ThreadLocal是什么呢？其实ThreadLocal并非是一个线程的本地实现版本，它并不是一个Thread，而是thread local variable（线程局部变量）。也许把它命名为ThreadLocalVar更加合适。线程局部变量（ThreadLocal）其实的功用非常简单，就是为每一个使用该变量的线程都提供一个变量值的副本，是每一个线程都可以独立地改变自己的副本，而不会和其它线程的副本冲突。从线程的角度看，就好像每一个线程都完全拥有该变量。线程局部变量并不是Java的新发明，在其它的一些语言编译器实现（如IBM XL FORTRAN）中，它在语言的层次提供了直接的支持。因为Java中没有提供在语言层次的直接支持，而是提供了一个ThreadLocal的类来提供支持，所以，在Java中编写线程局部变量的代码相对比较笨拙，这也许是线程局部变量没有在Java中得到很好的普及的一个原因吧。</p>
+<p>&nbsp;&nbsp;&nbsp;  举例：</p>
+<p>1、类SeriaNum类为每一个线程创建一个唯一的序列号，在线程生命周期内不变。</p>
+<p>public class SerialNum {<br>
+&nbsp;&nbsp;&nbsp;  // The next serial number to be assigned<br>
+&nbsp;&nbsp;&nbsp;  private static int nextSerialNum = 0;</p>
+<p>&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+ private static ThreadLocal serialNum = new ThreadLocal() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  protected synchronized Object initialValue() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  return new Integer(nextSerialNum++);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;  };</p>
+<p>&nbsp;&nbsp;&nbsp;  public static int get() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  return ((Integer) (serialNum.get())).intValue();<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+}</p>
+<p>2、测试</p>
+<p>public class thred extends Thread{<br>
+ private int num;<br>
+ public void run(){ <br>
+&nbsp;&nbsp; num=SerialNum.get();<br>
+&nbsp;&nbsp; System.out.println(SerialNum.get());<br>
+ }<br>
+ public static void main(String[] args) {<br>
+&nbsp;&nbsp; thred a=new thred();<br>
+&nbsp;&nbsp; thred b=new thred();<br>
+&nbsp;&nbsp; thred c=new thred();<br>
+&nbsp;&nbsp; thred d=new thred();<br>
+&nbsp;&nbsp; thred e=new thred();<br>
+&nbsp;&nbsp; thred f=new thred();<br>
+&nbsp;&nbsp; thred g=new thred();<br>
+&nbsp;&nbsp; a.start();<br>
+&nbsp;&nbsp; b.start();<br>
+&nbsp;&nbsp; c.start();<br>
+&nbsp;&nbsp; d.start();<br>
+&nbsp;&nbsp; e.start();<br>
+&nbsp;&nbsp; f.start();<br>
+&nbsp;&nbsp; g.start();<br>
+&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp; sleep(10000);<br>
+&nbsp;&nbsp; } catch (InterruptedException e1) {<br>
+&nbsp;&nbsp;&nbsp; e1.printStackTrace();<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; System.out.println(b.num);<br>
+ }<br>
+}</p>
+<p>输出：</p>
+<p>0<br>
+1<br>
+2<br>
+3<br>
+4<br>
+5<br>
+6<br>
+结论：可以看书abcdefg六个线程的序列号确定了后，不在变化。</p>
+<p> </p>
+<p> </p>
+<p>二、 ThreadLocal与其它同步机制的比较</p>
+<p>　　 ThreadLocal和其它同步机制相比有什么优势呢？ThreadLocal和其它所有的同步机制都是为了解决多线程中的对同一变量的访问冲突，在普通的同步机制中，是通过对象加锁来实现多个线程对同一变量的安全访问的。这时该变量是多个线程共享的，使用这种同步机制需要很细致地分析在什么时候对变量进行读写，什么时候需要锁定某个对象，什么时候释放该对象的锁等等很多。所有这些都是因为多个线程共享了资源造成的。ThreadLocal就从另一个角度来解决多线程的并发访问，ThreadLocal会为每一个线程维护一个和该线程绑定的变量的副本，从而隔离了多个线程的数据，每一个线程都拥有自己的变量副本，从而也就没有必要对该变量进行同步了。ThreadLocal提供了线程安全的共享对象，在编写多线程代码时，可以把不安全的整个变量封装进ThreadLocal，或者把该对象的特定于线程的状态封装进ThreadLocal。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  由于ThreadLocal中可以持有任何类型的对象，所以使用ThreadLocal get当前线程的值是需要进行强制类型转换。但随着新的Java版本（1.5）将模版的引入，新的支持模版参数的ThreadLocal类将从中受益。也可以减少强制类型转换，并将一些错误检查提前到了编译期，将一定程度地简化ThreadLocal的使用。</p></div></body></html>

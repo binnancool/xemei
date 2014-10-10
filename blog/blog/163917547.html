@@ -1,0 +1,19 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux下的系统时间设置</title></head><body><h1>Linux下的系统时间设置</h1><div><p><font size="3" face="宋体">Linux下的时间分为两种，系统时间与硬件时间。我们一般看到的时间就是系统时间，比如现在是11:45 am。硬件时间指的是主板上CMOS中的时间，这两个时间并不是总是同步的，一般情况下大约11分钟同步一次。<br>
+linux 系统开机时，从CMOS中读取当前时间，作为系统时间，从此以后系统时间独立tick，此时如果你用date命令修改了系统时间，硬件时间是不受影响的，就是说如果此时关机，下次的系统时间还是不对。要想将系统时间保存到硬件时间，可以是用 hwclock 或者 clock 命令，hwclock就是 hardware clock的意思。<br>
+一个完整的修改linux系统时间的过程如下所示，注意先改日期，再改时间：<br>
+<strong>修改系统日期(optional)，将当前日期改为2007-7-13:</strong></font></p>
+<p><font size="3" face="宋体"><strong>date -s 07/13/2007</strong></font></p>
+<p><font size="3" face="宋体"><strong>修改系统时间，将当前系统时间改为11:55:00：</strong></font></p>
+<p><font size="3" face="宋体"><strong>date -s 11:55:00</strong></font></p>
+<p><font size="3" face="宋体"><strong>将当前系统时间保存到硬件时间</strong></font></p>
+<p><font size="3" face="宋体"><strong>hwclock --systohc<br>
+或者<br>
+clock --systohc</strong></font></p>
+<p><font size="3" face="宋体">说明：<br>
+系统时间和日期可以一起改，详情查看这里或者 man date<br>
+如果想将系统时间改回硬件时间，可以使用</font></p>
+<p><font size="3" face="宋体">hwclock --hctosys<br>
+或者<br>
+clock --hctosys</font></p>
+<p> </p>
+<p><font size="3" face="宋体">本文来自CSDN博客，转载请标明出处：</font><a href="http://blog.csdn.net/zwhfyy/archive/2009/07/14/4347175.aspx"><font size="3" face="宋体">http://blog.csdn.net/zwhfyy/archive/2009/07/14/4347175.aspx</font></a></p></div></body></html>

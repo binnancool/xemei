@@ -1,0 +1,17 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>把Tomcat6封装为服务</title></head><body><h1>把Tomcat6封装为服务</h1><div><p><strong><font color="#ff0000" size="3">1、修改/bin目录下的service.bat文件的如下内容：</font></strong></p>
+<p><font color="#000000" size="3"><strong>rem Set default Service name<br>
+set SERVICE_NAME=inform&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //服务名称<br>
+set PR_DISPLAYNAME=inform&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //显示名称</strong></font></p>
+<p><font color="#ff0000" size="3"><strong>2、打开cmd，运行</strong></font></p>
+<p><font color="#000000" size="3"><strong>安装服务：service install inform<font color="#ff0000">(到Tomcat的bin目录下执行)</font></strong></font></p>
+<p><font color="#000000" size="3"><strong>删除服务：service remove inform<font color="#ff0000">(到Tomcat的bin目录下执行)</font></strong></font></p>
+<p><font color="#000000" size="3"><strong>打开服务：net start inform</strong></font></p>
+<p><font color="#000000" size="3"><strong>关闭服务：net stop inform</strong></font></p>
+<p><font color="#000000" size="3"><strong>查询服务状态：sc query inform</strong></font></p>
+<p><font color="#000000" size="3"><strong>设置为开机自动启动<font color="#000000">：sc config inform start= auto</font></strong></font></p>
+<p><font color="#000000" size="3"><strong>删除服务：sc delete inform</strong></font></p>
+<p> </p>
+<p> </p>
+<font color="#ff0000" size="3"><strong>3、查看Windows任务管理器&mdash;&mdash;进程，显示tomcat6.exe</strong></font>
+<p> </p>
+<p><font color="#000000" size="3"><strong>原因是tomcat的/bin目录下的tomcat6.exe,如果想改变进程tomcat6.exe，需要拷贝tomcat6.exe，修改为inform.exe。并修改/bin目录下service.bat中的tomcat6.exe，修改为inform.exe</strong></font></p></div></body></html>

@@ -1,0 +1,219 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>JAAS简介及实例</title></head><body><h1>JAAS简介及实例</h1><div><p><strong><font size="4">一、JAAS概述</font></strong></p>
+<p><font size="3">在JAAS出现以前，Java的安全模型是为了满足跨平台的网络应用程序的需要而设计的。在Java早期版本中，Java通常是作为远程代码被使用，例如Applet，。因此最初的安全模型把注意力放在通过验证代码的来源来保护用户上。早期的Java安全机制中包含的概念，如SercurityManager，沙箱概念，代码签名，策略文件，多是为了保护用户。</font></p>
+<p><font size="3"><br>
+　　JAAS的出现反映了Java的演变。传统的服务器／客户端程序需要实现登录和存取控制，JAAS通过对运行程序的用户的进行验证，从而达到保护系统的目的。虽然JAAS同时具有验证和授权的能力，在这篇文章中，我们主要介绍验证功能。</font></p>
+<p><font size="3">　　通过在应用程序和底层的验证和授权机制之间加入一个抽象层，JAAS可以简化涉及到Java Security包的程序开发。抽象层独立于平台的特性使开发人员可以使用各种不同的安全机制，而且不用修改应用程序级的代码。和其他Java Security API相似，JAAS通过一个可扩展的框架：服务提供者接口（Service Provider Interface，SPI）来保证程序独立于安全机制。服务提供者接口是由一组抽象类和接口组成的。图一中给出了JAAS程序的整体框架图。应用程序级的代码主要处理LoginContext。在LoginContext下面是一组动态配置的LoginModules。LoginModule使用正确的安全机制进行验证。</font><font size="3"><br>
+　　图一给出了JAAS的概览。应用程序层的代码只需要和LoginContext打交道。在LoginContext之下是一组动态配置的LoginModule对象，这些对象使用相关的安全基础结构进行验证操作。</font></p>
+<p align="center"><font size="3"><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/f282000148d72dbde850cd7f.jpg"><br>
+图一 JAAS概览</span></font></p>
+<p><font size="3"><span>JAAS提供了一些LoginModule的参考实现代码，比如JndiLoginModule。开发人员也可以自己实现LoginModule接口，就象在我们例子中的RdbmsLonginModule。同时我们还会告诉你如何使用一个简单的配置文件来安装应用程序。</span></font></p>
+<p><font size="3"><span><br>
+　　为了满足可插接性，JAAS是可堆叠的。在单一登录的情况下，一组安全模块可以堆叠在一起，然后被其他的安全机制按照堆叠的顺序被调用。</span></font></p>
+<p><font size="3"><span>　　JAAS的实现者根据现在一些流行的安全结构模式和框架将JASS模型化。例如可堆叠的特性同Unix下的可堆叠验证模块（PAM，Pluggable Authentication Module）框架就非常相似。从事务的角度看，JAAS类似于双步提交（Two-Phase Commit，2PC）协议的行为。JAAS中安全配置的概念（包括策略文件（Police File）和许可（Permission））来自于J2SE 1.2。JAAS还从其他成熟的安全框架中借鉴了许多思想。</span></font></p>
+<p><span><strong><font size="4">二、JAAS验证原来</font></strong></span></p>
+<p><span><font size="3">JAAS的核心类和接口可以被分为三种类型，大多数都在javax.security.auth包中。在J2SE 1.4中，还有一些接口的实现类在com.sun.security.auth包中，如下所示：</font></span></p>
+<p><span><font size="3">1、&nbsp;&nbsp;&nbsp;&nbsp;  普通类 Subject，Principal，Credential(凭证)</font></span></p>
+<p><span><font size="3">　Subject类代表了一个验证实体，它可以是用户、管理员、Web服务，设备或者其他的过程。该类包含了三中类型的安全信息：</font></span></p>
+<p><span><font size="3">1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  身份（Identities）：由一个或多个Principal对象表示</font></span></p>
+<p><span><font size="3">2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  公共凭证（Public credentials）：例如名称或公共密钥</font></span></p>
+<p><span><font size="3">3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  私有凭证（Private credentials）：例如口令或私有密钥</font></span></p>
+<p><span><font size="3">　　Principal对象代表了Subject对象的身份。它们实现了java.security.Principal和java.io.Serializable接口。在Principal类中，最重要的方法是getName（）。该方法返回一个身份名称。在Subject对象中包含了多个Principal对象，因此它可以拥有多个名称。由于登录名称、身份证号和Email地址都可以作为用户的身份标识，可见拥有多个身份名称的情况在实际应用中是非常普遍的情况。</font></span></p>
+<p><span><font size="3">在上面提到的凭证并不是一个特定的类或借口，它可以是任何对象。凭证中可以包含任何特定安全系统需要的验证信息，例如标签（ticket），密钥或口令。Subject对象中维护着一组特定的私有和公有的凭证，这些凭证可以通过Subject 方法getPrivateCredentials（）和getPublicCredentials（）获得。这些方法通常在应用程序层中的安全子系统被调用。</font></span></p>
+<p><span><font size="3">2、&nbsp;&nbsp;&nbsp;  验证 LoginContext，LoginModule，CallBackHandler，Callback</font></span></p>
+<p><span><font size="3">验证：LoginContext</font></span></p>
+<p><span><font size="3">　　在应用程序层中，你可以使用LoginContext对象来验证Subject对象。LoginContext对象同时体现了JAAS的动态可插入性（Dynamic Pluggability），因为当你创建一个LoginContext的实例时，你需要指定一个配置。LoginContext通常从一个文本文件中加载配置信息，这些配置信息告诉LoginContext对象在登录时使用哪一个LoginModule对象。</font></span></p>
+<p><span><font size="3">　　下面列出了在LoginContext中经常使用的三个方法： </font></span></p>
+<p><span><font size="3">《1》&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  login () 进行登录操作。该方法激活了配置中制定的所有LoginModule对 象。如果成功，它将创建一个经过了验证的Subject对象；否则抛出LoginException异常。</font></span></p>
+<p><span><font size="3"><span><font size="3">《2》</font></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  getSubject () 返回经过验证的Subject对象</font></span></p>
+<p><span><font size="3"><span><font size="3">《3》</font></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  logout () 注销Subject对象，删除与之相关的Principal对象和凭证</font></span></p>
+<p><span><font size="3">　　验证：LoginModule</font></span></p>
+<p><span><font size="3">　　LoginModule是调用特定验证机制的接口。J2EE 1.4中包含了下面几种LoginModule的实现类：</font></span></p>
+<p><span><font size="3"><span><font size="3">《1》</font></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  JndiLoginModule 用于验证在JNDI中配置的目录服务</font></span></p>
+<p><span><font size="3"><span><font size="3">《2》</font></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Krb5LoginModule 使用Kerberos协议进行验证</font></span></p>
+<p><span><font size="3"><span><font size="3">《3》</font></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  NTLoginModul 使用当前用户在NT中的用户信息进行验证</font></span></p>
+<p><span><font size="3"><span><font size="3">《4》</font></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  UnixLoginModule 使用当前用户在Unix中的用户信息进行验证</font></span></p>
+<p><span><font size="3"><br>
+　　同上面这些模块绑定在一起的还有对应的Principal接口的实现类，例如NTDomainPrincipal和UnixPrincipal。这些类在com.sun.security.auth包中。</font></span></p>
+<p><span><font size="3"><br>
+　　LoginModule接口中包含了五个方法：</font></span></p>
+<p><span><font size="3">1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  initialize () 当创建一LoginModule实例时会被构造函数调用</font></span></p>
+<p><span><font size="3">2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  login () 进行验证,通常会按照登录条件生成若干个Principal对象</font></span></p>
+<p><span><font size="3">3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  commit () 进行Principal对象检验，按照预定义Principal条件检验Login生成的Principal对象，所有需要的条件均符合后，把若干个生成的Principal对象付给Subject对象，JAAS架构负责回传给LoginContext.</font></span></p>
+<p><span><font size="3">4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  abort () 当任何一个LoginModule对象验证失败时都会调用该方法。任何已经和Subject对象绑定的Principal对象都会被解除绑定。</font></span></p>
+<p><span><font size="3">5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  logout () 删除与Subject对象关联的Principal对象和凭证，消除Subject,Principal等认证对象。</font></span></p>
+<p><span><font size="3">　验证：CallbackHandler和Callback</font></span></p>
+<p><span><font size="3">　　CallbackHandler和Callback对象可以使LoginModule对象从系统和用户那里收集必要的验证信息，同时独立于实际的收集信息时发生的交互过程。</font></span></p>
+<p><span><font size="3">　　</font></span></p>
+<p><span><font size="3">　　JAAS在javax.sevurity.auth.callback包中包含了七个Callback的实现类和两个CallbackHandler的实现类：ChoiceCallback、ConfirmationCallback、LogcaleCallback、NameCallback、PasswordCallback、TextInputCallback、TextOutputCallback、DialogCallbackHandler和TextCallBackHandler。Callback接口只会在客户端会被使用到。我将在后面介绍如何编写你自己的CallbackHandler类。</font></span></p>
+<p><span><font size="3"><br>
+3、&nbsp;&nbsp;&nbsp;&nbsp;  授权 Policy，AuthPermission，PrivateCredentialPermission</font></span></p>
+<p><span><strong><font size="4"><br>
+三、实例</font></strong></span></p>
+<p align="center"><span><font size="4"><span><strong><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/2b8831458ac60d76500ffe51.jpg"></strong></span></font></span></p>
+<p><font size="3">1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  创建一个LoginContext的实例。</font></p>
+<p><font size="3">2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  为了能够获得和处理验证信息，客户端将若干个CallBackHandler对象作为参数传送给LoginContext。</font></p>
+<p><font size="3">3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  JAAS通过配置文件查到相关的LoginModule处理类。</font></p>
+<p><font size="3">4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  通过调用LoginContext的login（）方法来进行验证，此处会回调所有传入CallBackHandler的handle()方法，该方法通常会从外部收集一些被验证信息。</font></p>
+<p><font size="3">5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  通过使用login（）方法返回的Subject对象实现一些特殊的功能（假设登录成功）。</font></p>
+<p><strong>源代码：</strong></p>
+<p><strong>Eclipse工程目录：</strong></p>
+<p align="center"><strong><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/a28e53dc784c87d577c63830.jpg"><br>
+</span></strong>
+<p><strong>（1）SimpleLogin类</strong></p>
+<p><font size="3">package simple;</font></p>
+<p><font size="3">import javax.security.auth.login.LoginContext;<br>
+import javax.security.auth.login.LoginException;</font></p>
+<p><font size="3">public class SimpleLogin<br>
+{<br>
+public static void main(String[] args)<br>
+{<br>
+&nbsp;&nbsp;  // 建立登陆上下文，并通过配置文件初始化，在这里配置文件必须与程序同目录<br>
+&nbsp;&nbsp;  LoginContext loginContext = null;<br>
+&nbsp;&nbsp;  try<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  //设置JAAS配置文件<br>
+<strong>&nbsp;&nbsp;  System.setProperty(&quot;java.security.auth.login.config&quot;, &quot;E:\\MyWorkSpace\\MyTestJAAS\\src\\jaas.config&quot;);<br>
+</strong>&nbsp;&nbsp;&nbsp;  loginContext = new LoginContext(&quot;simple&quot;,new SimpleCallbackHandle());<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  catch (LoginException e)<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  System.out.println(e.getMessage());<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  try<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  // 如果不抛出异常表示验证成功<br>
+&nbsp;&nbsp;&nbsp;  loginContext.login();<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  catch (LoginException e)<br>
+&nbsp;&nbsp;  {</font></p>
+<p><font size="3">&nbsp;&nbsp;  }<br>
+}</font></p>
+<p><font size="3">}</font><br>
+<strong>（2）SimpleCallbackHandle类</strong></p>
+<p><font size="3">package simple;</font></p>
+<p><font size="3">import java.io.BufferedReader;<br>
+import java.io.IOException;<br>
+import java.io.InputStreamReader;<br>
+import javax.security.auth.callback.Callback;<br>
+import javax.security.auth.callback.CallbackHandler;<br>
+import javax.security.auth.callback.NameCallback;<br>
+import javax.security.auth.callback.PasswordCallback;<br>
+import javax.security.auth.callback.UnsupportedCallbackException;</font></p>
+<p><font size="3">public class SimpleCallbackHandle implements CallbackHandler<br>
+{</font></p>
+<p><font size="3">public void handle(Callback[] callbacks) throws IOException,<br>
+&nbsp;&nbsp;&nbsp;  UnsupportedCallbackException<br>
+{</font></p>
+<p><font size="3">&nbsp;&nbsp;  for (Callback callback : callbacks)<br>
+&nbsp;&nbsp;  {</font></p>
+<p><font size="3">&nbsp;&nbsp;&nbsp;  if (callback instanceof NameCallback)<br>
+&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  NameCallback nc = (NameCallback) callback;</font></p>
+<p><font size="3">&nbsp;&nbsp;&nbsp;&nbsp;  System.out.print(nc.getPrompt());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  System.out.flush();</font></p>
+<p><font size="3">&nbsp;&nbsp;&nbsp;&nbsp;  nc.setName(&quot;dibin&quot;);<br>
+//&nbsp;&nbsp;&nbsp;&nbsp;  nc.setName((new BufferedReader(new InputStreamReader(<br>
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.in))).readLine());<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;  else if (callback instanceof PasswordCallback)<br>
+&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  PasswordCallback pcb = (PasswordCallback) callback;</font></p>
+<p><font size="3">&nbsp;&nbsp;&nbsp;&nbsp;  System.out.print(pcb.getPrompt());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  System.out.flush();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  pcb.setPassword(new char[]{'d','i','b','i','n'});<br>
+//&nbsp;&nbsp;&nbsp;&nbsp;  pcb.setPassword((new BufferedReader(new InputStreamReader(<br>
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.in))).readLine().toCharArray());<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  }<br>
+}<br>
+}</font></p>
+<p><strong>（3）SimpleLoginModule类</strong></p>
+<p><font size="3">package simple;</font></p>
+<p><font size="3">import java.io.IOException;<br>
+import java.util.Map;</font></p>
+<p><font size="3">import javax.security.auth.Subject;<br>
+import javax.security.auth.callback.Callback;<br>
+import javax.security.auth.callback.CallbackHandler;<br>
+import javax.security.auth.callback.NameCallback;<br>
+import javax.security.auth.callback.PasswordCallback;<br>
+import javax.security.auth.callback.UnsupportedCallbackException;<br>
+import javax.security.auth.login.LoginException;<br>
+import javax.security.auth.spi.LoginModule;</font></p>
+<p><font size="3">public class SimpleLoginModule implements LoginModule<br>
+{</font></p>
+<p><font size="3">private String userName;</font></p>
+<p><font size="3">private char[] password;</font></p>
+<p><font size="3">private Subject subject;</font></p>
+<p><font size="3">private CallbackHandler callbackHandler;</font></p>
+<p><font size="3">private Map sharedState;</font></p>
+<p><font size="3">private Map options;</font></p>
+<p><font size="3">private String debug;</font></p>
+<p><font size="3">public boolean abort() throws LoginException<br>
+{<br>
+&nbsp;&nbsp;  System.out.println(&quot;abort()&quot;);<br>
+&nbsp;&nbsp;  return false;<br>
+}</font></p>
+<p><font size="3">public boolean commit() throws LoginException<br>
+{<br>
+&nbsp;&nbsp;  System.out.println(&quot;commit()&quot;);<br>
+&nbsp;&nbsp;  return true;<br>
+}</font></p>
+<p><font size="3">public void initialize(Subject subject, CallbackHandler callbackHandler,<br>
+&nbsp;&nbsp;&nbsp;  Map sharedState, Map options)<br>
+{</font></p>
+<p><font size="3">&nbsp;&nbsp;  this.subject = subject;<br>
+&nbsp;&nbsp;  this.callbackHandler = callbackHandler;<br>
+&nbsp;&nbsp;  this.sharedState = sharedState;<br>
+&nbsp;&nbsp;  this.options = options;</font></p>
+<p><font size="3">&nbsp;&nbsp;  debug = (String) options.get(&quot;debug&quot;);<br>
+}</font></p>
+<p><font size="3">public boolean login() throws LoginException<br>
+{</font></p>
+<p><font size="3">&nbsp;&nbsp;  Callback[] callbacks = new Callback[2];<br>
+&nbsp;&nbsp;  callbacks[0] = new NameCallback(&quot;用户名: &quot;);<br>
+&nbsp;&nbsp;  callbacks[1] = new PasswordCallback(&quot;密码: &quot;, false);</font></p>
+<p><font size="3">&nbsp;&nbsp;  try<br>
+&nbsp;&nbsp;  {</font></p>
+<p><font size="3">&nbsp;&nbsp;&nbsp;  callbackHandler.handle(callbacks);<br>
+&nbsp;&nbsp;&nbsp;  userName = ((NameCallback) callbacks[0]).getName();<br>
+&nbsp;&nbsp;&nbsp;  password = ((PasswordCallback) callbacks[1]).getPassword();</font></p>
+<p><font size="3">&nbsp;&nbsp;&nbsp;  if (debug.equals(&quot;true&quot;))<br>
+&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;你输入的用户名为:&quot; + userName);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;你输入的密码为:&quot; + new String(password));<br>
+&nbsp;&nbsp;&nbsp;  }</font></p>
+<p><font size="3">&nbsp;&nbsp;&nbsp;  if (userName.equals(&quot;dibin&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &amp;&amp; new String(password).equals(&quot;dibin&quot;))<br>
+&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;验证成功&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  return true;<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;  else<br>
+&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;验证失败&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  userName = null;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  password = null;<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  catch (IOException e)<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  catch (UnsupportedCallbackException e)<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;  }</font></p>
+<p><font size="3">&nbsp;&nbsp;  return false;<br>
+}</font></p>
+<p><font size="3">public boolean logout() throws LoginException<br>
+{<br>
+&nbsp;&nbsp;  System.out.println(&quot;logout()&quot;);<br>
+&nbsp;&nbsp;  return false;<br>
+}</font></p>
+<p><font size="3">}</font></p>
+<p><font size="3"><strong>（4）jaas.config配置文件</strong></font></p>
+<p><font size="3">simple {&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;  simple.SimpleLoginModule required debug=true;&nbsp;&nbsp;  <br>
+};  </font></p>
+</p></div></body></html>

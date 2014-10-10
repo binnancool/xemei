@@ -1,0 +1,135 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>用apache和tomcat搭建集群,实现负载均衡</title></head><body><h1>用apache和tomcat搭建集群,实现负载均衡</h1><div><div class="blog_content">
+<p style="text-align: center; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="center"><font size="3" face="宋体"><span>一、集群和负载均衡的概念</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>（一）集群的概念</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3" face="宋体">　　集群（<span>Cluster</span>）是由两台或多台节点机（服务器）构成的一种松散耦合的计算节点集合，为用户提供网络服务或应用程序<span>(</span>包括数据库、<span>Web</span>服务和文件服务等<span>)</span>的单一客户视图，同时提供接近容错机的故障恢复能力。集群系统一般通过两台或多台节点服务器系统通过相应的硬件及软件互连，每个群集节点都是运行其自己进程的独立服务器。这些进程可以彼此通信，对网络客户机来说就像是形成了一个单一系统，协同起来向用户提供应用程序、系统资源和数据。除了作为单一系统提供服务，集群系统还具有恢复服务器级故障的能力。集群系统还可通过在集群中继续增加服务器的方式，从内部增加服务器的处理能力，并通过系统级的冗余提供固有的可靠性和可用性。</font><span><br>
+</span><font size="3" face="宋体">（二）集群的分类</font><span><br>
+<font size="3" face="宋体">1</font></span><font size="3" face="宋体">、高性能计算科学集群：</font><span><br>
+</span><font size="3" face="宋体">　　以解决复杂的科学计算问题为目的的<span>IA</span>集群系统。是并行计算的基础，它可以不使用专门的由十至上万个独立处理器组成的并行超级计算机，而是采用通过高速连接来链接的一组<span>1/2/4</span><span> CPU</span>的<span>IA</span>服务器，并且在公共消息传递层上进行通信以运行并行应用程序。这样的计算集群，其处理能力与真正超级并行机相等，并且具有优良的性价比。</font><span><br>
+<font size="3" face="宋体">2</font></span><font size="3" face="宋体">、负载均衡集群：</font><span><br>
+</span><font size="3" face="宋体">　　负载均衡集群为企业需求提供更实用的系统。该系统使各节点的负载流量可以在服务器集群中尽可能平均合理地分摊处理。该负载需要均衡计算的应用程序处理端口负载或网络流量负载。这样的系统非常适合于运行同一组应用程序的大量用户。每个节点都可以处理一部分负载，并且可以在节点之间动态分配负载，以实现平衡。对于网络流量也如此。通常，网络服务器应用程序接受了大量入网流量，无法迅速处理，这就需要将流量发送给在其它节点。负载均衡算法还可以根据每个节点不同的可用资源或网络的特殊环境来进行优化。</font><span><br>
+<font size="3" face="宋体">3</font></span><font size="3" face="宋体">、高可用性集群：</font><span><br>
+</span><font size="3" face="宋体">　　为保证集群整体服务的高可用，考虑计算硬件和软件的容错性。如果高可用性群集中的某个节点发生了故障，那么将由另外的节点代替它。整个系统环境对于用户是一致的。</font></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>　　实际应用的集群系统中，这三种基本类型经常会发生混合与交杂。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3" face="宋体">（三）典型集群</font><span><br>
+</span><font size="3" face="宋体">科学计算集群：</font><span><br>
+<font size="3" face="宋体">1</font></span><font size="3" face="宋体">、</font><font face="宋体"><font size="3"><span>Beowulf<br>
+</span>当谈到<span> Linux </span>集群时，许多人的第一反映是<span> Beowulf</span>。那是最著名的<span> Linux</span>科学软件集群系统。实际上，它是一组适用于在<span> Linux </span>内核上运行的公共软件包的通称。其中包括流行的软件消息传递<span> API</span>，如<span>&ldquo;</span>消息传送接口<span>&rdquo;(MPI) </span>或<span>&ldquo;</span>并行虚拟机<span>&rdquo;(PVM)</span>，对<span> Linux </span>内核的修改，以允许结合几个以太网接口、高性能网络驱动器，对虚拟内存管理器的更改，以及分布式进程间通信<span> (DIPC) </span>服务。公共全局进程标识空间允许使用<span> DIPC </span>机制从任何节点访问任何进程。</font></font><span><br>
+<font size="3" face="宋体">2</font></span><font size="3" face="宋体">、</font><font face="宋体"><font size="3"><span>MOSIX<br>
+Beowulf</span>类似于给系统安装的一个支持集群的外挂软件，提供了应用级的集群能力。而<span>MOSIX</span>是彻底修改<span>Linux</span>的内核，从系统级提供了集群能力，它对应用而言是完全透明的，原有的应用程序，可以不经改动，就能正常运行在<span>MOSIX</span>系统之上。集群中的任何节点都可以自由地加入和移除，来接替其它节点的工作，或是扩充系统。<span>MOSIX </span>使用自适应进程负载均衡和内存引导算法使整体性能最大化。应用程序进程可以在节点之间实现迁移，以利用最好的资源，这类似于对称多处理器系统可以在各个处理器之间切换应用程序。由于<span>MOSIX</span>通过修改内核来实现集群功能，所以存在兼容性问题，部分系统级应用程序将无法正常运行。</font></font></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3" face="宋体">负载均衡<span>/</span>高可用性集群</font><span><br>
+<font size="3" face="宋体">3</font></span><font size="3" face="宋体">、<span>LVS</span>（<span>Linux Virtual Server</span>）</font><span><br>
+</span><font size="3" face="宋体">这是一个由国人主持的项目。</font><span><br>
+</span><font size="3" face="宋体">它是一个负载均衡<span>/</span>高可用性集群，主要针对大业务量的网络应用（如新闻服务、网上银行、电子商务等）。</font><span><br>
+<font size="3" face="宋体">LVS</font></span><font size="3" face="宋体">是建立在一个主控服务器<span>(</span>通常为双机<span>)</span>（<span>director</span>）及若干真实服务器（<span>real-server</span>）所组成的集群之上。<span>real-server</span>负责实际提供服务，主控服务器根据指定的调度算法对<span>real-server</span>进行控制。而集群的结构对于用户来说是透明的，客户端只与单个的<span>IP</span>（集群系统的虚拟<span>IP</span>）进行通信，也就是说从客户端的视角来看，这里只存在单个服务器。</font><span><br>
+<font size="3" face="宋体">N54537Real-server</font></span><font size="3" face="宋体">可以提供众多服务，如<span>ftp, http, dns, telnet, nntp, smtp </span>等。主控服务器负责对<span>Real-Server</span>进行控制。客户端在向<span>LVS</span>发出服务请求时，<span>Director</span>会通过特定的调度算法来指定由某个<span>Real-Server</span>来应答请求，而客户端只与<span>Load Balancer</span>的<span>IP</span>（即虚拟<span>IP</span>，<span>VIP</span>）进行通信。</font></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3" face="宋体">其他集群：</font><span><br>
+</span><font size="3" face="宋体">现在集群系统可谓五花八门，绝大部分的<span>OS</span>开发商，服务器开发商都提供了系统级的集群产品，最典型的是各类双机系统，还有各类科研院校提供的集群系统。以及各类软件开发商提供的应用级别的集群系统，如数据库集群，<span>Application Server </span>集群，<span>Web Server</span>集群，邮件集群等等。</font></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>（四）负载均衡</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>1、概念</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3"><font face="宋体">&nbsp;&nbsp;&nbsp;  </font><font face="宋体">由于目前现有网络的各个核心部分随着业务量的提高，访问量和数据流量的快速增长，其处理能力和计算强度也相应地增大，使得单一的服务器设备根本无法承担。在此情况下，如果扔掉现有设备去做大量的硬件升级，这样将造成现有资源的浪费，而且如果再面临下一次业务量的提升时，这又将导致再一次硬件升级的高额成本投入，甚至性能再卓越的设备也不能满足当前业务量增长的需求。</font></font><font face="宋体"><font size="3"><span> <br>
+<br>
+</span>针对此情况而衍生出来的一种廉价有效透明的方法以扩展现有网络设备和服务器的带宽、增加吞吐量、加强网络数据处理能力、提高网络的灵活性和可用性的技术就是负载均衡（<span>Load Balance</span>）。</font></font></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>2、特点和分类</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3"><font face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;  </font><font face="宋体">负载均衡<span>(Server Load Balance)</span>一般用于提高服务器的整体处理能力，并提高可靠性，可用性，可维护性，最终目的是加快服务器的响应速度，从而提高用户的体验度。　　</font></font><span><br>
+<br>
+<font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;  </font></span><font size="3" face="宋体">负载均衡从结构上分为本地负载均衡<span>(Local Server Load Balance)</span>和地域负载均衡<span>(Global Server Load Balance)(</span>全局负载均衡<span>)</span>，一是指对本地的服务器群做负载均衡，另一是指对分别放置在不同的地理位置、有不同的网络及服务器群之间作负载均衡。　　</font><span><br>
+<br>
+</span><font size="3" face="宋体">地域负载均衡有以下的特点：</font><span><br>
+<br>
+</span><font size="3" face="宋体">（<span>1</span>）解决网络拥塞问题，服务就近提供，实现地理位置无关性</font><font face="宋体"><font size="3"><span> <br>
+<br>
+</span>（<span>2</span>）对用户提供更好的访问质量</font></font><font face="宋体"><font size="3"><span> <br>
+<br>
+</span>（<span>3</span>）提高服务器响应速度</font></font><font face="宋体"><font size="3"><span> <br>
+<br>
+</span>（<span>4</span>）提高服务器及其他资源的利用效率</font></font><font face="宋体"><font size="3"><span> <br>
+<br>
+</span>（<span>5</span>）避免了数据中心单点失效</font></font></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3"><font face="宋体">3</font><font face="宋体">、负载均衡技术主要应用</font></font><font face="宋体"><font size="3"><span> <br>
+<br>
+</span>（<span>1</span>）<span>DNS</span>负载均衡 最早的负载均衡技术是通过<span>DNS</span>来实现的，在<span>DNS</span>中为多个地址配置同一个名字，因而查询这个名字的客户机将得到其中一个地址，从而使得不同的客户访问不同的服务器，达到负载均衡的目的。<span>DNS</span>负载均衡是一种简单而有效的方法，但是它不能区分服务器的差异，也不能反映服务器的当前运行状态。</font></font><font face="宋体"><font size="3"><span> <br>
+<br>
+</span>（<span>2</span>）代理服务器负载均衡 使用代理服务器，可以将请求转发给内部的服务器，使用这种加速模式显然可以提升静态网页的访问速度。然而，也可以考虑这样一种技术，使用代理服务器将请求均匀转发给多台服务器，从而达到负载均衡的目的。</font></font><font face="宋体"><font size="3"><span> <br>
+<br>
+</span>（<span>3</span>）地址转换网关负载均衡 支持负载均衡的地址转换网关，可以将一个外部<span>IP</span>地址映射为多个内部<span>IP</span>地址，对每次<span>TCP</span>连接请求动态使用其中一个内部地址，达到负载均衡的目的。</font></font><font face="宋体"><font size="3"><span> <br>
+<br>
+</span>（<span>4</span>）协议内部支持负载均衡 除了这三种负载均衡方式之外，有的协议内部支持与负载均衡相关的功能，例如<span>HTTP</span>协议中的重定向能力等，<span>HTTP</span>运行于<span>TCP</span>连接的最高层。</font></font><font face="宋体"><font size="3"><span> <br>
+<br>
+</span>（<span>5</span>）<span>NAT</span>负载均衡<span> NAT</span>（<span>Network Address Translation </span>网络地址转换）简单地说就是将一个<span>IP</span>地址转换为另一个<span>IP</span>地址，一般用于未经注册的内部地址与合法的、已获注册的<span>Internet IP</span>地址间进行转换。适用于解决<span>Internet IP</span>地址紧张、不想让网络外部知道内部网络结构等的场合下。</font></font><font face="宋体"><font size="3"><span> <br>
+<br>
+</span>（<span>6</span>）反向代理负载均衡 普通代理方式是代理内部网络用户访问<span>internet</span>上服务器的连接请求，客户端必须指定代理服务器<span>,</span>并将本来要直接发送到<span>internet</span>上服务器的连接请求发送给代理服务器处理。反向代理（<span>Reverse Proxy</span>）方式是指以代理服务器来接受<span>internet</span>上的连接请求，然后将请求转发给内部网络上的服务器，并将从服务器上得到的结果返回给<span>internet</span>上请求连接的客户端，此时代理服务器对外就表现为一个服务器。反向代理负载均衡技术是把将来自<span>internet</span>上的连接请求以反向代理的方式动态地转发给内部网络上的多台服务器进行处理，从而达到负载均衡的目的。 </font></font><span><br>
+<br>
+</span><font size="3" face="宋体">（<span>7</span>）混合型负载均衡 在有些大型网络，由于多个服务器群内硬件设备、各自的规模、提供的服务等的差异，我们可以考虑给每个服务器群采用最合适的负载均衡方式，然后又在这多个服务器群间再一次负载均衡或群集起来以一个整体向外界提供服务（即把这多个服务器群当做一个新的服务器群），从而达到最佳的性能。我们将这种方式称之为混合型负载均衡。此种方式有时也用于单台均衡设备的性能不能满足大量连接请求的情况下。</font></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>二、搭建集群和实现负载平衡</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>（一）前期准备</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>我的系统用的是<span>windowsXP</span>专业版，我要做的是，用一个<span>apache</span>和多个（这里以两个作为示例）<span>tomcat</span>，通过<span>jk</span>方式，构造一个集群。以下是要首先准备的东西：</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font face="宋体"><span><font size="3">1、<span>jdk</span>，我用的版本是<span>jdk1.5.0_06</span>，下载地址是</font><a href="http://192.18.108.216/ECom/EComTicketServlet/BEGIND597A309654D73D910E051D73D539D5F/-2147483648/2438196255/1/852050/851882/2438196255/2ts+/westCoastFSEND/jdk-1.5.0_13-oth-JPR/jdk-1.5.0_13-oth-JPR:3/jdk-1_5_0_13-windows-i586-p.exe"><span style="color: #666699; text-decoration: none"><u><font size="3">http://192.18.108.216/ECom/EComTicketServlet/BEGIND597A309654D73D910E051D73D539D5F/-2147483648/2438196255/1/852050/851882/2438196255/2ts+/westCoastFSEND/jdk-1.5.0_13-oth-JPR/jdk-1.5.0_13-oth-JPR:3/jdk-1_5_0_13-windows-i586-p.exe</font></u></span></a></span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font face="宋体"><span><font size="3">2、<span>apache</span>，我用的版本是<span>2.2.4</span>，下载地址是</font><a href="http://apache.justdn.org/httpd/binaries/win32/apache_2.2.4-win32-x86-openssl-0.9.8d.msi"><span style="color: #666699; text-decoration: none"><u><font size="3">http://apache.justdn.org/httpd/binaries/win32/apache_2.2.4-win32-x86-openssl-0.9.8d.msi</font></u></span></a></span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font face="宋体"><span><font size="3">3、<span>tomcat</span>，我用的版本是<span>5.5</span>的解压版本，这里要注意：不能用安装的版本，因为一台机器上装两个一样的<span>tomcat</span>，是会出错误的。下载地址是</font><a href="http://apache.mirror.phpchina.com/tomcat/tomcat-5/v5.5.25/bin/apache-tomcat-5.5.25.zip"><span style="color: #666699; text-decoration: none"><u><font size="3">http://apache.mirror.phpchina.com/tomcat/tomcat-5/v5.5.25/bin/apache-tomcat-5.5.25.zip</font></u></span></a></span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font face="宋体"><span><font size="3">4、<span>jk</span>，这个<span>jk</span>的版本，本来有两个的，但是版本<span>2</span>已经被废弃掉了，目前可用的<span>jk</span>版本是<span>1.2.25</span>。每个<span>apache</span>的版本，都会有一个特定的<span>jk</span>与之对应，所以这里要用的<span>jk</span>也必须是为<span>apache-2.2.4</span>开发的那个才行。它的下载地址是</font><a href="http://www.apache.org/dist/tomcat/tomcat-connectors/jk/binaries/win32/jk-1.2.25/mod_jk-apache-2.2.4.so"><span style="color: #666699; text-decoration: none"><u><font size="3">http://www.apache.org/dist/tomcat/tomcat-connectors/jk/binaries/win32/jk-1.2.25/mod_jk-apache-2.2.4.so</font></u></span></a></span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>有了这四样东西，我们就可以开始做集群了。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>（二）安装</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>1、相信需要看这篇文章的人，<span>JDK</span>的安装一定不会陌生，这里不在赘述。只是需要提醒一下：环境变量别忘记配置了。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font face="宋体"><span><font size="3">2、安装<span>apache</span>也没有什么难度，就是在安装过程中要配置域名、网址和管理员邮箱之类的信息，这个信息完全可以按照提示，然后修改下填入即可，之后想修改的话直接到配置文件中改就行了。除了这个地方，还要保证机器上的<span>80</span>端口没有被其他程序占用。至于安装路径，完全取决于个人爱好。其他的默认就行了。安装成功后，系统右下角的托盘区会有个图标，我们可以通过这个启动<span>apache</span>，如果那个小红点变成绿色，说明服务已经正常启动了（如果服务没有启动起来，说明安装过程中的配置有错误，建议卸载后重装）。如果按照默认，端口是<span>80</span>的话，那打开浏览器，输入：</font><a href="http://localhost/"><span style="color: #666699; text-decoration: none"><u><font size="3">http://localhost/</font></u></span></a><font size="3"> ，应该可以看到<span> &quot; It works &ldquo;</span>的字样。这样就可以进入下一步了。</font></span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>3、解压缩<span>tomcat</span>，记得要做两份。这里不妨将两个<span>tomcat</span>命名为：<span>tomcat-5.5.25_1</span>和<span>tomcat-5.5.25_2</span>，其实这两个文件夹中的东西是完全一样的。但是我为了在同一台机器上做集群，那就要保证两个<span>tomcat</span>运行起来不会在端口上起冲突。进入<span>tomcat-5.5.25_1/conf</span>目录，用文本编辑器打开并修改<span>server.xml</span>，将该<span>tomcat</span>的默认<span>8080</span>端口改为<span>8088</span>（其实没必要改，我改这个是因为我机器上还有其他<span>tomcat</span>占用着<span>8080</span>端口）。然后进入<span>tomcat-5.5.25_2/conf</span>目录，同样将<span>8080</span>修改掉，至于改成多少没多大关系，只要不占用其他程序的端口，应该不会出什么问题。这样，<span>tomcat</span>就算安装好了。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>4、<span>jk</span>这东西是一个连接模块，不用安装，直接将<span>mod_jk-apache-2.2.4.so</span>这个文件拷贝到<span>apache</span>安装目录下的<span>modules</span>文件夹下面就行了。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>这样，安装完成，下面开始配置。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>（三）配置</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>这个地方才是搭建集群的关键所在，我也会尽我的可能写的详细点。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font face="宋体"><span><font size="3">1、配置<span>tomcat</span></font></span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>为防止冲突，进入第二个<span>tomcat</span>主目录，然后进入<span>conf</span>目录，打开<span>server.xml</span>修改配置。主要是修改端口，我这里把所有的端口信息，都在原有基础上加<span>1000</span>，即原端口是<span>8009</span>，我改为<span>9009</span>。当然，你不必和我一样，只要保证不冲突就<span>OK</span>！这些配置在<span>apache</span>的配置中可能会用到。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font face="宋体"><span><font size="3">2、配置<span>apache</span></font></span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>（<span>1</span>）进入<span>apache</span>的主目录，然后进入<span>conf</span>文件夹，用文本编辑器打开<span>httpd.conf</span>，在该文件末尾加上如下几行：</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3"><font face="宋体">### </font><font face="宋体">加载<span> mod_jk </span>模块</font></font><span><br>
+<font size="3" face="宋体">LoadModule jk_module modules/mod_jk-apache-2.2.4.so</font></span></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3"><font face="宋体">### </font><font face="宋体">配置</font></font><font face="宋体"><font size="3"><span> mod_jk<br>
+JkWorkersFile conf/workers.properties&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #</span>加载集群中的</font></font><font face="宋体"><font size="3"><span>workers<br>
+JkMountFile conf/uriworkermap.properties&nbsp;&nbsp;&nbsp;  #</span>加载<span>workers</span>的请求处理分配文件</font></font><span><br>
+<font size="3" face="宋体">JkLogFile logs/mod_jk.log&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #</font></span><font size="3" face="宋体">指定<span>jk</span>的日志输出文件</font><span><br>
+<font size="3" face="宋体">JkLogLevel warn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #</font></span><font size="3" face="宋体">指定日志级别</font></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>（<span>2</span>）不要改变目录，新建一个文件：<span>workers.properties</span>，该文件用来配置<span>web</span>容器的信息。该文件的内容如下：</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3"><font face="宋体"># worker</font><font face="宋体">列表</font></font><span><br>
+<font size="3" face="宋体">worker.list=controller, status</font></span></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3"><font face="宋体">#</font><font face="宋体">第一个<span>server</span>的配置，<span>server</span>名为</font></font><font face="宋体"><font size="3"><span>s1<br>
+#ajp13 </span>端口号，在<span>tomcat</span>下<span>server.xml</span>配置<span>,</span>默认</font></font><font face="宋体"><font size="3"><span>8009<br>
+worker.s1.port=8009<br>
+#tomcat</span>的主机地址，如不为本机，请填写<span>ip</span>地址</font></font><span><br>
+<font size="3" face="宋体">worker.s1.host=localhost<br>
+worker.s1.type=ajp13<br>
+#server</font></span><font size="3" face="宋体">的加权比重，值越高，分得的请求越多</font><span><br>
+<font size="3" face="宋体">worker.s1.lbfactor=1</font></span></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3"><font face="宋体">#</font><font face="宋体">第二个<span>server</span>的配置，<span>server</span>名为</font></font><span><font size="3" face="宋体">s2<br>
+worker.s2.port=9009<br>
+worker.s2.host=localhost<br>
+worker.s2.type=ajp13<br>
+worker.s2.lbfactor=1</font></span></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3"><font face="宋体">#server</font><font face="宋体">名为<span>controller,</span>用于负载均衡</font></font><span><br>
+<font size="3" face="宋体">worker.controller.type=lb<br>
+worker.retries=3&nbsp;&nbsp;  #</font></span><font size="3" face="宋体">重试次数</font><span><br>
+<font size="3" face="宋体">#</font></span><font size="3" face="宋体">指定分担请求的<span>server</span>列表，用逗号分隔</font><span><br>
+<font size="3" face="宋体">worker.controller.balanced_workers=s1,s2<br>
+#</font></span><font size="3" face="宋体">设置用于负载均衡的<span>server</span>的<span>session</span>可否共享有不少文章说设置为<span>1</span>是可以的，但是我是设置为<span>0</span>才可以的</font><span><br>
+<font size="3" face="宋体">worker.controller.sticky_session=0<br>
+#worker.controller.sticky_session_force=1</font></span></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>worker.status.type=status</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>（<span>3</span>）不要改变目录，新建一个文件：<span>uriworkermap.properties</span>，文件内容如下：</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3"><font face="宋体">/*=controller&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #</font><font face="宋体">所有请求都由<span>controller</span>这个<span>server</span>处理</font></font><span><br>
+<font size="3" face="宋体">/jkstatus=status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #</font></span><font size="3" face="宋体">所有包含<span>jkstatus</span>请求的都由<span>status</span>这个<span>server</span>处理</font></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><span><font size="3"><font face="宋体">!/*.gif=controller&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #</font><font face="宋体">所有以<span>.gif</span>结尾的请求都不由<span>controller</span>这个<span>server</span>处理，以下几个都是一样的意思</font></font><span><br>
+<font size="3" face="宋体">!/*.jpg=controller<br>
+!/*.png=controller<br>
+!/*.css=controller<br>
+!/*.js=controller<br>
+!/*.htm=controller<br>
+!/*.html=controller</font></span></span></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>这里的<span>&quot;!&rdquo;</span>类似于<span>java</span>中的<span>&quot;!&rdquo;</span>，是<span>&ldquo;</span>非<span>&rdquo;</span>的意思。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>这样，<span>apache</span>一块就配置好了。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>3、再修改<span>tomcat</span>配置：这里两个<span>tomcat</span>都要配置。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>仍然是打开第一步中的那个<span>server.xml</span>文件，找到<span>&lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot;&gt;</span>这一行，在里面加上一句：<span>jvmRoute=&quot;s1&quot;</span>，即把该句改为：<span>&lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot; jvmRoute=&quot;s1&quot;&gt;</span>。这里的<span>s1</span>就是第二步中配置的用于负载均衡的<span>server</span>的名称。如果该<span>tomcat</span>的端口是第二步中<span>s1</span>用的端口，那这里就写<span>s1</span>，第二个<span>tomcat</span>就应该是<span>s2</span>了。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>这样，配置就完成了。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>（四）运行</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>进入两个<span>tomcat</span>的<span>bin</span>目录，执行两个<span>tomcat</span>的<span>startup.bat</span>启动这两个<span>tomcat</span>，然后将<span>apache</span>重新启动后，运行起来看看效果吧。如果不出意外，两个<span>tomcat</span>的窗口应该是你一次我一次的打印日志信息了，而且此时<span>session</span>也是共享了的。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>到这里，集群搭建好了，负载均衡也实现了。</span></font></p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"> </p>
+<p style="text-align: left; line-height: 15pt; margin: 0cm 0cm 0pt; background: #fbfaf6" class="MsoNormal" align="left"><font size="3" face="宋体"><span>转自：<a href="http://xiezhuogang.javaeye.com/blog/438342">http://xiezhuogang.javaeye.com/blog/438342</a></span></font></p>
+</div></div></body></html>

@@ -1,0 +1,56 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>PHP 观察者模式 SplSubject 和 SplObserver</title></head><body><h1>PHP 观察者模式 SplSubject 和 SplObserver</h1><div><p></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 18px;">观察者模式它是一种事件系统，意味着这一模式允许某个类观察另一个类的状态，当被观察的类状态发生改变的时候，观察类可以收到通知并且做出相应的动作。比如键盘，我一敲击，系统就收到通知并进行相应的回应。</span><br /><span style="font-size: 18px;">对于PHP来说，PHP内置提供了两个接口来供外部应用区实现这个模式。</span><br /></p>
+<p><strong><span style="font-size: 18px;">splsubject 接口，它代表着被观察的对象，其结构：</span></strong></p><pre>interface SplSubject{
+	public function attach(splobserver $observer);
+	public function detach(SplObserver $observer);
+	public function notify();
+}</pre>
+<p><strong><span style="font-size: 18px;">SplObserver 接口，它代表着充当观察者的对象，其结构：</span></strong></p><pre>interface SplObserver{
+	public function update(SplSubject $subject);
+}</pre>
+<p><strong><span style="font-size: 18px;">这一个模式是这样实现的:SplSubject维护了一个特定的状态，当这个状态发生变化时，它就用notify()来通知之前用attach注册到SplSubject的所有SplObserver，并且调用其相应的update方法。</span></strong></p>
+<p><strong><span style="font-size: 18px;">简单的例子：</span></strong></p><pre>class subject implements SplSubject{
+
+	private $observers , $value;
+
+	public function __construct(){
+		$this-&gt;observers = array();
+	}
+
+	public function attach(SplObserver $observer){
+		$this-&gt;observers[] = $observer;
+	}
+
+	public function detach(SplObserver $observer){
+		if($idx = array_search($observer, $this-&gt;observers, true)) {
+			unset($this-&gt;observers[$idx]);
+		}
+	}
+
+	public function notify(){
+		foreach($this-&gt;observers as $observer){
+			$observer-&gt;update($this);
+		}
+	}
+
+	public function setValue($value){
+		$this-&gt;value = $value;
+		$this-&gt;notify();
+	}
+
+	public function getValue(){
+		return $this-&gt;value;
+	}
+
+}
+
+class observer implements SplObserver{
+	public function update(SplSubject $subject){
+		echo 'The new state of subject'.$subject-&gt;getValue();
+	}
+}
+
+$subject = new subject();
+$observer = new observer();
+$subject-&gt;attach($observer);
+$subject-&gt;setValue(5);</pre></div></body></html>

@@ -1,0 +1,16 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Eclipse控制台提示警告：log4j:WARN No appenders could be found for logger</title></head><body><h1>Eclipse控制台提示警告：log4j:WARN No appenders could be found for logger</h1><div>在Eclipse中开发相关项目时,在控制台经常看到如下信息:<br>
+log4j:WARN No appenders could be found for logger<br>
+log4j:WARN Please initialize the log4j system properly.
+<p>此处输出信息并不是错误信息而仅只是警告信息,因为log4j无法输出日志,log4j是一个日志输入软件包。可以将Struts或Hibernate等压缩包解压，内<font color="#ff0000">有log4j.properties</font>文件，将它复制到<font color="#ff0000">项目src文件夹或将log4j.properties放到 \WEB-INF\classes</font>文件夹中即可。</p>
+<p>在<font color="#ff0000">src</font>下面新建file名为<font color="#ff0000">log4j.properties</font>内容如下:<br>
+<br>
+# Configure logging for testing: optionally with log file<br>
+log4j.rootLogger=WARN, stdout<br>
+# log4j.rootLogger=WARN, stdout, logfile</p>
+<p>log4j.appender.stdout=org.apache.log4j.ConsoleAppender<br>
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout<br>
+log4j.appender.stdout.layout.ConversionPattern=%d %p [%c] - %m%n</p>
+<p>log4j.appender.logfile=org.apache.log4j.FileAppender<br>
+log4j.appender.logfile.File=target/spring.log<br>
+log4j.appender.logfile.layout=org.apache.log4j.PatternLayout<br>
+log4j.appender.logfile.layout.ConversionPattern=%d %p [%c] - %m%n</p></div></body></html>

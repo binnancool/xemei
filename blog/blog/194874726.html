@@ -1,0 +1,93 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>MS sql2000数据库和补丁SP4安装演示</title></head><body><h1>MS sql2000数据库和补丁SP4安装演示</h1><div><p><strong>注意：执行SP4的补丁安装：SQL2000-KB884525-SP4-x86-CHS.EXE后只是解压文件，安装的话到解压目录下，运行setup.bat</strong></p>
+<p><strong>切记要安装SP4,否则数据库将无法远程连接</strong></p>
+<p><strong>远程ODBC数据源的配置，服务器写SQLServer2000的安装机器IP地址。</strong></p>
+<p>数据库MSSQL2000安装过程较为简单，整个过程大约20分钟。请用足够的耐心按照教程安装完.</p>
+<p> </p>
+<p> </p>
+ 下载好补丁文件,重新启动VPS后，把安装文件，和补丁文件解压，我们这里放到了D盘的tools目录下。打开SETUP.BAT文件，开始安装，直接默认就可以了。<br>
+<img src="http://hi.baidu.com/uploads/allimg/090323/2031304522-0.jpg"><br>
+<p> </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031302248-1.jpg"><br>
+会出现一个兼容性对话框，不用理会，点 继续即可.<br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031306094-2.jpg"><br>
+SQL2000开始安装</p>
+<p><br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031302X1-3.jpg"><br>
+下一步开始安装<br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031303926-4.jpg"><br>
+选择  创建新的SQL Server实例，或安装客户端工具<br>
+ </p>
+<p> </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/20313055L-5.jpg"><br>
+输入你的姓名和公司名称，默认即可<br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031302140-6.jpg"><br>
+同意软件许可协议</p>
+<p> </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031304156-7.jpg"><br>
+选择 服务器和客户端工具 </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/20313024U-8.jpg"><br>
+选择 默认 ,下一步</p>
+<p><br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/203130K41-9.jpg"><br>
+这里选择安装目录和数据库存放目录，选择好后下一步</p>
+<p><br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031301018-10.jpg"><br>
+服务设置，选择 使用本地系统帐户<br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031301156-11.jpg"><br>
+这里选择混合模式，然后输入SA密码，注意输入一个复杂的密码</p>
+<p><br>
+ </p>
+<p>之后 安装进行中,请耐心等待。。。。。。。。。。。。。。。。</p>
+<p><br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/203130M14-12.jpg"><br>
+MSSQL2000安装完毕！！！</p>
+<p> </p>
+<p>接下来重启动系统，安装补丁Sp4！！！切记要安装SP4,否则数据库将无法远程连接</p>
+<p>重新启动系统后,开始安装数据库补丁，基本上默认就可以了。<br>
+<img src="http://hi.baidu.com/uploads/allimg/090323/20313054I-13.jpg"></p>
+<p>进入SP4补丁的解压目录<br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031304531-14.jpg"><br>
+选择  setup.bat安装</p>
+<p><br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/203130M92-15.jpg"></p>
+<p><br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031302001-16.jpg"></p>
+<p><br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031301927-17.jpg"></p>
+<p><br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031303000-18.jpg"></p>
+<p><br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/203130K07-19.jpg"></p>
+<p><br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031305228-20.jpg"></p>
+<p><br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031301010-21.jpg"><br>
+这里把 升级到SP4打勾</p>
+<p><br>
+ </p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031303016-22.jpg"></p>
+<p>安装进行中，请耐心等待 。。。。。。。。。。。</p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/20313025E-23.jpg"></p>
+<p><br>
+ 安装进行中，请耐心等待 。。。。。。。。。。。</p>
+<p><img src="http://hi.baidu.com/uploads/allimg/090323/2031304509-24.jpg"><br>
+<br>
+SQL 2000 SP4顺利安装完成.</p>
+<p> </p>
+<p>重要说明:安装数据库MSSQL2000较为简单，需要的是耐心的等待。</p></div></body></html>

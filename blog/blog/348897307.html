@@ -1,0 +1,78 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>squid实现透明代理详解</title></head><body><h1>squid实现透明代理详解</h1><div><p>一、获得squid-3.1.11.tar.bz2</p>
+<p><a href="http://www.squid-cache.org/Versions/">http://www.squid-cache.org/Versions/</a></p>
+<p>二、<span>检查</span><span>linux</span><span>是否存在</span><span>squid</span><span>老版本</span><span></p>
+<p style="TEXT-INDENT: 21pt; MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span><span style="FONT-FAMILY: Times New Roman"># <span style="mso-spacerun: yes">&nbsp;</span>rpm -qa|grep squid</span></span></p>
+<p><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #<span style="mso-spacerun: yes">&nbsp; </span>rpm -e squid<span style="mso-spacerun: yes">&nbsp; </span>//</span><span>删除</span><span>squid</span><span>老版本</span></p>
+<p><span>三、squid安装</span></p>
+<p><span>1、解压：tar -xvf squid-3.1.11.tar.bz2</span></p>
+<p><span>2、进入解压后的目录：cd squid-3.1.11</span></p>
+<p><span>3、检查：<span>./configure --prefix=/usr/local/squid</span></span></p>
+<p><span><span>4、编译：make</span></span></p>
+<p><span><span>5、安装：make install</span></span></p>
+<p><span><span>参数说明：</p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>./configure --prefix=/usr/local/squid \<span style="mso-tab-count: 1">&nbsp;&nbsp; </span><span style="mso-spacerun: yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>指定</span><span>squid</span><span>安装目录</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--mandir=/usr/share/man \<span style="mso-tab-count: 4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>指定</span><span>man</span><span>的安装目录</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--enable-async-io=20 \<span style="mso-tab-count: 5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>采用同步</span><span>io</span><span>提高性能，负载高可设大点</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--disable-icmp \<span style="mso-tab-count: 5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>禁止</span><span>icmp</span><span>协议代理</span><span>(</span><span>默认不允许</span><span>)</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--enable-delay-pools \<span style="mso-tab-count: 5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>允许延迟限止带宽</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--enable-cache-digests \<span style="mso-tab-count: 4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>允许缓存摘要</span><span>,</span><span>可以加快请求缓冲内容的速度</span><span>(</span><span>集群用</span><span>)</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--enable-snmp \<span style="mso-tab-count: 6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>允许</span><span>snmp</span><span>协议支持</span><span>(</span><span>如用</span><span>mrtg</span><span>进行流量监控等</span><span>)</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--disable-ident-lookups \<span style="mso-tab-count: 4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>禁止使用</span><span>RFC931</span><span>识别</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--enable-epoll \<span style="mso-tab-count: 5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>支持</span><span>epoll</span><span>的</span><span>IO</span><span>模式</span><span>,2.6</span><span>以上内核才具有</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--enable-basic-auth-helpers="NCSA"<span style="mso-tab-count: 3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>允许带密码验证</span><span>,NCSA </span><span>风格的用户名和密码档</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--enable-linux-netfilter<span style="mso-tab-count: 4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>允许透明代理</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--enable-arp-acl<span style="mso-tab-count: 5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>允许基于</span><span>MAC</span><span>地址的存取过滤</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--enable-err-language="Simplify_Chinese"<span style="mso-tab-count: 2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>支持的错误语言</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>--enable-default-err-language="Simplify_Chinese"<span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp; </span>#</span><span>指定默认的错误语言</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>四、squid配置</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>cd /usr/local/squid/etc</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>cp squid.conf squid.conf.bak</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;</p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span><span style="mso-bookmark: OLE_LINK2"><span style="FONT-FAMILY: Times New Roman">mkdir -p /usr/local/squid/var/cache</span></span></span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span><span style="FONT-FAMILY: Times New Roman">chown -R nobody:nobody /usr/local/squid/var&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //修改所属用户和组</span></span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"></span>&nbsp;</p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>#</span><span>初始化你在</span><span> squid.conf </span><span>里配置的</span><span> cache </span><span>目录</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span># cd /usr/local/squid/sbin</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span># squid –z</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>squid.conf内容修改为：</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span><br>http_port 3128 transparent</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>visible_hostname dibin_test.channel.com<br>cache_dir ufs /usr/local/squid/var/cache 500 16 256<br>cache_mgr <a href="mailto:123@163.com">123@163.com</a><br>cache_mem 393216 KB<br>maximum_object_size_in_memory 2048 KB<br>memory_replacement_policy lru<br>minimum_object_size 0 KB<br>maximum_object_size 32768 KB</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>logformat squid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %ts.%03tu %6tr %&gt;a %Ss/%03&gt;Hs %&lt;st %rm %ru %un %Sh/%&lt;A %mt<br>logformat common&nbsp;&nbsp;&nbsp;&nbsp; %&gt;a %ui %un [%tl] "%rm %ru HTTP/%rv" %&gt;Hs %&lt;st %Ss:%Sh<br>logformat combined&nbsp;&nbsp; %&gt;a %ui %un [%tl] "%rm %ru HTTP/%rv" %&gt;Hs %&lt;st "%{Referer}&gt;h" "%{User-Agent}&gt;h" %Ss:%Sh<br>logformat referrer&nbsp;&nbsp; %ts.%03tu %&gt;a %{Referer}&gt;h %ru<br>logformat useragent&nbsp; %&gt;a [%tl] "%{User-Agent}&gt;h"</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>access_log /usr/local/squid/var/logs/access_log combined<br>cache_log /usr/local/squid/var/logs/cache_log<br>cache_store_log none<br>http_access allow all<br>http_access deny all</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>hierarchy_stoplist cgi-bin ?<br>cache_effective_user nobody<br>cache_effective_group nobody</span></p><span>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><br>coredump_dir /usr/local/squid/var/cache</p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal">refresh_pattern ^ftp:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1440&nbsp;&nbsp;&nbsp; 20%&nbsp;&nbsp;&nbsp;&nbsp; 10080<br>refresh_pattern ^gopher:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1440&nbsp;&nbsp;&nbsp; 0%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1440<br>refresh_pattern -i (/cgi-bin/|\?) 0&nbsp;&nbsp;&nbsp;&nbsp; 0%&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>refresh_pattern .&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20%&nbsp;&nbsp;&nbsp;&nbsp; 4320</p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal">五、启动squid</p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"></span>&nbsp;</p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>1</span><span>，对你的</span><span>squid.conf </span><span>排错，即验证</span><span> squid.conf </span><span>的</span> <span>语法和配置。</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>&lt;?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /&gt;&nbsp;</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>#squid -k parse</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>如果</span><span>squid.conf </span><span>有语法或配置错误，这里会返回提示你，如果没有返回，恭喜，可以尝试启动</span><span>squid</span><span>。</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>2</span><span>，在前台启动</span><span>squid</span><span>，并输出启动过程。</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>#squid -N -d1</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>如果有到</span><span> ready to server reques</span><span>，恭喜，启动成功。</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>然后</span><span> ctrl + c</span><span>，停止</span><span>squid</span><span>，并以后台运行的方式启动它。</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>3</span><span>，启动</span><span>squid</span><span>在后台运行。</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>#squid -s</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>这时候可以</span><span> ps -A </span><span>来查看系统进程，可以看到俩个</span><span> squid </span><span>进程。</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>4</span><span>，停止</span><span> squid</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>#squid -k shutdown</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>这个不用解释吧。</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>5</span><span>，重引导修改过的</span><span> squid.conf</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>#squid -k reconfigure</span></p>
+<p></span></span>六&nbsp;、配置网关和转发</p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>打开转发：</span><span><span style="FONT-FAMILY: Times New Roman">echo 1 &gt;/proc/sys/net/ipv4/ip_forward</span></span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>设置</span><span><span style="FONT-FAMILY: Times New Roman">iptables</span></span><span>：</span></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp; 设置转发：</strong></span><strong><span><span style="FONT-FAMILY: Times New Roman">iptables -t nat -A PREROUTING -i eth0 -p tcp -m tcp --dport 80 -j REDIRECT --to-ports 3128</span></span></strong></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><strong><span><span style="FONT-FAMILY: Times New Roman">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 开发端口：iptables -t filter -A INPUT -p tcp -m tcp --dport 3128 -j ACCEPT</span></span></strong></p>
+<p><span>修改默认网关：</span><span>route add default gw 0.0.0.0</span></p>
+<p><span><span></span></span></span>&nbsp;</p></div></body></html>

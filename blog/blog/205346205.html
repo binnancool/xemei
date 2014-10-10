@@ -1,0 +1,127 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>JAXB的Eclipse插件（.xsd文件到java类的映射）</title></head><body><h1>JAXB的Eclipse插件（.xsd文件到java类的映射）</h1><div><p><strong><font size="4">一、JAXB的Eclipse插件的下载地址：</font></strong><a href="https://jaxb-workshop.dev.java.net/servlets/ProjectDocumentList?folderID=4962&amp;expandFolder=4962&amp;folderID=0"><strong><font size="4">https://jaxb-workshop.dev.java.net/servlets/ProjectDocumentList?folderID=4962&amp;expandFolder=4962&amp;folderID=0</font></strong></a></p>
+<p><strong><font size="4">二、插件的使用说明：</font></strong><a href="https://jaxb-workshop.dev.java.net/plugins/eclipse/xjc-plugin.html"><strong><font size="4">https://jaxb-workshop.dev.java.net/plugins/eclipse/xjc-plugin.html</font></strong></a></p>
+<p><strong><font size="4">三、实例</font></strong></p>
+<p><strong>1、databaseInfo.xsd文件</strong></p>
+<p><strong>&lt;?xml version=&quot;1.0&quot;?&gt;<br>
+&lt;xs:schema xmlns:xs=&quot;<a href="http://www.w3.org/2001/XMLSchema">http://www.w3.org/2001/XMLSchema</a>&quot;<br>
+ targetNamespace=&quot;<a href="http://www.w3school.com.cn/">http://www.w3school.com.cn</a>&quot; xmlns=&quot;<a href="http://www.w3school.com.cn/">http://www.w3school.com.cn</a>&quot;<br>
+ elementFormDefault=&quot;qualified&quot;&gt;</strong></p>
+<p><strong> &lt;xs:element name=&quot;database&quot;&gt;<br>
+&nbsp;&nbsp; &lt;xs:complexType&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;xs:sequence&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &lt;xs:element name=&quot;info&quot; maxOccurs=&quot;unbounded&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;xs:complexType&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;xs:sequence&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;xs:element name=&quot;ip&quot; type=&quot;xs:string&quot; /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;xs:element name=&quot;port&quot; type=&quot;xs:string&quot; /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;xs:element name=&quot;databaseName&quot; type=&quot;xs:string&quot; /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;xs:element name=&quot;userName&quot; type=&quot;xs:string&quot; /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;xs:element name=&quot;password&quot; type=&quot;xs:string&quot; /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/xs:sequence&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/xs:complexType&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &lt;/xs:element&gt;<br>
+&nbsp;&nbsp;&nbsp; &lt;/xs:sequence&gt;<br>
+&nbsp;&nbsp; &lt;/xs:complexType&gt;<br>
+ &lt;/xs:element&gt;</strong></p>
+<p><strong>&lt;/xs:schema&gt;</strong></p>
+<p><strong>2、右键点击&ldquo;databaseInfo.xsd&rdquo;文件</strong></p>
+<p><strong><span> <img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/0f83a931a48343afa8018eff.jpg"><br>
+</span></strong></p>
+<p><strong>3、下一步</strong></p>
+<p><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/c26651102c5b8df0a6ef3fcc.jpg"></span></p>
+<p><span><strong>4、下一步</strong></span></p>
+<p><span><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/5aa5641a084ee0e3ac6e75c9.jpg"><br>
+</span><strong>5、&ldquo;Finish&rdquo;之后</strong></span></p>
+<p><span><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/0a4e56ff52e547075d6008d0.jpg"><br>
+</span></span></p>
+<p><span><strong>6、刷新项目</strong></span></p>
+<p><span><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/9d1a7b108a4dbc26b8127bde.jpg"><br>
+</span><br>
+</span></p>
+<p><span><strong>7、xmlOperation.java对XML的读写操作</strong></span></p>
+<p><span><strong>package com.channelsoft.xml.operation;</strong></span></p>
+<p><span><strong>import java.io.File;</strong></span></p>
+<p><span><strong>import javax.xml.bind.JAXBContext;<br>
+import javax.xml.bind.JAXBException;<br>
+import javax.xml.bind.Marshaller;<br>
+import javax.xml.bind.Unmarshaller;</strong></span></p>
+<p><span><strong>import com.channelsoft.xml.Database;<br>
+import com.channelsoft.xml.ObjectFactory;</strong></span></p>
+<p><span><strong>public class xmlOperation<br>
+{<br>
+ /**<br>
+  *从XML文件读<br>
+  */<br>
+ public void readFromXML()<br>
+ {<br>
+&nbsp;&nbsp; JAXBContext jc;<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; jc = JAXBContext.newInstance(&quot;com.channelsoft.xml&quot;);<br>
+&nbsp;&nbsp;&nbsp; Unmarshaller u = jc.createUnmarshaller();<br>
+&nbsp;&nbsp;&nbsp; Database info = (Database) u.unmarshal(new File(&quot;e:\\info.xml&quot;));<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; for(int i=0;i&lt;info.getInfo().size();i++)<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(info.getInfo().get(i).getIp());<br>
+&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(info.getInfo().get(i).getPort());<br>
+&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(info.getInfo().get(i).getDatabaseName());<br>
+&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(info.getInfo().get(i).getUserName());<br>
+&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(info.getInfo().get(i).getPassword());<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (JAXBException e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;<br>
+ }<br>
+ <br>
+ /**<br>
+  * 创建并写入XML文件<br>
+  */<br>
+ public void saveToXML()<br>
+ {<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; ObjectFactory of = new ObjectFactory();<br>
+&nbsp;&nbsp;&nbsp; Database database = of.createDatabase();<br>
+&nbsp;&nbsp;&nbsp; Database.Info info= of.createDatabaseInfo();<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; info.setIp(&quot;10.130.14.142&quot;);<br>
+&nbsp;&nbsp;&nbsp; info.setPort(&quot;1433&quot;);<br>
+&nbsp;&nbsp;&nbsp; info.setDatabaseName(&quot;hrinfo&quot;);<br>
+&nbsp;&nbsp;&nbsp; info.setUserName(&quot;sa&quot;);<br>
+&nbsp;&nbsp;&nbsp; info.setPassword(&quot;dibin&quot;);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; Database.Info info1= of.createDatabaseInfo();<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; info1.setIp(&quot;10.130.14.49&quot;);<br>
+&nbsp;&nbsp;&nbsp; info1.setPort(&quot;1433&quot;);<br>
+&nbsp;&nbsp;&nbsp; info1.setDatabaseName(&quot;hrinfo&quot;);<br>
+&nbsp;&nbsp;&nbsp; info1.setUserName(&quot;sa11&quot;);<br>
+&nbsp;&nbsp;&nbsp; info1.setPassword(&quot;dibin11&quot;);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; database.getInfo().add(info);<br>
+&nbsp;&nbsp;&nbsp; database.getInfo().add(info1);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; JAXBContext jc = JAXBContext.newInstance(&quot;com.channelsoft.xml&quot;);<br>
+&nbsp;&nbsp;&nbsp; Marshaller ms = jc.createMarshaller();<br>
+&nbsp;&nbsp;&nbsp; ms.setProperty(&quot;jaxb.encoding&quot;, &quot;GB2312&quot;);<br>
+&nbsp;&nbsp;&nbsp; ms.setProperty(&quot;jaxb.formatted.output&quot;, true);<br>
+&nbsp;&nbsp;&nbsp; ms.marshal(database, new File(&quot;e:\\info.xml&quot;));<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp; }<br>
+ }<br>
+ <br>
+ public static void main(String[] args)<br>
+ {<br>
+&nbsp;&nbsp; new xmlOperation().saveToXML();<br>
+&nbsp;&nbsp; new xmlOperation().readFromXML();<br>
+ }<br>
+}</strong><br>
+</span></p></div></body></html>

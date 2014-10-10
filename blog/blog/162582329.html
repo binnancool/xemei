@@ -1,0 +1,45 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux时钟设置</title></head><body><h1>Linux时钟设置</h1><div>设置Linux的时钟 <br>
+<br>
+在Linux中，用于时钟查看和设置的命令主要有date、hwclock和clock。其中，clock和hwclock用法相近，只不过clock命令除了支持x86硬件体系外，还支持Alpha硬件体系。由于目前绝大多数用户使用x86硬件体系，所以可以视这两个命令为一个命令来学习。 <br>
+<br>
+1.在虚拟终端中使用date命令来查看和设置系统时间<br>
+查看系统时钟的操作：<br>
+# date <br>
+<br>
+设置系统时钟的操作：<br>
+# date 091713272003.30 <br>
+<br>
+通用的设置格式：<br>
+# date 月日时分年.秒 <br>
+<br>
+2.使用hwclock或clock命令查看和设置硬件时钟<br>
+查看硬件时钟的操作：<br>
+# hwclock --show 或<br>
+# clock --show<br>
+2003年09月17日 星期三 13时24分11秒 -0.482735 seconds <br>
+<br>
+设置硬件时钟的操作：<br>
+# hwclock --set --date=&quot;09/17/2003 13:26:00&quot; <br>
+<br>
+或者<br>
+# clock --set --date=&quot;09/17/2003 13:26:00&quot; <br>
+<br>
+通用的设置格式：hwclock/clock --set --date=&ldquo;月/日/年 时：分：秒&rdquo;。 <br>
+<br>
+3.同步系统时钟和硬件时钟 <br>
+<br>
+Linux系统(笔者使用的是Red Hat 8.0，其它系统没有做过实验)默认重启后，硬件时钟和系统时钟同步。如果不大方便重新启动的话(服务器通常很少重启)，使用clock或hwclock命令来同步系统时钟和硬件时钟。 <br>
+<br>
+硬件时钟与系统时钟同步：<br>
+# hwclock --hctosys <br>
+<br>
+或者<br>
+# clock --hctosys <br>
+<br>
+上面命令中，--hctosys表示Hardware Clock to SYStem clock。 <br>
+<br>
+系统时钟和硬件时钟同步：<br>
+# hwclock --systohc <br>
+<br>
+或者<br>
+# clock --systohc <br></div></body></html>

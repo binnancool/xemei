@@ -1,0 +1,60 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Java使用默认浏览器打开指定URL</title></head><body><h1>Java使用默认浏览器打开指定URL</h1><div><font face="宋体" size="3"><strong>Java使用默认浏览器打开指定URL的方法有两种：</strong><br>
+<font size="5"><strong>1、方法一</strong></font><br>
+</font><font face="宋体" size="3">Java SE  6.0的新功能：java.awt.Desktop类的  java.awt.Desktop.isDesktopSupported()可以获取当前系统是否支持java  awt桌面扩展.如果支持可以获取当前系统的Desktop<br>
+<br>
+java.awt.Desktop dp = java.awt.Desktop.getDesktop();<br>
+<br>
+dp.browse(java.net.URI);<br>
+<br>
+<font color="#00ff00"><strong>就可以启动系统默认的浏览器,所以也就解决了跨平台的问题.下面是示例代码:<br>
+<br>
+public class TestSystem {<br>
+public static void main(String[] args) {<br>
+//判断当前系统是否支持Java AWT Desktop扩展<br>
+if(java.awt.Desktop.isDesktopSupported()){<br>
+try {<br>
+//创建一个URI实例<br>
+java.net.URI uri = java.net.URI.create(&quot; http://www.163.com/&quot;);<br>
+//获取当前系统桌面扩展<br>
+java.awt.Desktop dp = java.awt.Desktop.getDesktop();<br>
+//判断系统桌面是否支持要执行的功能<br>
+if(dp.isSupported(java.awt.Desktop.Action.BROWSE)){<br>
+//获取系统默认浏览器打开链接<br>
+dp.browse(uri);&#160;&#160; <br>
+}<br>
+} catch(java.lang.NullPointerException e){<br>
+//此为uri为空时抛出异常<br>
+} catch (java.io.IOException e) {<br>
+//此为无法获取系统默认浏览器<br>
+}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <br>
+}<br>
+}<br>
+</strong></font><font size="4"><strong><font color="#00ff00">}<br>
+<font size="5" color="#000000">2、方法二</font><br>
+</font><font color="#ff0000"> //使用默认浏览器打开<br>
+//&#160;&#160;&#160; &#160;&#160;&#160; Runtime.getRuntime().exec(&quot;rundll32  url.dll,FileProtocolHandler http://www.baidu.com&quot;);</font></strong></font></font><br>
+<font face="宋体" size="3"><br>
+System.getProperties()可以获取系统的信息.包括 JDK路径,系统版本等等信息.我需要的是System.getProperty(&quot;sun.desktop&quot;)获取系统类型,因为我用的是 Windows操作系统,所以返回的String为windows.用System.getProperty(&quot;os.name&quot;)可以获取更详细的一些信息,我得到的结果为windows xp<br>
+<br>
+现在给大家推荐一些我认为有些作用的字段<br>
+<br>
+user.home 可以获取当前用户的主目录<br>
+<br>
+java.specification.version 获取当前JDK的版本号<br>
+<br>
+java.class.path 获取classpath<br>
+<br>
+user.name 获取当前用户名<br>
+<br>
+java.home 获取JDK路径<br>
+<br>
+sun.os.patch.level 获取系统版本号..也可以说是补丁号 我的显示为Service Pack 2<br>
+<br>
+user.dir 当前程序的主目录<br>
+<br>
+os.arch 显示系统操作系统的类型 我的显示为X86<br>
+<br>
+os.version 显示系统内部版本号<br>
+<br>
+java.io.tmpdir 显示当前系统的临时目录<br>
+</font></div></body></html>

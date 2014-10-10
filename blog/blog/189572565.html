@@ -1,0 +1,196 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>JConsole使用手册</title></head><body><h1>JConsole使用手册</h1><div><p><strong><span style="font-size: small"><font size="2">JConsole</font></span></strong></p>
+<p>JConsole是一个基于JMX的GUI工具，用于连接正在运行的JVM，不过此JVM需要使用可管理的模式启动。如果要把一个应用以可管理的形式启动，可以在启动是设置<code>com.sun.management.jmxremote</code>。例如，启动一个可以在本地监控的J2SE的应用<em>Java2Demo</em> ，需输入以下命令：</p>
+<pre><em>&nbsp;&nbsp;  <strong>JDK_HOME</strong></em><strong>/bin/java -Dcom.sun.management.jmxremote -jar <em>JDK_HOME</em>/demo/jfc/Java2D/Java2Demo.jar
+</strong>
+<code><em><font>JDK_HOME需要</font></em></code>是一个含有JDK5.0的目录。</pre>
+<pre>要启动JConsole，运行
+<em>&nbsp;&nbsp;  <strong>JDK_HOME</strong></em><strong>/bin/jconsole
+</strong>
+一个用于连接的对话框将会打开。对话框的Local标签列出了所有本地正在运行的JVM，还包含进程的ID等信息。</pre>
+<p><img border="0" alt="Figure 2: Local Tab" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/Local.jpg" width="400" height="300"></p>
+<p><strong>Figure 2</strong>: Local Tab.</p>
+<p>JConsole可以以三种方式连接正在运行的JVM：</p>
+<ul>
+    <li><strong>Local：</strong>使用JConsole连接一个正在本地系统运行的JVM，并且执行程序的和运行JConsole的需要是同一个用户。JConsole使用文件系统的授权通过RMI连接器连接到平台的MBean服务器上。这种从本地连接的监控能力只有Sun的JDK具有</li>
+    <li><strong>Remote：</strong>使用下面的URL通过RMI连接器连接到一个JMX代理：</li>
+</ul>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <strong>service:jmx:rmi:///jndi/rmi://<em>hostName</em>:<em>portNum</em>/jmxrmi <br>
+</strong><em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  hostName</em>填入主机名称，<em>portNum</em>为JMX代理启动时指定的端口。JConsole为建立连接，需要在环境变量中设置<code>mx.remote.credentials来指定用户名和密码从而进行授权。 <br>
+</code>
+<ul>
+    <li><strong>Advanced:</strong>使用一个特殊的URL连接JMX代理。一般情况使用自己定制的连接器而不是RMI提供的连接器来连接JMX代理，或者是一个使用JDK1.4的实现了JMX和JMX Rmote的应用。</li>
+</ul>
+<br>
+当JConsole成功建立连接，它从连接上的JMX代理处获取信息，并且以下面几个标签页呈现信息。
+<ul>
+    <li><strong>Summary tab.</strong> 监控JVM和一些监控变量的信息。</li>
+    <li><strong>Memory tab. </strong>内存使用信息</li>
+    <li><strong>Threads tab.</strong> 线程使用信息</li>
+    <li><strong>Classes tab.</strong> 类调用信息</li>
+    <li><strong>VM tab.</strong> JVM的信息</li>
+    <li><strong>MBeans tab.</strong>所有MBeans的信息</li>
+</ul>
+<p>MBeans tab展示了所有以一般形式注册到JVM上的MBeans。MBeans tab允许你获取所有的平台信息，包括那些不能从其他标签页获取到的信息。注意，其他标签页上的一些信息也在MBeans这里显示。另外，你可以使用 MBeans标签管理你自己的应用的MBeans</p>
+<p> </p>
+<p><strong><span style="font-size: small"><font size="2">使用MBeans Tab监控和管理MBean</font></span></strong></p>
+<p><br>
+注册到JMX代理的平台或者应用的MBeans，可以通过MBeans标签获取。例如,内存的MBeans如下面定义</p>
+<pre>public interface MemoryMXBean {
+     public MemoryUsage getHeapMemoryUsage();
+     public MemoryUsage getNonHeapMemoryUsage();
+     public int         getObjectPendingFinalizationCount();
+     public boolean     isVerbose();
+     public void        setVerbose(boolean value);
+     public void        gc();
+ }</pre>
+<p>内存的MBean包括四个属性：</p>
+<ul>
+    <li><strong><code>HeapMemoryUsage</code>.</strong> 用于描述当前堆内存使用情况的只读属性</li>
+    <li><strong><code>NonHeapMemoryUsage</code>.</strong> 用于描述当前的非堆内存的使用情况的只读属性</li>
+    <li><strong><code>ObjectPendingFinalizationCount</code>.</strong>用于描述有多少对象被挂起以便回收。</li>
+    <li><strong><code>Verbose</code>.</strong>用于动态设置GC是否跟着详细的堆栈信息，为一个布尔变量</li>
+</ul>
+内存的MBean支持一个操作&mdash;&mdash;GC，此操作可以发送进行实时的垃圾回收请求。
+<p><img border="0" alt="Figure 3: MBeans Tab" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/MBeansTab.jpg" width="675" height="530"></p>
+<p><strong>Figure 3</strong>: MBeans Tab.</p>
+<p>左边的树形结构以名字的方式展示了所有MBeans的列表。一个MBean对象的名字由一个域的名字和一串关键字属性组成。例如，JVM的平台的MBeans是在&ldquo;java.lang&rdquo;域下的一组，而日志的MBeans则在&quot;<code>java.util.logging</code>&quot;域下。MBean对象的名字在<a href="http://java.sun.com/j2se/1.5.0/docs/api/javax/management/ObjectName.html"><font color="#108ac6">javax.management.ObjectName</font></a> 规范中定义。</p>
+<p>当你在树中选中一个MBean，属性，方法，或者通知等一些信息会再右边显示出来。如果属性是可写的（属性被标志为蓝色），你可以进行设置。你可以操作在<a href="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/MBeansTab-Operations.JPG"><font color="#108ac6">Operations tab</font></a>中列出的操作。你也可以看到由MBean发送出来的通知：默认情况，如果你不订阅通知的话，JConsole不会收到MBean发生过来的通知。你可以点击<code>&quot;Subscribe</code>&quot;(订阅)按钮来堆通知进行定义，而使用&quot;<code>Unsubscribe</code>&quot;按钮来取消订阅</p>
+<p><img border="0" alt="Figure 4: MBeans Notification" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/MBeansTab-Notif.jpg" width="675" height="530"></p>
+<p><strong>Figure 4</strong>: MBeans Notification.</p>
+<p> </p>
+<p><strong><span style="font-size: small"><font size="2">监控内存</font></span></strong></p>
+<p><br>
+内存标签页通过读取内存系统、内存池、垃圾回收的MBean来获取对内存消耗、内存池、垃圾回收的情况的统计。 <br>
+图： <br>
+<img src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/SetUsageThreshold.jpg"></p>
+<p><br>
+上图展示了内存随时间变化的使用情况。有对堆的、非堆的以及特殊内存池的统计。内存池信息是否能被获取，取决与使用的Java虚拟机。下面列表展示了HotSpot虚拟机的内存池情况。</p>
+<p><br>
+<strong>Eden Space (heap)：</strong> 内存最初从这个线程池分配给大部分对象。 <br>
+<strong>Survivor Space (heap)：</strong>用于保存在eden space内存池中经过垃圾回收后没有被回收的对象。 <br>
+<strong>Tenured Generation (heap)：</strong>用于保持已经在 survivor space内存池中存在了一段时间的对象。 <br>
+<strong>Permanent Generation (non-heap):</strong> 保存虚拟机自己的静态(refective)数据，例如类（class）和方法（method）对象。Java虚拟机共享这些类数据。这个区域被分割为只读的和只写的， <br>
+<strong>Code Cache (non-heap):</strong>HotSpot Java虚拟机包括一个用于编译和保存本地代码（native code）的内存，叫做&ldquo;代码缓存区&rdquo;（code cache）</p>
+<p><br>
+详细信息区域给出一些当前线程的信息： <br>
+<strong>Used ：</strong>已使用：当前的内存使用量。使用的内存包括所有对象（能被获取和不能被获取的）所占用的内存。</p>
+<p><br>
+<strong>Committed ：</strong>分配量：Java虚拟机保证能够获取到的内存量。分配内存（committedmemory）的量可能随时间改变。Java虚拟机可能释放部分这里的内存给系统，相应的分配的内存这时可能少于初始化时分配的给它的量。分配量总数大于或等于已使用的内存量。</p>
+<p><br>
+<strong>Max :</strong>内存管理系统可以使用的最大内存量。这个值可以被改变或者不做设定。如果JVM试图增加使用的内存到大于分配量（committedmemory）的情况，内存分配可能失败，即便想使用的内存量小于或者等于最大值（如：系统虚拟内存比较低时）</p>
+<p><br>
+<strong>Usage Threshold</strong> The usage threshold of a memory pool. This field will only beshown if the memory pool supports usage threshold. <br>
+<strong>GC time :</strong>垃圾回收使用的总时间和调用垃圾回收的次数。它可能有好几行，每行代表JVM使用的垃圾回收算法。(</p>
+<p><br>
+右下角的棒状图表显示了被JVM的内存池消耗的内存。如果内存使用超过 usage threshold,则棒会变红。usagethreshold是用于支持内存检查的Memory Pool MBean的一个属性。MemoryPoolMXBean定义了一系列方法用于检查内存。 <br>
+public interface MemoryPoolMXBean { <br>
+.... <br>
+// Usage threshold <br>
+public long&nbsp;&nbsp;&nbsp;  getUsageThreshold(); <br>
+public void&nbsp;&nbsp;&nbsp;  setUsageThreshold(long threshold); <br>
+public boolean isUsageThresholdExceeded(); <br>
+public boolean isUsageThresholdSupported(); <br>
+// Collection usage threshold <br>
+public long&nbsp;&nbsp;&nbsp;  getCollectionUsageThreshold(); <br>
+public void&nbsp;&nbsp;&nbsp;  setCollectionUsageThreshold(long threshold); <br>
+public boolean isCollectionUsageThresholdSupported(); <br>
+public boolean isCollectionUsageThresholdExceeded(); <br>
+}</p>
+<p><br>
+每种内存池可能有两种内存初始话支持： usage threshold和collection usage threshold特殊的内存池可能两种都不支持。</p>
+<p><a><strong><span style="color: #000000"><u>Usage Threshold</u></span></strong></a></p>
+<p><em>usage threshold</em>是内存池中一个可管理的属性。它使用低负荷的内存监控。设置<em>usage threshold</em>为正值则<em>usage threshold</em>检查内存池。设置<em>usage threshold</em>为零，则关闭检查。默认值由JVM设置。JVM一般让usage threshold在最合适的时候检查内存，典型的在GC的过程中和某些分配内存的时候。如果JVM发现当前的内存使用超过了<em>usage threshold，</em>它将会把<code>UsageThresholdExceeded</code>属性设置为true <br>
+有些内存池可能不支持<em>usage threshold。</em>你可以使用<code>UsageThresholdSupported属性来判断一个内存池是否支持</code><em>usage threshold。</em>例如，一个比较完善（generational garbage collector）的垃圾回收器（如HotSpot的虚拟机），most of the objects are allocated in the young generation，从eden内存池中产生。eden pool被设计成可以被装满；再eden pool中执行垃圾回收将会释放他</p>
+<p><strong><a><br>
+</a></strong></p>
+<p><a><strong><span style="color: #000000"><u>Collection Usage Threshold</u></span></strong></a></p>
+<p><em>Collection usage threshold</em>是可进行垃圾回收的内存池的一个可配置属性。JVM堆一个内存池进行垃圾回收以后，此内存池中的一些内存仍然被那些没有被回收的对象占用。collection usage threshold仅允许你在垃圾回收后对内存进行检查。如果JVM发现可用内存超出collection usage threshold，它将会设置<code>CollectionUsageThresholdExceeded</code>属性为true。 <br>
+你可以使用<code>CollectionUsageThresholdSupported</code>属性来控制内存池释放支持 collection usage threshold. <br>
+usage threshold 和collection usage threshold是MBean标签中的一组。例如，在左边的树形结构中选择TenuredGen，设置tenured generation memory pool的usage threshold为6m。如下图所示</p>
+<p><img border="0" alt="Figure 6: Setting Usage Threshold" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/SetUsageThreshold.jpg" width="675" height="530"></p>
+<p><strong>Figure 6</strong>: Setting Usage Threshold.</p>
+<p>当 <code>TenuredGen</code> memory pool的内存使用超过6MBytes时，代表 <code>TenuredGen</code> memory pool的柱状图将会呈现红色来代表使用的内存超过了usage threshold。代表堆内存的柱状图也将变为红色。你可以选择柱状图或者在图表中指定内存池来查看某个指定内存池的信息。如果把鼠标房子柱状图上，将会显示出内存池的名字</p>
+<p><img border="0" alt="Figure 7: Low Memory" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/LowMemory.jpg" width="675" height="530"></p>
+<p><strong>Figure 7</strong>: Low Memory.</p>
+<p> </p>
+<p> </p>
+<p><strong><span style="font-size: small"><font size="2">开启/关闭虚拟机的详细跟踪</font></span></strong></p>
+<p>如上所述，内存系统的MBean定义了一个叫做Verbose布尔变量，让你能动态的打开或关闭详细的GC跟踪。详细的GC跟踪，将会在JVM启动时显示。默认的HotSpot的GC详细输出为<code>stdout</code>.</p>
+<p><img border="0" alt="Figure 8: Setting Verbose GC" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/SettingGCVerbose.jpg" width="675" height="530"></p>
+<p><strong>Figure 8</strong>: Setting Verbose GC.</p>
+<p> </p>
+<p> </p>
+<p><strong><span style="font-size: small"><font size="2">死锁检查</font></span></strong></p>
+<p>线程标签页提供关于应用的线程运行信息</p>
+<p><img border="0" alt="Figure 9: Threads Tab" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/ThreadsTab.jpg" width="675" height="530"></p>
+<p><strong>Figure 9</strong>: Threads Tab.</p>
+<p>左下角列出了所以正在运行的线程。如果你在过滤器中输入一个字符，线程列表将仅显示线程名字包含你输入字符的线程。通过点击某个线程，你可以获取这个线程的相关信息。</p>
+<p>线程的MBean标签提供了一些Thread标签没有提供有用的操作。</p>
+<ul>
+    <li><code>findMonitorDeadlockedThreads</code>. 如果发生线程死锁，可以通过这个检查出来。操作返回一组死锁的线程ID</li>
+    <li><code>getThreadInfo</code>. 返回线程的信息。包括线程的名称、堆栈信息，导致当前线程阻塞的锁，如果有的话，还返回哪儿线程持有这个锁，和这个线程信息的统计。</li>
+    <li><code>getThreadCpuTime</code>.返回指定线程消耗的CPU时间。</li>
+</ul>
+为使用上面这些属性，可以到MBeans标签下，在MBeans树上选择Threading MBean。它列出了当前监控的JVM所有属性的操作。
+<p><img border="0" alt="Figure 10: MBeans Tab Threading" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/MBeansTab-Threading.jpg" width="675" height="530"></p>
+<p><strong>Figure 10</strong>: MBeans Tab Threading.</p>
+<p>为检查你的应用是否进入死锁（例如,你的应用挂起），你可以使用<code>findMonitorDeadlockedThreads</code>操作。</p>
+<p><img border="0" alt="Figure 11: Find Deadlocked Threads" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/FindDeadlock-IDs.jpg" width="675" height="530"></p>
+<p><strong>Figure 11</strong>: Find Deadlocked Threads.</p>
+<p>一旦你选择了<code>findMonitorDeadlockedThreads</code>按钮，将会有一个弹出窗口显示结果。在上面例子中，JConsole连接了一个存在3个死锁线程的示例应用SampleTest。如上所示，检查出ID为12，10和11的线程死锁。想查询更多的线程信息，可以使用<code>getThreadInfo</code>操作。线程的MBean支持<code>getThreadInfo</code>操作的四种形式，</p>
+<ul>
+    <li>对一个给定的线程ID，给出最深的堆栈情况</li>
+    <li>堆一系列的线程ID，给出最深的堆栈情况</li>
+</ul>
+<ul>
+    <li>Of a given thread ID with no stack trace.</li>
+    <li>Of an array of thread IDs with no stack trace.</li>
+</ul>
+对应死锁情况，你一般会比较关系堆栈情况。你可以在getThreadInfo操作的第一个参数中输入死锁的线程ID和你想跟踪的堆栈深度。
+<p><img border="0" alt="Figure 12: ThreadInfo for thread ID = 12" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/ThreadInfo-1.jpg" width="684" height="592"></p>
+<p><strong>Figure 12</strong>: ThreadInfo for Thread ID = 12.</p>
+<p>双击stackTrace属性的值域将会显示一个复合对话框，你可以在堆栈中来回查看。图13，14显示了死锁线程-1的复合对话框中的第一层堆栈和第二层堆栈。</p>
+<p><img border="0" alt="Figure 13: Top Frame of the Stack Trace of DeadlockedThread-1" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/ThreadInfo-2.jpg" width="368" height="245"></p>
+<p><strong>Figure 13</strong>: Top Frame of the Stack Trace of DeadlockedThread-1.</p>
+<p><img border="0" alt="Figure 14: Second Frame of the Stack Trace of DeadlockedThread-1" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/ThreadInfo-3.jpg" width="368" height="245"></p>
+<p><strong>Figure 14</strong>: Second Frame of the Stack Trace of DeadlockedThread-1.</p>
+<p>线程标签页提供了一个友好的界面供查看线程的堆栈。你可以找到死锁线程的名字，使用<code>getThreadInfo</code> 查找线程信息。然后又可以使用线程标签页来分析死锁。</p>
+<p> </p>
+<p> </p>
+<p><strong><span style="font-size: small"><font size="2">控制日志等级</font></span></strong></p>
+<p>Logging MBean定义了<code>LoggerNames</code>属性，用于描述日志名称。为找到你的应用的日志，可以选择<code>在MBeans树中java.util.logging</code> 下的Logging MBean，双击LoggerNames属性</p>
+<p><img border="0" alt="Figure 15: List of All Logger Names" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/LoggerNames.jpg" width="675" height="530"></p>
+<p><strong>Figure 15</strong>: List of All Logger Names.</p>
+<p>Logging MBean也支持三种操作：</p>
+<ul>
+    <li><code>getParentLoggerName</code>. 返回指定logger的父logger</li>
+    <li><code>getLoggerLevel</code>. 返回指定logger的日志等级</li>
+    <li><code>setLoggerLevel</code>.设置指定logger到一个新的等级</li>
+</ul>
+所有三个操作都把日志名称作为第一个参数。
+<p><img border="0" alt="Figure 16: Setting Log Level" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/LogLevel.jpg" width="675" height="530"></p>
+<p><strong>Figure 16</strong>: Setting Log Level.</p>
+<p> </p>
+<p><strong><span style="font-size: small"><font size="2">获取操作系统资源信息-Sun平台下的扩展</font></span></strong></p>
+<p>JDK5.0扩展了操作系统的MBean，以此可以获取一下系统资源的信息，如：</p>
+<ul>
+    <li>处理的CPU</li>
+    <li>总共的和空闲的物理内存</li>
+    <li>可获得的虚拟内存。（即保证可以分配给运行的进程的虚拟内存）</li>
+    <li>总共的和空闲的交换区</li>
+    <li>打开的文件总数（只能在Unix下使用）</li>
+</ul>
+当打开MBeans标签下的Operating System MBean，你可以看到平台可以执行的所有属性和操作。你可以监控任何一个属性随时间的变化&mdash;&mdash;如，CPU时间-双击属性的值域部分。
+<p><img border="0" alt="Figure 17: MBeans Tab OS" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/MBeansTab-OS.jpg" width="675" height="530"></p>
+<p><strong>Figure 17</strong>: MBeans Tab OS.</p>
+<p>除此之外，VM标签和Summary标签提供了操作系统资源的一些信息</p>
+<p> </p>
+<p>管理应用的MBean <br>
+被监控的SampleTest应用有它自己的Hello MBean：</p>
+<pre>com.sun.example:type=Hello
+如果CacheSize 属性发生改变，Hello MBean将会发送一个通知。你可以和管理平台的MBeans一样使用MBeans标签页来管理你的应用的MBean。例如，当CacheSize 属性变化的时候你想监控。你首先可以在
+Notification标签页中订阅。如果你改变CacheSize，你可以看到一个通知被发送。</pre>
+<p><img border="0" alt="Figure 18: Notifications" src="http://java.sun.com/developer/technicalArticles/J2SE/jconsole/Hello-Notif.jpg" width="675" height="530"></p>
+<p><strong>Figure 18</strong>: Notifications.</p></div></body></html>

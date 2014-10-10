@@ -1,0 +1,469 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Java学习总结二</title></head><body><h1>Java学习总结二</h1><div><p><font face="宋体"><font size="3"><strong><font size="5">程序、进程和线程</font></strong><br>
+<br>
+1、程序是计算机指令的集合，它以文件的形式存储在磁盘上。<br>
+&nbsp;&nbsp;  进程：是一个程序在其自身的地址空间中的一次执行活动。<br>
+&nbsp;&nbsp;  *进程是资源申请、调度和独立运行的单位，因此，它使用系统中的运行资源；而程序不能申请系统资源，不能被系统调度，也不能作为独立运行的单位，因此，它不占用系统的运行资<br>
+源。<br>
+&nbsp;&nbsp;  线程：是进程中的一个单一的连续控制流程。一个进程可以拥有多个线程。<br>
+&nbsp;&nbsp;  *线程又成为轻量级进程，它和进程一样拥有独立的执行控制，由操作系统负责调度，区别在于线程没有独立的存储空间，而是和所属进程中的其它线程共享一个存储空间，这使得线程<br>
+间的通信远较进程简单。<br>
+2、一个进程中至少会有一个线程。<br>
+<br>
+<strong><font size="5">java对多线程的支持<br>
+</font></strong><br>
+1、java在语言级提供了对多线程程序设计的支持。<br>
+2、实现多线程程序的两种方式：<br>
+&nbsp;&nbsp;  （1）从Thread类继承；<br>
+&nbsp;&nbsp;  （2）实现Runnable接口。<br>
+3、一个Thread对象就代表了进程当中的一个线程。java虚拟机允许一个应用程序可以拥<br>
+有多个并发运行的线程。当一个JVM启动的时候，通常由一个单一的非后台线程（典<br>
+型的就是调用main方法的线程）<br>
+4、可以利用线程类当中的静态方法<br>
+&nbsp;&nbsp;  static Thread currentThread()返回当前正在执行的Thread对象的引用，也就是获取<br>
+当前线程。<br>
+5、可以利用线程类当中的方法<br>
+&nbsp;&nbsp;&nbsp;  String getName()获取线程的名字。<br>
+&nbsp;&nbsp;  例：Thread.currentThread().getName();<br>
+6、让线程可以运行我们的代码需要覆盖其run()方法。<br>
+7、让线程运行需要调用线程类中的一个方法start。当我们调用start方法的时候就会导<br>
+致这个线程开始执行，然后java的虚拟机就会调用这个线程的run方法。可以把run<br>
+方法理解为线程的入口函数。<br>
+8、可以把一个线程设置为后台线程，利用线程类中的一个方法：<br>
+&nbsp;&nbsp;  void setDaemon(boolean on)标记这个线程为后台线程或者用户线程。<br>
+&nbsp;&nbsp;  如果参数设置为真，标记该线程为后台线程。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  *main方法所在的线程是非后台线程。<br>
+9、一个正在执行的线程可以放弃它执行的权利让另一个线程运行，使用Thread类中的静态方法 static void yield()导致当前正在执行的thread对象临时暂停允许其它thread执行。<br>
+10、java中每一个线程都有一个优先级，可以通过Thread类中的方法int getPriority()<br>
+和void setPriority(int newPriority)去得到一个线程的优先级和设置线程的优先级。<br>
+&nbsp;&nbsp;&nbsp;  *线程优先级的取值范围（1~10）：<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  三个常量（MAX_PRIORITY、MIN_PRIORITY、NORM_PRIORITY）表示线程最大、最小、<br>
+默认优先级，它们表示的整数值分别是10、1、5。<br>
+&nbsp;&nbsp;&nbsp;  *可以随时去设置线程的优先级，可以在start()前也可以在start()后去修改。<br>
+&nbsp;&nbsp;&nbsp;  *java中如果一个线程的优先级较高，那么它将始终获得运行的机会<br>
+<br>
+<strong><font size="5">java多线程的支持<br>
+</font></strong><br>
+1、java运行时系统实现了一个用于调度线程执行的线程调度器，用于确定某一时刻由哪一个线程在CPU上运行。<br>
+2、在java技术中，线程通常是抢占式的而不需要时间片分配进程（分配给每个线程相等CPU时间的进程）。抢占式调度模型就是许多线程处于可以运行状态（等待状态），但实际上只有一个线程在运行。该线程一直运行到它终止进入可运行状态（等待状态），或者另一个具有更高优先级的线程可变成可运行状态。在后一种情况下，低优先级的线程被高优先级的线程抢占，高优先级的线程获得运行的机会。（程序编写中，不要利用高优先级将始终运行这个特点来完成某些功能）<br>
+<br>
+3、java线程调度器支持不同优先级线程的抢先方式，但其本身不支持相同优先级线程的<br>
+时间片轮转。<br>
+4、java运行时系统所在的操作系统支持时间片的轮转，则线程调度器就支持相同优先级线程的时间片轮换。<br>
+<br>
+<br>
+<strong><font size="5">实现线程的第二种方式（实现Runnable接口）</font></strong><br>
+<br>
+1、 Thread类其实也实现了Runnable接口<br>
+2、 对于一个类来说，如果说它的实例想要被一个线程去执行，就应该实现Runnable接口。该接口只有一个方法run()。<br>
+3、 构造Thread的时候可以传递一个实现了Runnable接口的对象:<br>
+Thread(Runnable target)作为Thread构造函数的参数。Java虚拟机会调用实现了Runnable接口对象当中的run()方法来执行我们的代码。<br>
+<br>
+MyThread mt = new MyThread();<br>
+New Thread(mt).start();<br>
+4、 通常，如果不需要修改线程类当中除了run()方法之外的其它方法的行为之外，最好都<br>
+是要去实现Runnable接口。<br>
+5、 实现Runnable接口有两个好处：<br>
+*已经继承了其他类无法再继承Thread类时，就实现Runnable接口；<br>
+*如果多个线程访问同一种资源的话是很方便的：<br>
+6、Thread.sleep(long millis)让当前正在执行的线程睡眠一会。<br>
+7、 让一个线程进入一段代码后即使休眠了其它线程也不能进入这段代码，除非它将剩余的代码执行完成之后，其它的线程才能后进入到这段代码之中。可以利用java语言中的同步来完成。<br>
+<br>
+<br>
+<strong><font size="5">线程的同步</font></strong><br>
+<br>
+1、在一个程序中，代码段访问了同一个对象从单独的、并发的线程当中，这个代码段就<br>
+叫做&ldquo;临界区&rdquo;。采用同步的机制对临界区进行保护。<br>
+2、同步的两种方式：同步块和同步方法。这两种方式都是通过一个synchronized关键字<br>
+来完成的。<br>
+A.对于同步块来说，在synchronized后面需要加上一个对象，这个对象是任意的一个<br>
+对象。可以定义一个String类型的，也可以定义一个Object类型的对象：<br>
+Object obj = new Object();<br>
+在synchronized后面加上这个对象：<br>
+synchronized(obj)<br>
+{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //保护的代码段<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ……<br>
+}<br>
+这样就实现了一个同步。<br>
+<br>
+B．*同步方法的实现：<br>
+在方法的前面加上synchronized<br>
+Public synchronized void method1()<br>
+{<br>
+}<br>
+<br>
+同步的方法可以完成跟同步块一样的结果。同步块需要有一个对象，同步方法只需要<br>
+在方法的前面加上一个synchronized关键字。<br>
+<br>
+3、同步块的实现机制是怎样完成的呢？java语言中每一个对象都有一个监视器，或者叫<br>
+做锁。当我们第一个线程进来的时候首先要判断一下obj这个对象的监视器是否被加<br>
+锁，如果没有被加锁，那么它就会将obj的监视器加锁，然后往下执行（遇到sleep<br>
+睡眠）…如果其它线程执行到Synchronized会判断到obj已经被加锁，那么它们只能<br>
+等待。第一个线程执行完受保护的代码后，会将obj的监视器解锁。其它线程就可以<br>
+进入到这个同步的代码段中。<br>
+<br>
+同步方法的实现机制又是怎样的呢？当我们一个线程进入这个方法的时候，也需要加<br>
+上一把锁，同步的方法是给类中的this变量的监视器加锁。当一个线程进入同步方法<br>
+的时候，会察看this对象是否加锁，没有加锁则会加锁。然后进入到方法内部，方法<br>
+执行完后，会将this解锁，其它线程在this解锁后才可以进入。 <br>
+4、同步方法利用的是this所代表的对象的锁。<br>
+5、因为静态方法只属于类本身，而不属于某个对象。每个类都对应有一个class对象，同<br>
+步静态方法使用的就是方法所在的类所对应的class对象的监视器。<br>
+<br>
+<br>
+<strong><font size="5">线程的死锁</font></strong><br>
+<br>
+1、 哲学家进餐的问题。<br>
+2、 线程1锁住了对象A的监视器，等待对象B的监视器，线程2锁住了对象B的监视器，等待对象A的监视器，就造成了死锁。<br>
+3、 Thread类中两个废弃的方法就很容易造成死锁，suspend()、resume()<br>
+<br>
+Wait、notify、nofityAll方法<br>
+<br>
+1、 每一个对象除了有一个锁之外，还有一个等待队列(wait set)，当一个对象刚创建的时候，它的等待队列是空的。<br>
+2、我们应该在当前线程锁住对象的锁后，去调用该对象的wait方法。也就是说wait方法只能够在同步方法或者同步块中被调用。但我们调用wait方法的时候，这个线程就进入了这个对象的等待队列当中。<br>
+3、 当调用对象的notify方法时，将从该对象的等待队列中删除一个任意选择的线程，这个线程将再次成为可运行的线程。<br>
+4、 当调用对象的notifyAll方法时，将从该对象的等待队列中删除所有等待的线程，这些线程将成为可运行的线程。<br>
+5、 Wait和notify主要用于producer-consumer这种关系中。<br>
+6、 Wait和notify方法必须在一个同步的块或者方法中被调用，并且针对同一对象的等待队列<br>
+<br>
+<br>
+<strong><font size="5">线程的状态<br>
+</font></strong><br>
+1、 用new创建一个线程的时候，线程就处于new状态。<br>
+当调用start方法的时候，线程处于可运行(Runnable)状态。<br>
+一个尚未运行的线程是Runnable状态，一个正在运行的线程也是Runnable状态。<br>
+当一个正在运行的线程调用yield方法的时候，线程调度器会选择另外一个线程去运行，调用yield方法的线程仍然处于Runnable状态。<br>
+当我们调用sleep、wait、suspend或者I/O阻塞时线程就进入Not Runnable状态。当一个线程sleep结束，或者调用了notify方法、resume方法或者I/O操作完成，线程就会从Not Runnable状态返回Runnable状态。<br>
+（resume和suspend这两个函数已经被废弃了，不建议我们再使用）<br>
+当一个处于可运行状态的线程它的run方法执行完毕或者调用stop方法，线程就进入了Dead状态终止了。<br>
+在Not Runnable状态的时候，调用了stop方法，线程也会终止。<br>
+（stop方法是用来停止一个线程的，这个方法也已经废弃了，因为这个方法是不安全的，当调用stop方法时，它会解锁先前锁住的所有的监视器，这样的话，其它的线程就可以去访问被保护的对象，导致对象的状态不一致，结果是不可预料的）<br>
+<br>
+↓new thread<br>
+↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  yield<br>
+↓&nbsp;&nbsp;&nbsp;&nbsp;  start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ○&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  sleep wait suspend I/O阻塞<br>
+New →→→→→→ Runnable →→→→→→→→→→→→→→→→→→Not Runnable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↘&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ←←←←←←←←←←←←←←←←←←&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↙<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↘&nbsp;&nbsp;&nbsp;&nbsp;  Sleep结束、notify resume I/O操作完成&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↙<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↘&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↙<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↘&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↙<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↘&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↙<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↘ run方法退出&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  stop方法调用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↘ stop调用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↙<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↘&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↙<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↘&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↙<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↘&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↙<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↘&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ↙<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Dead<br>
+<br>
+<strong><font size="5">线程的终止(两种方式)</font></strong><br>
+<br>
+1、 设置一个flag变量<br>
+2、 interrupt()方法（可以中断一个线程）<br>
+<br>
+<br>
+<strong><font size="5">File类</font></strong><br>
+<br>
+1、 一个File类的对象，表示了磁盘上的文件或目录。<br>
+2、 File类提供了与平台无关的方法来对磁盘上的文件或目录进行操作。<br>
+3、 可以通过一个文件名来构造一个File类对象：<br>
+File(String pathname)<br>
+&nbsp;&nbsp;  也可以通过指定一个File对象，再指定它的文件名：<br>
+&nbsp;&nbsp;&nbsp;  File(String parent, String child)去构造一个File对象，这里的parent表示<br>
+文件或目录所在的父目录。Child指定文件<br>
+名。<br>
+4、File类不只可以用来表示一个文件还可以表示一个目录。<br>
+5、File类中：<br>
+&nbsp;&nbsp;&nbsp;  Boolean canRead() //检测文件是否可读<br>
+&nbsp;&nbsp;&nbsp;  Boolean canWrite()//检测文件是否可写<br>
+&nbsp;&nbsp;&nbsp;  Boolean createNewFile() 当我们构造一个File对象的时候可以调用<br>
+createNewFile()去创建一个新的文件<br>
+1、 在我们进行I/O操作的时候，经常会出现一些异常。如：磁盘空间不足、因为磁盘故障不能创建文件。所以在用java.io包中的类进行编程的时候，经常会需要捕获一些异常。为了简单起见，可以在main后throws出异常,让java虚拟机去处理。<br>
+例：<br>
+import java.io.*;<br>
+<br>
+class FileTest<br>
+{<br>
+public static void main(String[] args) throws Exception<br>
+{<br>
+&nbsp;&nbsp;&nbsp;  File f = new File(&quot;1.txt&quot;);<br>
+&nbsp;&nbsp;&nbsp;  f.createNewFile();<br>
+}<br>
+}<br>
+2、 File类还可以用来创建目录：<br>
+Boolean mkdir(); //用来创建一个目录<br>
+例：<br>
+&nbsp;&nbsp;&nbsp;  File f = new File(&quot;1.txt&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  //f.createNewFile();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  f.mkdir();<br>
+3、 利用绝对路径创建一个文件：<br>
+File f = new File(&quot;D:\\MyWorks\\lessons\\java\\lesson7\\1.txt&quot;);<br>
+f.createNewFile();<br>
+10、File类提供了常量表示目录的分隔符：<br>
+&nbsp;&nbsp;&nbsp;  Static String separator //系统独立的分隔符在windows下会被解释为&ldquo;\&rdquo;，<br>
+//在linux下为&rdquo;/&rdquo;<br>
+&nbsp;&nbsp;&nbsp;  Static char separatorChar //也是用来表示分隔符，只不过一个使用String类<br>
+//型来表示，一个是用char表示<br>
+4、 在当前盘符下直接写一个目录分隔符，也可以表示当前盘符的根目录。<br>
+<br>
+<br>
+<br>
+<strong><font size="5">I/O 流概述</font></strong><br>
+<br>
+　　输入/输出处理是程序设计中非常重要的一部分，比如从键盘读取数据、从文件中读取数据或向文件中写数据等等。<br>
+<br>
+　　Java把这些不同类型的输入、输出源抽象为流（stream），用统一接口来表示，从而使程序简单明了。<br>
+<br>
+　　Jdk 提供了包java.io，其中包括一系列的类来实现输入/输出处理。下面我们对java.io包的内容进行概要的介绍。<br>
+<br>
+　I/O流的层次<br>
+<br>
+　　1．字节流<br>
+<br>
+　　2．字符流<br>
+<br>
+　　3．对象流<br>
+<br>
+　　4．其它<br>
+<br>
+---------------------------------<br>
+1．字节流：<br>
+<br>
+　　从InputStream和OutputStream派生出来的一系列类。这类流以字节(byte)为基本处理单位。<br>
+　　◇ InputStream、OutputStream<br>
+　　◇ FileInputStream、FileOutputStream<br>
+　　◇ PipedInputStream、PipedOutputStream<br>
+　　◇ ByteArrayInputStream、ByteArrayOutputStream<br>
+　　◇ FilterInputStream、FilterOutputStream<br>
+　　◇ DataInputStream、DataOutputStream<br>
+　　◇ BufferedInputStream、BufferedOutputStream<br>
+<br>
+　2．字符流：<br>
+<br>
+　　从Reader和Writer派生出的一系列类，这类流以16位的Unicode码表示的字符为基本处理单位。<br>
+　　◇ Reader、Writer<br>
+　　◇ InputStreamReader、OutputStreamWriter<br>
+　　◇ FileReader、FileWriter<br>
+　　◇ CharArrayReader、CharArrayWriter<br>
+　　◇ PipedReader、PipedWriter<br>
+　　◇ FilterReader、FilterWriter<br>
+　　◇ BufferedReader、BufferedWriter<br>
+　　◇ StringReader、StringWriter<br>
+<br>
+　3．对象流<br>
+<br>
+　　◇ ObjectInputStream、ObjectOutputStream<br>
+<br>
+　4．其它<br>
+<br>
+　　◇ 文件处理：<br>
+　　File、RandomAccessFile；<br>
+<br>
+　　◇ 接口<br>
+　　DataInput、DataOutput、ObjectInput、ObjectOutput；<br>
+<br>
+-----------------------------------<br>
+1．InputStream<br>
+<br>
+　　◇ 从流中读取数据：<br>
+　　int read( ); //读取一个字节，返回值为所读的字节<br>
+　　int read( byte b[ ] ); //读取多个字节，放置到字节数组b中，通常<br>
+　　　　　　　　　　　　　 //读取的字节数量为b的长度，返回值为实际<br>
+　　　　　　　　　　　　　 //读取的字节的数量<br>
+　　int read( byte b[ ], int off, int len ); //读取len个字节，放置<br>
+　　　　　　　　　　　　　　　　　　　　　　 //到以下标off开始字节<br>
+　　　　　　　　　　　　　　　　　　　　　　 //数组b中，返回值为实<br>
+　　　　　　　　　　　　　　　　　　　　　　 //际读取的字节的数量<br>
+　　int available( ); 　　//返回值为流中尚未读取的字节的数量<br>
+　　long skip( long n )； //读指针跳过n个字节不读，返回值为实际<br>
+　　　　　　　　　　　　　//跳过的字节数量<br>
+<br>
+　　◇ 关闭流：<br>
+　　close( ); //流操作完毕后必须关闭<br>
+　　<br>
+　　◇ 使用输入流中的标记：<br>
+　　void mark( int readlimit ); //记录当前读指针所在位置，readlimit<br>
+　 　　　　　　　　　　　　　　 //表示读指针读出readlimit个字节后<br>
+　　　　　　　　　　　　　　　　//所标记的指针位置才失效<br>
+　　void reset( ); 　　　 //把读指针重新指向用mark方法所记录的位置<br>
+　　boolean markSupported( );　//当前的流是否支持读指针的记录功能<br>
+<br>
+　　有关每个方法的使用，详见java API。<br>
+<br>
+<br>
+　2．OutputStream<br>
+<br>
+　　◇ 输出数据：<br>
+　　void write( int b ); 　　//往流中写一个字节b<br>
+　　void write( byte b[ ] ); //往流中写一个字节数组b<br>
+　　void write( byte b[ ], int off, int len ); //把字节数组b中从<br>
+　　　　　　　　　　　　　　//下标off开始，长度为len的字节写入流中<br>
+<br>
+　　◇ flush( ) 　　　　　　//刷空输出流，并输出所有被缓存的字节<br>
+　　由于某些流支持缓存功能，该方法将把缓存中所有内容强制输出到流中。<br>
+<br>
+　　◇ 关闭流：<br>
+　　 close( ); 　　　　　　//流操作完毕后必须关闭<br>
+<br>
+-----------------------------------<br>
+进行I/O操作时可能会产生I/O例外，属于非运行时例外，应该在程序中处理。如：FileNotFoundException, EOFException, IOException<br>
+-----------------------------------<br>
+<strong><font size="5">文件的顺序处理</font></strong><br>
+<br>
+　　类FileInputStream和FileOutputStream用来进行文件I/O处理，由它们所提供的方法可以打开本地主机上的文件，并进行顺序的读/写。例如，下列的语句段是顺序读取文件名为text.txt的文件里的内容，并显示在控制台上面，直到文件结束为止。<br>
+<br>
+例：<br>
+&nbsp;&nbsp;&nbsp;  FileInputStream fis; <br>
+　　 try{<br>
+　　　　fis = new FileInputStream( &quot;text.txt&quot; );<br>
+　　 System.out.print( &quot;content of text is : &quot;);<br>
+　　　　　int b;<br>
+　　　　　while( (b=fis.read())!=-1 ) //顺序读取文件text里的内容并赋值<br>
+　　　　　　　　　　　　　　　　　　　　给整型变量b,直到文件结束为止。 <br>
+　　　　　{ 　　　　　　　　　　　　　<br>
+　　　　　　　System.out.print( (char)b );<br>
+　　　　　}<br>
+　　 }catch( FileNotFoundException e ){<br>
+　　 System.out.println( e );<br>
+　　 }catch( IOException e ){<br>
+　　 System.out.println( e );<br>
+　　 }<br>
+<br>
+----------------------------<br>
+过滤流<br>
+<br>
+　 过滤流在读/写数据的同时可以对数据进行处理，它提供了同步机制，使得某一时刻只有一个线程可以访问一个I/O流，以防止多个线程同时对一个I/O流进行操作所带来的意想不到的结果。类FilterInputStream和FilterOutputStream分别作为所有过滤输入流和输出流的父类。<br>
+&nbsp;&nbsp;  过滤流类层次：<br>
+　　　　java.lang.Object<br>
+&nbsp;&nbsp;&nbsp;  |<br>
+&nbsp;&nbsp;&nbsp;  +----java.io.InputStream<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  |<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  +----java.io.FilterInputStream<br>
+<br>
+　　为了使用一个过滤流，必须首先把过滤流连接到某个输入/出流上，通常通过在构造方法的参数中指定所要连接的输入/出流来实现。例如：<br>
+<br>
+　　FilterInputStream( InputStream in );<br>
+　　FilterOutputStream( OutputStream out );<br>
+<br>
+几种常见的过滤流:<br>
+<br>
+&nbsp;&nbsp;&nbsp;  ◇ BufferedInputStream和BufferedOutputStream<br>
+　　　 缓冲流，用于提高输入/输出处理的效率。<br>
+<br>
+　　◇ DataInputStream 和 DataOutputStream<br>
+　　　 不仅能读/写数据流，而且能读/写各种的java语言的基本类型，如：boolean，int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ，float等。<br>
+<br>
+　　◇ LineNumberInputStream<br>
+　　　 除了提供对输入处理的支持外，LineNumberInputStream可以记录当前的行号。<br>
+<br>
+　　◇ PushbackInputStream<br>
+　　　 提供了一个方法可以把刚读过的字节退回到输入流中，以便重新再读一遍。<br>
+<br>
+　　◇ PrintStream<br>
+　　　 打印流的作用是把Java语言的内构类型以其字符表示形式送到相应的输出流。<br>
+<br>
+<br>
+<strong><font size="5">-------------------------------<br>
+字符流的处理</font></strong><br>
+<br>
+　　java中提供了处理以16位的Unicode码表示的字符流的类，即以Reader和Writer 为基类派生出的一系列类。<br>
+<br>
+　<strong><font size="5">4．7．1 Reader和Writer<br>
+</font></strong><br>
+　　1．Reader类是处理所有字符流输入类的父类。<br>
+<br>
+　　2． Writer类是处理所有字符流输出类的父类。<br>
+<br>
+这两个类是抽象类，只是提供了一系列用于字符流处理的接口，不能生成这两个类的实例，只能通过使用由它们派生出来的子类对象来处理字符流。<br>
+<br>
+　1．Reader类是处理所有字符流输入类的父类。<br>
+<br>
+　　◇ 读取字符 <br>
+　　public int read() throws IOException; //读取一个字符，返回值为读取的字符<br>
+　　public int read(char cbuf[]) throws IOException; /*读取一系列字符到数组cbuf[]中，返回值为实际读取的字符的数量*/<br>
+　　public abstract int read(char cbuf[],int off,int len) throws IOException; <br>
+　　/*读取len个字符，从数组cbuf[]的下标off处开始存放，返回值为实际读取的字符数量，该方法必须由子类实现*/<br>
+<br>
+　　◇ 标记流<br>
+　　public boolean markSupported(); //判断当前流是否支持做标记<br>
+　　public void mark(int readAheadLimit) throws IOException; <br>
+　　 //给当前流作标记，最多支持readAheadLimit个字符的回溯。<br>
+　　public void reset() throws IOException; //将当前流重置到做标记处<br>
+<br>
+　　◇ 关闭流<br>
+　　public abstract void close() throws IOException;<br>
+<br>
+　2． Writer类是处理所有字符流输出类的父类。 <br>
+<br>
+　　◇ 向输出流写入字符<br>
+　　public void write(int c) throws IOException；<br>
+　　//将整型值c的低16位写入输出流<br>
+　　public void write(char cbuf[]) throws IOException；<br>
+　　//将字符数组cbuf[]写入输出流<br>
+　　public abstract void write(char cbuf[],int off,int len) throws IOException；<br>
+　　//将字符数组cbuf[]中的从索引为off的位置处开始的len个字符写入输出流<br>
+　　public void write(String str) throws IOException；<br>
+　　//将字符串str中的字符写入输出流<br>
+　　public void write(String str,int off,int len) throws IOException；<br>
+　　//将字符串str 中从索引off开始处的len个字符写入输出流<br>
+<br>
+　　◇ flush( )<br>
+　　刷空输出流，并输出所有被缓存的字节。<br>
+<br>
+　　◇ 关闭流<br>
+　　public abstract void close() throws IOException；<br>
+<br>
+-----------------------------------<br>
+3 BufferedReader和BufferedWriter<br>
+<br>
+　　生成流对象<br>
+<br>
+　　读入/写出字符<br>
+<br>
+　　下面是一个从键盘接收输入数据的例子：<br>
+<br>
+◇ 生成流对象<br>
+<br>
+　　public BufferedReader(Reader in); //使用缺省的缓冲区大小<br>
+　　public BufferedReader(Reader in, int sz); //sz为缓冲区的大小<br>
+　　public BufferedWriter(Writer out);<br>
+　　public BufferedWriter(Writer out, int sz);<br>
+<br>
+　◇ 读入/写出字符<br>
+<br>
+　　除了Reader和Writer中提供的基本的读写方法外，增加对整行字符的处理。<br>
+　　public String readLine() throws IOException; //读一行字符<br>
+　　public void newLine() throws IOException; //写一行字符<br>
+<br>
+【例4-4】<br>
+<br>
+　　import java.io.*;<br>
+　　public class NumberInput{<br>
+　　　public static void main(String args[]){<br>
+　　　　try{<br>
+　　　　　　InputStreamReader ir;<br>
+　　　　　　BufferedReader in;<br>
+　　　　　　ir=new InputStreamReader(System.in); <br>
+　　　　　　//从键盘接收了一个字符串的输入，并创建了一个字符输入流的对象<br>
+　　　　　　in=new BufferedReader(ir);<br>
+　　　　　　String s=in.readLine();<br>
+　　　　　　//从输入流in中读入一行，并将读取的值赋值给字符串变量s<br>
+　　　　　　System.out.println(&quot;Input value is: &quot;+s);<br>
+　　　　　　int i = Integer.parseInt(s);//转换成int型<br>
+　　　　　　i*=2;<br>
+　　　　　　System.out.println(&quot;Input value changed after doubled: &quot;+i);<br>
+　　　　}catch(IOException e)<br>
+　　　　{System.out.println(e);}<br>
+　　　}<br>
+　　}<br>
+<br>
+<br>
+　　注意：在读取字符流时，如果不是来自于本地的，比如说来自于网络上某处的与本地编码方式不同的机器，那么我们在构造输入流时就不能简单地使用本地缺省的编码方式，否则读出的字符就不正确；为了正确地读出异种机上的字符，我们应该使用下述方式构造输入流对象：<br>
+　　<br>
+　　　　ir = new InputStreamReader(is, &quot;8859_1&quot;);<br>
+<br>
+　　采用ISO 8859_1编码方式，这是一种映射到ASCII码的编码方式，可以在不同平台之间正确转换字符。<br>
+<br>
+</font></font></p>
+<p><br>
+<font size="3" face="宋体">本文来自CSDN博客，转载请标明出处：</font><a href="http://blog.csdn.net/allan_sun/archive/2006/02/21/604353.aspx"><font size="3" face="宋体">http://blog.csdn.net/allan_sun/archive/2006/02/21/604353.aspx</font></a></p></div></body></html>

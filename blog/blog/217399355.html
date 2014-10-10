@@ -1,0 +1,53 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>转：网管实战：WebDAV搭建廉价跨网方案</title></head><body><h1>转：网管实战：WebDAV搭建廉价跨网方案</h1><div><p>最近，经理要求我在整个公司的VPN网络部署完成之前，尽快找到一个临时方案，以缓解分公司的员工无法共享总部局域网的共享资源，造成公司内部沟通不畅这一问题。</p>
+<p>　　现在有FTP、WebDAV、VPN三个解决方案，但VPN还没部署完成，只有FTP、WebDAV两个方案实际可行。最后通过实际比较，我还是选择了WebDAV方法。</p>
+<p>　　选择WebDAV的三大理由:</p>
+<p>　　·WebDAV能穿越各种互联网基础设备，如防火墙、路由器等;</p>
+<p>　　·利用WebDAV访问互联网中的共享资源，和局域网中的文件共享一样简单;</p>
+<p>　　·WebDAV采用HTTP协议，能对互联网中各个角落的共享数据进行访问。</p>
+<p>　　一、部署WebDAV</p>
+<p>　　WebDAV的全称是Web Digital Authoring Versioning，该功能需要使用HTTP协议以及IIS服务器的TCP 80端口。因此，应用WebDAV功能不用开放额外的端口，用户可以在线编辑文件(不需要先将共享文件下载到本地)。WebDAV的整个部署过程非常简单，只需要简单几步就能完成。</p>
+<p>　　轻车熟路安装组件</p>
+<p>　　公司的文件服务器使用的是Windows Server 2003(以下简称Win2003)操作系统，并且已安装了IIS6服务器，要想应用WebDAV解决方案，还必须在IIS6中安装WebDAV组件。</p>
+<p>　　进入&ldquo;添加/删除Windows组件&rdquo;页面，依次选择&ldquo;Windows组件向导→应用程序服务器→详细信息→Internet信息服务(IIS)→详细信息→万维网服务→WebDAV发布&rdquo;(图1)，按提示完成该组件的安装。</p>
+<p><br>
+图1<span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/7097a7dec2516128622798d2.jpg"><br>
+</span></p>
+<p>　　提示:虽然已经安装了&ldquo;WebDAV发布&rdquo;组件，但Win2003系统默认还是禁用WebDAV功能的，必须手工启用IIS6中的WebDAV服务扩展。</p>
+<p>启用WebDAV服务</p>
+<p>　　接下来的工作是手工启用&ldquo;WebDAV服务扩展&rdquo;。在文件服务器中依次点击&ldquo;开始→程序→管理工具→Internet信息服务(IIS)管理器&rdquo;，弹出IIS管理控制台窗口。在左侧栏中选中&ldquo;Web服务扩展&rdquo;，在右侧栏中选中&ldquo;WebDAV&rdquo;选项后点击&ldquo;允许&rdquo;按钮就可启用&ldquo;WebDAV服务扩展&rdquo;(图2)。</p>
+<p><br>
+图2<span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/456244d23e92fae4a8ec9ad3.jpg"><br>
+</span></p>
+<p>　　提示:安装并启用WebDAV功能后，就为发布文件服务器中的共享资源奠定了基础，接下来就可利用IIS网站的虚拟目录来发布共享资源了。</p>
+<p>　　发布共享资源</p>
+<p>　　文件服务器中的共享资源存储在&ldquo;D:\cpcw&rdquo;目录下，在IIS服务器的&ldquo;默认网站&rdquo;中，可以利用创建虚拟目录来发布共享资源。</p>
+<p>　　在Internet信息服务(IIS)管理器窗口中，展开&ldquo;网站&rdquo;选项，右键点击&ldquo;默认网站&rdquo;，在弹出的菜单中选择&ldquo;新建→虚拟目录&rdquo;，弹出&ldquo;虚拟目录创建向导&rdquo;对话框。点击&ldquo;下一步&rdquo;按钮，在&ldquo;别名&rdquo;栏中为该虚拟目录取名(如&ldquo;gongxiang&rdquo;)，进入下一窗口后点击&ldquo;浏览&rdquo;按钮，找到&ldquo;D:\cpcw&rdquo;目录，这是该虚拟目录在硬盘中的实际路径。</p>
+<p>　　接下来，进入&ldquo;虚拟目录访问权限&rdquo;对话框，指定虚拟目录的访问权限。因为分公司的员工不但需要对共享资源有&ldquo;读取&rdquo;和&ldquo;浏览&rdquo;权限，有时还要修改某些共享文件。针对这些需要，就要选中&ldquo;读取&rdquo;、&ldquo;写入&rdquo;和&ldquo;浏览&rdquo;选项(图3)，最后点击&ldquo;下一步&rdquo;按钮，完成虚拟目录的创建，也就实现了共享资源的发布。</p>
+<p><br>
+图3<span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/8e573c120e9889ebf6039edc.jpg"><br>
+</span></p>
+<p>　　提示:在&ldquo;匿名访问&rdquo;状态下，无法控制用户对共享资源的访问，可利用&ldquo;身份验证方法&rdquo;实现对用户访问的控制。</p>
+<p>增加安全性</p>
+<p>　　在Internet信息服务(IIS)管理器窗口中，右键点击新建的虚拟目录&ldquo;gongxiang&rdquo;，选择进入&ldquo;属性&rdquo;窗口，进入&ldquo;目录安全性&rdquo;标签页。</p>
+<p>　　点击&ldquo;身份验证和访问控制&rdquo;框体中的&ldquo;编辑&rdquo;按钮，弹出&ldquo;身份验证方法&rdquo;对话框，取消对&ldquo;启用匿名访问&rdquo;选项的选择(图4)，最后点击&ldquo;确定&rdquo;按钮即可。这样一来员工必须拥有合法的用户访问账号，才能访问发布的共享资源。</p>
+<p><br>
+图4<span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/b5fe6089c5fe6cafa5c272dd.jpg"><br>
+</span></p>
+<p>　　提示:在用户众多且不需要复杂的用户权限分级的时候，也可以采用&ldquo;启用匿名访问&rdquo;。</p>
+<p>　　对安全加&ldquo;双保险&rdquo;</p>
+<p>　　虽然禁用了匿名访问，但还是不能掉以轻心。为了安全，最好利用NTFS系统的ACL(访问控制列表)功能，给共享资源的访问加上&ldquo;双保险&rdquo;。</p>
+<p>　　进入&ldquo;cpcw&rdquo;目录的&ldquo;属性&rdquo;窗口，切换到&ldquo;安全&rdquo;标签页。</p>
+<p>　　以赋予访问账号&ldquo;tjraofdf&rdquo; 读取、修改、浏览等权限为例，点击&ldquo;添加&rdquo;按钮，将&ldquo;tjraofdf&rdquo;账号添加到&ldquo;组或用户名称&rdquo;列表框中。然后选中&ldquo;tjraofdf&rdquo;账号，在&ldquo;tjraofdf的权限&rdquo;列表框中选中&ldquo;读取和运行、列出文件夹目录、读取、修改和写入&rdquo;选项，最后点击&ldquo;确定&rdquo;按钮即可。其他访问账号的权限设置方法与此相同。在&ldquo;安全&rdquo;标签页中完成所有的账号权限设置后，就等于给共享资源加了&ldquo;双保险&rdquo;。</p>
+<p>　　通过以上设置，对&ldquo;WebDAV&rdquo;功能的应用以及共享资源的发布就完成了，这时分公司的员工就可作好访问总部的共享资源的准备了。</p>
+<p>　　二、使用网间共享</p>
+<p>　　公司的客户机统一使用Windows XP操作系统，要想访问公司总部发布的共享资源，不但要求用户拥有合法的共享资源访问账号(这些账号是总部网管在文件服务器中为异地用户创建的共享资源访问账号)，还需要启动Windows XP客户机中的WebClient服务。</p>
+<p>　　启用WebClient</p>
+<p>　　进入&ldquo;服务&rdquo;对话框，双击&ldquo;WebClient&rdquo;选项。接着在属性对话框中，将&ldquo;启动类型&rdquo;修改为&ldquo;自动&rdquo;后点击&ldquo;应用&rdquo;按钮，最后点击&ldquo;服务状态&rdquo;框中的&ldquo;启动&rdquo;按钮，完成WebClient服务的启动。</p>
+<p>　　访问共享</p>
+<p>　　运行IE浏览器，在地址栏中输入&ldquo;http://默认网站IP地址(或域名)/ gongxiang&rdquo;后回车会弹出账号登录对话框，输入相应的访问账号名和密码后，就会在IE浏览器窗口中列出总部文件服务器提供的用户能够访问的共享资源。</p>
+<p>　　用户可以在线编辑共享文件(如TXT和Word文件等)，避免了使用其他共享资源方式的时候，要先将共享文件下载到本地机器再进行编辑和修改，最后还要将文件上传到文件服务器的麻烦。访问和应用共享资源简单多了。</p>
+<p>　　网管经验 在充分分析了网络现有情况后，新开FTP等服务，危险性大，不好上手而且即时修改、同步资源等要求无法满足。而WebDAV通过添加的单个组件依托已经存在的IIS服务完成了这一切，是最优化的方法。</p>
+<p>　　采用此方案需要注意的是一定要注意目录的安全性，并且，最好将共享资源放置在NTFS分区，通过NTFS的访问控制进一步提高访问的安全性。</p>
+<p>　　为什么不用FTP?</p>
+<p>　　WebDAV提供文件锁定功能，同一时间内只允许一个用户对同一共享文件进行修改，这些优势都是FTP服务器无法比拟的。同时，使用FTP服务器虽然可以解决这个难题，但总部局域网的安全更为重要。要使用FTP服务，就必须在服务器上开放更多的端口，如TCP 20和TCP 21端口，这样可能给总部局域网带来更多的安全隐患。</p>
+<p>原文出自【比特网】，转载请保留原文链接：<a href="http://biz.chinabyte.com/488/2086488_3.shtml">http://biz.chinabyte.com/488/2086488_3.shtml</a></p></div></body></html>

@@ -1,0 +1,382 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>windows xp 定时执行任务之一——schtasks</title></head><body><h1>windows xp 定时执行任务之一——schtasks</h1><div>schtasks /create /sc minute /mo 20 /tn &quot;Security scrīpt&quot; /tr &quot;shutdown -s -t 0&quot; 这是windows xp 定时执行任务的一个实例 &ldquo;执行的任务是每隔20分钟windows自动关机 schtasks调用的shutdown命令
+<p>schtasks的具体用法如下：</p>
+<p align="left"><a href="http://hi.baidu.com/fc/editor/fckeditor.html?InstanceName=spBlogText&amp;v=3.3&amp;Toolbar=Default&amp;v=3.1.html#" target="_self"><font size="2">Schtasks</font></a></p>
+<p align="left">安排命令和程序定期运行或在指定时间内运行。从计划表中添加和删除任务，按需要启动和停止任务，显示和更改<a href="http://hi.baidu.com/fc/editor/fckeditor.html?InstanceName=spBlogText&amp;v=3.3&amp;Toolbar=Default&amp;v=3.1.html#" target="_self"><strong><font size="2">计划任务</font></strong></a>。</p>
+<p align="left">若要查看该命令语法，请单击以下命令：</p>
+<p align="left">schtasks create</p>
+<p align="left">创建新的计划任务。</p>
+<p align="left"><strong>语法</strong></p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc</strong><em>schedule</em>[<strong>/mo</strong><em>modifier</em>][<strong>/d</strong><em>day</em>][<strong>/m</strong><em>month</em>[<strong>,</strong><em>month</em>...][<strong>/i</strong><em>IdleTime</em>][<strong>/st</strong><em>StartTime</em>][<strong>/sd</strong><em>StartDate</em>][<strong>/ed</strong><em>EndDate</em>][<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]<strong>/?</strong></p>
+<p align="left"><strong>参数</strong></p>
+<p align="left"><strong>/tn</strong><em>TaskName</em></p>
+<p align="left">指定任务的名称。</p>
+<p align="left"><strong>/tr</strong><em>TaskRun</em></p>
+<p align="left">指定任务运行的程序或命令。键入可执行文件、<a href="http://hi.baidu.com/fc/editor/fckeditor.html?InstanceName=spBlogText&amp;v=3.3&amp;Toolbar=Default&amp;v=3.1.html#" target="_self"><strong><font size="2">脚本</font></strong></a>文件或批处理文件的完全合格的路径和文件名。如果忽略该路径，SchTasks.exe 将假定文件在<em>Systemroot</em>\System32 目录下。</p>
+<p align="left"><strong>/sc</strong><em>schedule</em></p>
+<p align="left">指定计划类型。有效值为 MINUTE、HOURLY、DAILY、WEEKLY、MONTHLY、ONCE、ONSTART、ONLOGON、ONIDLE。</p>
+<div align="center">
+<table border="1" cellpadding="0">
+    <tbody>
+        <tr>
+            <td>
+            <p align="left"><strong>值</strong></p>
+            </td>
+            <td>
+            <p align="left"><strong>说明</strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left"><strong>MINUTE</strong><strong>、</strong><strong>HOURLY</strong><strong>、</strong><strong>DAILY</strong><strong>、</strong><strong>WEEKLY</strong><strong>、</strong><strong>MONTHLY</strong></p>
+            </td>
+            <td>
+            <p align="left">指定计划的时间单位。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left"><strong>ONCE</strong></p>
+            </td>
+            <td>
+            <p align="left">任务在指定的日期和时间运行一次。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left"><strong>ONSTART</strong></p>
+            </td>
+            <td>
+            <p align="left">任务在每次<a href="http://hi.baidu.com/fc/editor/fckeditor.html?InstanceName=spBlogText&amp;v=3.3&amp;Toolbar=Default&amp;v=3.1.html#" target="_self"><strong>系统</strong></a>启动的时候运行。可以指定启动的日期，或下一次系统启动的时候运行任务。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left"><strong>ONLOGON</strong></p>
+            </td>
+            <td>
+            <p align="left">每当用户（任意用户）登录的时候，任务就运行。可以指定日期，或在下次用户登录的时候运行任务。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left"><strong>ONIDLE</strong></p>
+            </td>
+            <td>
+            <p align="left">只要系统空闲了指定的时间，任务就运行。可以指定日期，或在下次系统空闲的时候运行任务。</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<p align="left"><strong>/mo</strong><em>modifier</em></p>
+<p align="left">指定任务在其计划类型内的运行频率。这个参数对于 MONTHLY 计划是必需的。对于 MINUTE、HOURLY、DAILY 或 WEEKLY 计划，这个参数有效，但也可选。默认值为 1。</p>
+<div align="center">
+<table border="1" cellpadding="0">
+    <tbody>
+        <tr>
+            <td>
+            <p align="left"><strong>计划类型</strong></p>
+            </td>
+            <td>
+            <p align="left"><strong>修饰符</strong></p>
+            </td>
+            <td>
+            <p align="left"><strong>说明</strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left">MINUTE</p>
+            </td>
+            <td>
+            <p align="left"><strong>1</strong>～<strong>1439</strong></p>
+            </td>
+            <td>
+            <p align="left">任务每<em>n</em>分钟运行一次。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left">HOURLY</p>
+            </td>
+            <td>
+            <p align="left"><strong>1</strong>～<strong>23</strong></p>
+            </td>
+            <td>
+            <p align="left">任务每<em>n</em>小时运行一次。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left">DAILY</p>
+            </td>
+            <td>
+            <p align="left"><strong>1</strong>～<strong>365</strong></p>
+            </td>
+            <td>
+            <p align="left">任务每<em>n</em>天运行一次。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left">WEEKLY</p>
+            </td>
+            <td>
+            <p align="left"><strong>1</strong>～<strong>52</strong></p>
+            </td>
+            <td>
+            <p align="left">任务每<em>n</em>周运行一次。</p>
+            </td>
+        </tr>
+        <tr>
+            <td rowspan="3">
+            <p align="left">MONTHLY</p>
+            </td>
+            <td>
+            <p align="left"><strong>1</strong>～<strong>12</strong></p>
+            </td>
+            <td>
+            <p align="left">任务每<em>n</em>月运行一次。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left"><strong>LASTDAY</strong></p>
+            </td>
+            <td>
+            <p align="left">任务在月份的最后一天运行。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left"><strong>FIRST</strong>、<strong>SECOND</strong>、<strong>THIRD</strong>、<strong>FOURTH</strong>、<strong>LAST</strong></p>
+            </td>
+            <td>
+            <p align="left">与<strong>/d</strong><em>day</em>参数共同使用,并在特定的周和天运行任务。例如，在月份的第三个周三。</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<p align="left"><strong>/d</strong><em>dirlist</em></p>
+<p align="left">指定周或月的一天。只与 WEEKLY 或 MONTHLY 计划共同使用时有效。</p>
+<div align="center">
+<table border="1" cellpadding="0">
+    <tbody>
+        <tr>
+            <td>
+            <p align="left"><strong>计划类型</strong></p>
+            </td>
+            <td>
+            <p align="left"><strong>日期值</strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left">WEEKLY</p>
+            </td>
+            <td>
+            <p align="left">可选项。有效值是 MON ~ SUN 和 * （每一天）。MON 是默认值。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left">MONTHLY</p>
+            </td>
+            <td>
+            <p align="left">在使用 FIRST、SECOND、THIRD、FOURTH 或 LAST 修饰符 (<strong>/mo</strong>) 时，需要 MON ～ SUN 中的某个值。1 ～ 31 是可选的，只在没有修饰符或修饰符为1 ～ 12类型时有效。默认值是 1 （月份的第一天）。</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<p align="left"><strong>/m</strong><em>month</em>[<strong>,</strong><em>month</em>...]</p>
+<p align="left">指定一年中的一个月。有效值是 JAN ～ DEC 和 * （每个月）。<strong>/m</strong>参数只对于 MONTHLY 计划有效。在使用 LASTDAY 修饰符时，这个参数是必需的。否则，它是可选的，默认值是 * （每个月）。</p>
+<p align="left"><strong>/i</strong><em>InitialPageFileSize</em></p>
+<p align="left">指定任务启动之前计算机空闲多少分钟。键入一个1 ～ 999之间的整数。这个参数只对于 ONIDLE 计划有效，而且是必需的。</p>
+<p align="left"><strong>/st</strong><em>StartTime</em></p>
+<p align="left">以HH:MM:SS24 小时格式指定时间。默认值是命令完成时的当前本地时间。<strong>/st</strong>参数只对于 MINUTE、HOURLY、DAILY、WEEKLY、MONTHLY 和 ONCE 计划有效。它只对于 ONCE 计划是必需的。</p>
+<p align="left"><strong>/sd</strong><em>StartDate</em></p>
+<p align="left">以<em>MM</em>/<em>DD</em>/<em>YYYY</em>格式指定任务启动的日期。默认值是当前日期。<strong>/sd</strong>参数对于所有的计划有效，但只对于 ONCE 计划是必需的。</p>
+<p align="left"><strong>/ed</strong><em>EndDate</em></p>
+<p align="left">指定任务计划运行的最后日期。此参数是可选的。它对于 ONCE、ONSTART、ONLOGON 或 ONIDLE 计划无效。默认情况下，计划没有结束日期。</p>
+<p align="left"><strong>/s</strong><em>Computer</em></p>
+<p align="left">指定远程计算机的名称或 IP 地址（带有或者没有反斜杠）。默认值是本地计算机。</p>
+<p align="left"><strong>/u</strong>[<em>domain</em>\]<em>user</em></p>
+<p align="left">使用特定用户帐户的权限运行命令。默认情况下，使用已登录到运行 SchTasks 的计算机上的用户的权限运行命令。</p>
+<p align="left"><strong>/p</strong><em>password</em></p>
+<p align="left">指定在<strong>/u</strong>参数中指定的用户帐户的密码。如果使用<strong>/u</strong>参数，则需要该参数。</p>
+<p align="left"><strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>}</p>
+<p align="left">使用指定用户帐户的权限运行任务。默认情况下，使用用户登录到运行 SchTasks 的计算机上的权限运行任务。</p>
+<div align="center">
+<table border="1" cellpadding="0">
+    <tbody>
+        <tr>
+            <td>
+            <p align="left"><strong>值</strong></p>
+            </td>
+            <td>
+            <p align="left"><strong>说明</strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td> </td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left">[<em>domain</em>\}<em>User</em>?</p>
+            </td>
+            <td>
+            <p align="left">指定用户帐户。</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <p align="left"><strong>&quot;System&quot;</strong>或<strong>&quot;&quot;</strong></p>
+            </td>
+            <td>
+            <p align="left">指定操作系统使用的 NT Authority\System 帐户。</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<p align="left"><strong>/p</strong><em>Password</em></p>
+<p align="left">指定用户帐户的密码，该用户帐户在<strong>/u</strong>参数中指定。如果在指定用户帐户的时候忽略了这个参数，SchTasks.exe 会提示您输入密码而且不显示键入的文本。使用 NT Authority\System 帐户权限运行的任务不需要密码，SchTasks.exe 也不会提示索要密码。</p>
+<p align="left"><strong>/?</strong></p>
+<p align="left">在命令提示符显示帮助。</p>
+<p align="left"><strong>注释</strong></p>
+<p align="left">XOX</p>
+<ul>
+    <li>SchTasks.exe 不验证程序文件的位置或用户帐户密码。如果没有为用户帐户输入正确的文件位置或正确的密码，任务仍然可以创建，但不会运行。另外，如果帐户的密码更改或过期，而且没有更改存储在任务中的密码，那么任务也不会运行。</li>
+    <li>NT Authority\System 帐户没有交互式登录权限。用户看不到以系统权限运行的程序，不能与之交互。</li>
+    <li>每个任务只运行一个程序。但是，可以创建一个批处理文件来启动多个任务，然后计划一个任务来运行该批处理文件。</li>
+    <li>只要创建了任务就可对其测试。使用<strong>run</strong>操作来测试任务，然后从 SchedLgU.txt 文件 (<em>Systemroot</em>\SchedLgU.txt ) 中查阅错误。</li>
+</ul>
+<p align="left"><strong>每个计划类型的语法和范例。</strong></p>
+<p align="left">若要查看该命令语法，请单击以下命令：</p>
+<p align="left">schtasks create minute</p>
+<p align="left"><strong>语法</strong></p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc minute</strong>[<strong>/mo</strong>{1 - 1439}][<strong>/st</strong><em>StartTime</em>][<strong>/sd</strong><em>StartDate</em>][<strong>/ed</strong><em>EndDate</em>][<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]</p>
+<p align="left"><strong>范例</strong></p>
+<p align="left"><strong>计划任务每</strong><strong> 20 </strong><strong>分钟运行一次。</strong></p>
+<p align="left">下面的命令计划安全脚本 Sec.vbs 每 20 分钟运行一次。由于命令没有包含起始日期或时间，任务在命令完成 20 分钟后启动，此后每当系统运行它就每 20 分钟运行一次。请注意，安全脚本源文件位于远程计算机上，但任务在本地计算机上计划并执行。</p>
+<p align="left"><strong>schtasks /create /sc minute /mo 20 /tn &quot;Security scrīpt&quot; /tr \\central\data\scrīpts\sec.vbs</strong></p>
+<p align="left">作为响应，SchTasks.exe 显示一条消息来说明任务会以当前用户的权限运行并需要当前用户的密码。输入密码时，SchTasks.exe 不显示键入的文本。</p>
+<p align="left">The task will be created under current logged-in user name.</p>
+<p align="left">Please enter the password</p>
+<p align="left">************</p>
+<p align="left">然后 SchTasks.exe 显示一条消息表明已计划该任务：</p>
+<p align="left">成功：计划任务 &quot;Security scrīpt&quot; 已成功创建。</p>
+<p align="left">查询显示命令计划的任务：</p>
+<p align="left">TaskName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Next Run Time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Status</p>
+<p align="left">========================= ======================== ==============</p>
+<p align="left">Security scrīpt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  10:50:00 AM , 4/4/2001</p>
+<p align="left">schtasks create hourly</p>
+<p align="left"><strong>语法</strong></p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc hourly</strong>[<strong>/mo</strong>{1 - 365}][<strong>/st</strong><em>StartTime</em>][<strong>/sd</strong><em>StartDate</em>][<strong>/ed</strong><em>EndDate</em>][<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]</p>
+<p align="left"><strong>范例</strong></p>
+<p align="left"><strong>计划命令在每小时过五分的时候运行。</strong></p>
+<p align="left">下面的命令将计划 MyApp 程序从午夜过后五分钟起每小时运行一次。因为忽略了<strong>/mo</strong>参数，命令使用了小时计划的默认值，即每 (1) 小时。如果该命令在 12:05 A.M 之后生成，程序将在第二天才会运行。</p>
+<p align="left"><strong>schtasks /create /sc hourly /st 00:05:00 /tn &quot;My App&quot; /tr c:\apps\myapp.exe</strong></p>
+<p align="left"><strong>计划命令每五小时运行一次</strong></p>
+<p align="left">下面的命令计划 MyApp 程序从 2001 年 3 月的第一天起每五小时运行一次。它使用<strong>/mo</strong>参数来指定间隔时间，使用<strong>/sd</strong>参数来指定起始日期。由于命令没有指定起始时间，当前时间被用作起始时间。</p>
+<p align="left"><strong>schtasks /create /sc hourly /mo 5 /sd 03/01/2001 /tn &quot;My App&quot; /tr c:\apps\myapp.exe</strong></p>
+<p align="left">schtasks create daily</p>
+<p align="left"><strong>语法</strong></p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc daily</strong>[<strong>/mo</strong>{1 - 365}][<strong>/st</strong><em>StartTime</em>][<strong>/sd</strong><em>StartDate</em>][<strong>/ed</strong><em>EndDate</em>][<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]</p>
+<p align="left"><strong>范例</strong></p>
+<p align="left"><strong>计划任务每天运行一次</strong></p>
+<p align="left">下面的范例计划 MyApp 程序在每天的 8:00 A.M. 运行一次，直到 2001 年 12 月 31 日结束。由于它忽略了<strong>/mo</strong>参数，所以使用默认间隔 1 来每天运行命令。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc daily /st 08:00:00 /ed 12/31/2001</strong></p>
+<p align="left"><strong>计划任务每隔一天运行一次</strong></p>
+<p align="left">下面的范例计划 MyApp 程序从 2001 年 12 月 31 日起每隔一天在 1:00 P.M. (13:00) 运行。命令使用<strong>/mo</strong>参数来指定两 (2) 天的间隔。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc daily /mo 2 /st 13:00:00 /sd 12/31/2001</strong></p>
+<p align="left">schtasks create weekly</p>
+<p align="left"><strong>语法</strong></p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc weekly</strong>[<strong>/d</strong>{<em>MON - SUN</em>| *}][<strong>/mo</strong>{1 - 52}][<strong>/st</strong><em>StartTime</em>][<strong>/sd</strong><em>StartDate</em>][<strong>/ed</strong><em>EndDate</em>][<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]</p>
+<p align="left"><strong>范例</strong></p>
+<p align="left"><strong>计划任务每六周运行一次</strong></p>
+<p align="left">下面的命令计划 MyApp 程序在远程计算机上每六周运行一次。该命令使用<strong>/mo</strong>参数来指定间隔。它也使用<strong>/s</strong>参数来指定远程计算机，使用<strong>/ru</strong>参数来计划任务以用户的 Administrator 帐户权限运行。因为忽略了<strong>/rp</strong>参数，SchTasks.exe 会提示用户输入 Administrator 帐户密码。</p>
+<p align="left">另外，因为命令是远程运行的，所以命令中所有的路径，包括到 MyApp.exe 的路径，都是指向远程计算机上的路径。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc weekly /mo 6 /s Server16 /ru Admin01</strong></p>
+<p align="left"><strong>计划任务每隔一周在周五运行</strong></p>
+<p align="left">下面的命令计划任务每隔一周在周五运行。它使用<strong>/mo</strong>参数来指定两周的间隔，使用<strong>/d</strong>参数来指定是一周内的哪一天。如计划任务在每个周五运行，要忽略<strong>/mo</strong>参数或将其设置为 1。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc weekly /mo 2 /d FRI</strong></p>
+<p align="left">schtasks create monthly</p>
+<p align="left"><strong>语法</strong></p>
+<p align="left">常规月计划语法</p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc monthly</strong>[<strong>/mo</strong>{<strong>FIRST</strong>|<strong>SECOND</strong>|<strong>THIRD</strong>|<strong>FOURTH</strong>|<strong>LAST</strong>|<strong>LASTDAY</strong>][<strong>/d</strong>{<strong>MON</strong>-<strong>SUN</strong>|<strong>1</strong>-<strong>31</strong>}][<strong>/m</strong>{<strong>JAN</strong>-<strong>DEC</strong>[<strong>,JAN</strong>-<strong>DEC</strong>...] |<strong>*</strong>}][<strong>/st</strong><em>StartTime</em>][<strong>/sd</strong><em>StartDate</em>][<strong>/ed</strong><em>EndDate</em>][<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]</p>
+<p align="left">指定周的语法</p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc monthly/mo</strong>{<strong>FIRST</strong>|<strong>SECOND</strong>|<strong>THIRD</strong>|<strong>FOURTH</strong>|<strong>LAST</strong>}<strong>/d</strong>{<strong>MON</strong>-<strong>SUN</strong>}[<strong>/m</strong>{<strong>JAN</strong>-<strong>DEC</strong>[<strong>,JAN</strong>-<strong>DEC</strong>...] |<strong>*</strong>}][<strong>/st</strong><em>StartTime</em>][<strong>/sd</strong><em>StartDate</em>][<strong>/ed</strong><em>EndDate</em>][<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]</p>
+<p align="left">Lastday 语法</p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc monthly/mo LASTDAY/m</strong>{<strong>JAN</strong>-<strong>DEC</strong>[<strong>,JAN</strong>-<strong>DEC</strong>...] |<strong>*</strong>}[<strong>/st</strong><em>StartTime</em>][<strong>/sd</strong><em>StartDate</em>][<strong>/ed</strong><em>EndDate</em>][<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]</p>
+<p align="left">指定日期的语法</p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc monthly/d</strong>{<strong>1</strong>-<strong>31</strong>}[<strong>/m</strong>{<strong>JAN</strong>-<strong>DEC</strong>[<strong>,JAN</strong>-<strong>DEC</strong>...] | *}][<strong>/st</strong><em>StartTime</em>][<strong>/sd</strong><em>StartDate</em>][<strong>/ed</strong><em>EndDate</em>][<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]</p>
+<p align="left"><strong>范例</strong></p>
+<p align="left"><strong>计划任务在每月的第一天运行</strong></p>
+<p align="left">下面的命令计划 MyApp 程序在每月的第一天运行。因为默认修饰符是 none（即：没有修饰符），默认天是第一天，默认的月份是每个月，所以该命令不需要任何其它的参数。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc monthly</strong></p>
+<p align="left"><strong>计划任务在每月的最后一天运行</strong></p>
+<p align="left">下面的命令计划 MyApp 程序在每月的最后一天运行。它使用<strong>/mo</strong>参数指定在每月的最后一天运行程序，使用通配符 (*) 与<strong>/m</strong>参数表明在每月的最后一天运行程序。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc monthly /mo lastday /m *</strong></p>
+<p align="left"><strong>计划任务每三个月运行一次</strong></p>
+<p align="left">下面的命令计划 MyApp 程序每三个月运行一次。.它使用<strong>/mo</strong>参数来指定间隔。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc monthly /mo 3</strong></p>
+<p align="left"><strong>计划任务在每月的第二个周日运行</strong></p>
+<p align="left">下面的命令计划 MyApp 程序在每月的第二个周日运行。它使用<strong>/mo</strong>参数指定是每月的第二周，使用<strong>/d</strong>参数指定天。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc monthly /mo SECOND /d SUN</strong></p>
+<p align="left"><strong>计划任务在五月和六月的第</strong><strong> 15 </strong><strong>天运行。</strong></p>
+<p align="left">下面的命令计划 MyApp 程序在五月 15 日和六月 15 日的 3:00 PM (15:00) 运行。它使用<strong>/d</strong>参数来指定日期，使用<strong>/m</strong>参数指定月份。它也使用<strong>/st</strong>参数来指定开始时间。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc monthly /d 15 /m MAY,JUN /st 15:00:00</strong></p>
+<p align="left">schtasks create once</p>
+<p align="left"><strong>语法</strong></p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc once/st</strong><em>StartTime</em><strong>/sd</strong><em>StartDate</em>[<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]</p>
+<p align="left"><strong>范例</strong></p>
+<p align="left"><strong>计划任务运行一次</strong></p>
+<p align="left">下面的命令计划 MyApp 程序在 2002 年 1 月 1 日午夜运行一次。它使用<strong>/ru</strong>参数指定以用户的 Administrator 帐户权限运行任务，使用<strong>/rp</strong>参数为 Administrator 帐户提供密码。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc once /st 00:00:00 /sd 01/01/2002 /ru Admin23 /rp p@ssworD1</strong></p>
+<p align="left">schtasks create onstart</p>
+<p align="left"><strong>语法</strong></p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc onstart</strong>[<strong>/sd</strong><em>StartDate</em>][<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]</p>
+<p align="left"><strong>范例</strong></p>
+<p align="left"><strong>计划任务在每次系统启动的时候运行</strong></p>
+<p align="left">下面的命令计划 MyApp 程序在每次系统启动的时候运行，起始日期是 2001 年 3 月 15 日。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc onstart /sd 03/15/2001</strong></p>
+<p align="left">schtasks create onlogon</p>
+<p align="left"><strong>语法</strong></p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc onlogon</strong>[<strong>/sd</strong><em>StartDate</em>][<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]</p>
+<p align="left"><strong>范例</strong></p>
+<p align="left"><strong>计划任务在用户登录到远程计算机的时候运行</strong></p>
+<p align="left">下面的命令计划批处理文件在用户（任何用户）每次登录到远程计算机上的时候运行。它使用<strong>/s</strong>参数指定远程计算机。因为命令是远程的，所以命令中所有的路径，包括批处理文件的路径，都指定为远程计算机上的路径。</p>
+<p align="left"><strong>schtasks /create /tn &quot;Start Web Site&quot; /tr c:\myiis\webstart.bat /sc onlogon /s Server23</strong></p>
+<p align="left">schtasks create onidle</p>
+<p align="left"><strong>语法</strong></p>
+<p align="left"><strong>schtasks/create/tn</strong><em>TaskName</em><strong>/tr</strong><em>TaskRun</em><strong>/sc onidle/i</strong><em>IdleTime</em>[<strong>/sd</strong><em>StartDate</em>][<strong>/s</strong><em>computer</em>[<strong>/u</strong>[<em>domain</em>\]<em>user</em><strong>/p</strong><em>password</em>]][<strong>/ru</strong>{[<em>Domain</em>\]<em>User</em>|<strong>&quot;System&quot;</strong>} [<strong>/rp</strong><em>Password</em>]]</p>
+<p align="left"><strong>范例</strong></p>
+<p align="left"><strong>计划某项任务在计算机空闲的时候运行</strong></p>
+<p align="left">下面的命令计划 MyApp 程序在计算机空闲的时候运行。它使用必需的<strong>/i</strong>参数指定在启动任务之前计算机必需持续空闲十分钟。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc onidle /i 10</strong></p>
+<p align="left"><strong>更多范例</strong></p>
+<p align="left">若要查看范例，请单击范例名称：</p>
+<p align="left">创建以 System 权限运行的任务</p>
+<p align="left">下面的命令计划 MyApp 程序以 NT Authority\System 帐户权限运行。在这个范例中，任务计划在每月的第一天运行，但对于以系统权限运行的任务可以使用所有的计划类型。</p>
+<p align="left">该命令使用<strong>/ru &quot;System&quot;</strong>参数指定系统安全上下文。因为系统任务不需要密码，所以忽略了<strong>/rp</strong>参数。</p>
+<p align="left"><strong>schtasks /create /tn &quot;My App&quot; /tr c:\apps\myapp.exe /sc monthly /d 1 /ru &quot;System&quot;</strong></p>
+<p align="left">作为响应，SchTasks.exe 显示一个信息性消息和一个成功消息。它不提示输入密码。</p>
+<p align="left">信息：此任务将被创建于用户名下 (&quot;NT AUTHORITY\SYSTEM&quot;)。</p>
+<p align="left">成功：计划任务 &quot;My App&quot; 已成功创建。</p>
+<p align="left">创建运行多个程序的任务</p>
+<p align="left">每个任务只能运行一个程序。但是可以创建一个运行多个程序的批处理文件，然后计划一个任务来运行该批处理文件。下面的过程说明了这个方法：</p>
+<p align="left">1.&nbsp;&nbsp;&nbsp;&nbsp;  创建一个启动要运行程序的批处理文件。</p>
+<p align="left">在这个范例中创建了一个启动&ldquo;事件查看器&rdquo;(Eventvwr.exe) 和&ldquo;系统监视器&rdquo;(Perfmon.exe) 的批处理文件。</p>
+<p align="left">o&nbsp;&nbsp;&nbsp;  启动文本编辑器，例如&ldquo;记事本&rdquo;。</p>
+<p align="left">o&nbsp;&nbsp;&nbsp;  键入每个程序的名称和指向可执行文件的完全合格的路径。在这种情况下，文件包含有下列语句。</p>
+<p align="left"><strong>C:\Windows\System32\Eventvwr.exe</strong><br>
+<strong>C:\Windows\System32\Perfmon.exe</strong></p>
+<p align="left">o&nbsp;&nbsp;&nbsp;  将文件存储为 MyApps.bat。</p>
+<p align="left">2.&nbsp;&nbsp;&nbsp;&nbsp;  使用 SchTasks.exe 创建一个运行 MyApps.bat 的任务。</p>
+<p align="left">下面的命令创建了 Monitor 任务，每当有人登录它就运行。它使用<strong>/tn</strong>参数命名任务，使用<strong>/tr</strong>参数运行 MyApps.bat。它使用<strong>/sc</strong>参数来指明 OnLogon 计划类型，使用<strong>/ru</strong>参数指定 Administrator 帐户。</p>
+<p align="left"><strong>schtasks /create /tn Monitor /tr C:\MyApps.bat /sc onlogon /ru Reskit\Administrator</strong></p>
+<p align="left">该命令的结果是，每当用户登录到计算机，任务就启动&ldquo;事件查看器&rdquo;和&ldquo;系统监视器&rdquo;。</p></div></body></html>

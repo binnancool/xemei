@@ -1,0 +1,142 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>linux定时执行命令——crontab</title></head><body><h1>linux定时执行命令——crontab</h1><div><p>crontab -e<br>
+进入一个vi 编辑界面<br>
+在最后一行加上<br>
+*/30 * * * * netstat &gt; /tmp/net.log<br>
+表示每隔30分就执行netstat命令，并把执行结果存入net.log中。<br>
+Crontab是一个很方便的在unix/linux系统上定时(循环)执行某个任务的程序<br>
+　　使用cron服务，用 service crond status 查看 cron服务状态，如果没有启动则 service crond start启动它，<br>
+　　cron服务是一个定时执行的服务，可以通过crontab 命令添加或者编辑需要定时执行的任务：<br>
+　　crontab -u //设定某个用户的cron服务，一般root用户在执行这个命令的时候需要此参数<br>
+　　crontab -l //列出某个用户cron服务的详细内容<br>
+　　crontab -r //删除没个用户的cron服务<br>
+　　crontab -e //编辑某个用户的cron服务<br>
+　　比如说root查看自己的cron设置：crontab -u root -l<br>
+　　再例如，root想删除fred的cron设置：crontab -u fred -r<br>
+　　在编辑cron服务时，编辑的内容有一些格式和约定，输入：crontab -u root -e<br>
+　　进入vi编辑模式，编辑的内容一定要符合下面的格式：*/1 * * * * ls &gt;&gt; /tmp/ls.txt<br>
+　　编辑/etc/crontab文件，在末尾加上一行： 30 5 * * * root init 6 这样就将系统配置为了每天早上5点30自动重新启动。<br>
+　　需要将crond设置为系统启动后自动启动的服务，可以在/etc/rc.d/rc.local 中，在末尾加上<br>
+　　service crond start<br>
+　　如果还需要在系统启动十加载其他服务，可以继续加上其他服务的启动命令。<br>
+　　比如： service mysqld start<br>
+　　基本用法:<br>
+　　1. crontab -l<br>
+　　列出当前的crontab任务<br>
+　　2. crontab -d<br>
+　　删除当前的crontab任务<br>
+　　3. crontab -e (solaris5.8上面是 crontab -r)<br>
+<br>
+　　编辑一个crontab任务,ctrl_D结束<br>
+　　4. crontab filename<br>
+　　以filename做为crontab的任务列表文件并载入<br>
+　　crontab file的格式:<br>
+　　crontab 文件中的行由 6 个字段组成，不同字段间用空格或 tab 键分隔。前 5 个字段指定命令要运行的时间<br>
+　　分钟 (0-59)<br>
+　　小时 (0-23)<br>
+　　日期 (1-31)<br>
+　　月份 (1-12)<br>
+　　星期几(0-6，其中 0 代表星期日)<br>
+　　第 6 个字段是一个要在适当时间执行的字符串<br>
+　　例子:<br>
+　　#MIN HOUR DAY MONTH DAYOFWEEK COMMAND<br>
+　　#每天早上6点10分<br>
+　　10 6 * * * date<br>
+　　#每两个小时<br>
+　　0 */2 * * * date (solaris 5.8似乎不支持此种写法)<br>
+　　#晚上11点到早上8点之间每两个小时，早上8点<br>
+　　0 23-7/2，8 * * * date<br>
+　　#每个月的4号和每个礼拜的礼拜一到礼拜三的早上11点<br>
+　　0 11 4 * mon-wed date</p>
+<p>　　#1月份日早上4点<br>
+　　0 4 1 jan * date<br>
+　　补充：在使用crontab的时候，要特别注意的是运行脚本中能够访问到的环境变量和当前测试环境中的环境变量未必一致，一个比较保险的做法是在运行的脚本程序中自行设置环境变量(export)<br>
+　　(1)先建一个文件crond.txt如下， 每天早上5点36分重新启动<br>
+　　36 5 * * * reboot<br>
+　　(2)上传到/opt目录<br>
+　　(3)运行命令<br>
+　　crontab /opt/crond.txt<br>
+　　crontab -l<br>
+　　让配置文件生效：如果让配置文件生效，还得重新启动cron，切记，既然每个用户下的cron配置文件修改后。也要重新启动cron服务器。<br>
+　　在Fedora 和Redhat中，我们应该用；<br>
+　　[root@localhost ~]# /etc/init.d/crond restart<br>
+　　如果让crond 在开机时运行，应该改变其运行级别；<br>
+　　[root@localhost ~]# chkconfig --levels 35 crond on<br>
+　　service crond status 查看 cron服务状态，如果没有启动则 service crond start启动它， cron服务是一个定时执行的服务，可以通过crontab 命令添加或者编辑需要定时执行的任务</p>
+<p><br>
+Crontab文件的每一行由六个域(minutes、hours、day of month、month、day of week、 command)组 成，域之间用空格或Tab分开，其中：<br>
+minutes： 分钟域，值的范围是0到59<br>
+hours： 小时域，值的范围是0到23<br>
+day of month： 日期，值的范围是1到31<br>
+month： 月份，值的范围是1到12<br>
+day of week： 星期，值的范围是0到6，星期日值为0<br>
+command： 所要运行的命令<br>
+<br>
+<strong>如果一个域是*，表明命令可以在该域所有可能的取值范围内执行。<br>
+<br>
+如果一个域是由连字符隔开的两个数字，表明命令可以在两个数字之间的范围内执行（包括两个数字 本身）。<br>
+如果一个域是由逗号隔开的一系列值组成的，表明命令可以在这些值组成的范围内执行。<br>
+如果日期域和星期域都有值，则这两个域都有效。<br>
+编写一个文件，用以启动自动备份进程。<br>
+</strong>cd /opt<br>
+touch reboot.txt<br>
+在reboot.txt中添加一下内容:<br>
+0 4 * * * reboot<br>
+crontab /opt/reboot.txt<br>
+用crontab -e编辑定时操作，例如加入下行命令：<br>
+用crontab －l命令来查看<br>
+注意:需要启动服务(添加在rc.local中)<br>
+重启crond任务<br>
+/etc/init.d/cron restart (ubuntu下)<br>
+第一种 在Fedora或Redhat 等以RPM包管理的系统中；<br>
+[root@localhost ~]# /etc/init.d/crond start<br>
+[root@localhost ~]# /etc/init.d/crond stop<br>
+[root@localhost ~]# /etc/init.d/crond restart<br>
+/etc/rc.d/init.d/crond restart<br>
+命令简介<br>
+crontab-操作每个用户的守护程序和该执行的时间表。<br>
+部分参数说明<br>
+crontab file [-u user]-用指定的文件替代目前的crontab。<br>
+crontab-[-u user]-用标准输入替代目前的crontab.<br>
+crontab-1[user]-列出用户目前的crontab.<br>
+crontab-e[user]-编辑用户目前的crontab.<br>
+crontab-d[user]-删除用户目前的crontab.<br>
+crontab-c dir- 指定crontab的目录。<br>
+crontab文件的格式：M H D m d cmd.<br>
+M: 分钟（0-59）。<br>
+<br>
+H：小时（0-23）。<br>
+<br>
+D：天（1-31）。<br>
+<br>
+m: 月（1-12）。<br>
+<br>
+d: 一星期内的天（0~6，0为星期天）。<br>
+<br>
+cmd要运行的程序，程序被送入sh执行，这个shell只有USER,HOME,SHELL这三个环境变量。<br>
+下面是一个例子文件：<br>
+#MIN HOUR DAY MONTH DAYOFWEEK COMMAND<br>
+#每天早上6点</p>
+<p>106* * * date<br>
+#每两个小时<br>
+0*/2* * * date<br>
+<br>
+#晚上11点到早上7点之间每两个小时，早上8点<br>
+0 23-7/2，8* * * date<br>
+<br>
+#每个月的4号和每个礼拜的礼拜一到礼拜三的早上11点<br>
+0 11 4* mon-wed date<br>
+#1月份日早上4点<br>
+0 4 1 jan* date<br>
+范例<br>
+<br>
+lark:~&gt;crontab-1 列出用户目前的crontab.<br>
+<br>
+#MIN HOUR DAY MONTH DAYOFWEEK COMMAND<br>
+<br>
+10 6* * * date<br>
+<br>
+0*/2* * * date<br>
+<br>
+0 23-7/2,8 * * * date<br>
+<br>
+lark:~&gt;</p></div></body></html>

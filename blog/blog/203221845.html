@@ -1,0 +1,142 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Web Service实践——Xfire的ws-security数字签名和报文加密安全验证（一）</title></head><body><h1>Web Service实践——Xfire的ws-security数字签名和报文加密安全验证（一）</h1><div><p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan; mso-outline-level: 4" class="MsoNormal" align="left"> </p>
+<span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">
+<p>XFire在1.1中已经支持ws-security了。XFire通过wss4j提供ws-security支持。<br>
+<strong>一、&nbsp;&nbsp;&nbsp;&nbsp;  前提条件：</strong><br>
+<br>
+前提条件要安装Unlimited Strength Jurisdiction Policy（可以在http://java.sun.com/j2se/1.5.0/download.jsp或http://java.sun.com/j2se/1.4.2/download.html下载）和Bouncy Castle（来自http://BouncyCastle.org）。否则会出现无效算法(algorithm)或Key大小(Key Size)<br>
+为了能支持WS-Security必须添加两个Handler：inhandlers、outhandlers。<br>
+以下必须添加到inHandlers<br>
+1、&nbsp;&nbsp;&nbsp;&nbsp;  org.codehaus.xfire.security.wss4j.WSS4JInHandler：执行WS-Security相关的函数；<br>
+2、&nbsp;&nbsp;&nbsp;&nbsp;  org.codehaus.xfire.util.dom.DOMInHandler：为WS-Security从StAX 转换成DOM格式。<br>
+<strong>注：DOMInHandler必须引入Xalan 2.7.1，XFire默认没有引入。</strong></p>
+<p><strong>下载地址：</strong><a href="http://xml.apache.org/xalan-j/downloads.html"><strong>http://xml.apache.org/xalan-j/downloads.html</strong></a>（包含多个jar包，可能都需要引入工程）<br>
+以下添加到outHandlers：<br>
+1、&nbsp;&nbsp;&nbsp;&nbsp;  org.codehaus.xfire.security.wss4j.WSS4JOutHandler：执行WS-Security相关的函数；<br>
+2、&nbsp;&nbsp;&nbsp;&nbsp;  org.codehaus.xfire.util.dom.DOMOutHandler：为WS-Security从StAX 转换成DOM格式。</p>
+<p><br>
+<strong>二、&nbsp;&nbsp;&nbsp;&nbsp;  安装Unlimited Strength Jurisdiction Policy和Bouncy Castle</strong></p>
+<p><br>
+1、&nbsp;&nbsp;&nbsp;&nbsp;  <strong><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">安装<span>Java</span>策略文件</span></strong></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">策略文件被<span>JDK</span>使用，用以控制加密的强度和算法。确认已经安装对应<span>JDK </span>版本的<span>Unlimited Strength Jurisdiction</span>策略文件，这是一个无限制的安全控制文件。你可以从<span>http: //java.sun.com/j2se/<st1:chsdate isrocdate="False" islunardate="False" day="30" month="12" year="1899">1.5.0</st1:chsdate>/download.jsp </span>或<span> http://java.sun.com/j2se/1.4.2/download.html</span>页面的底部找到下载的链接。否则在使用<span>WS- Security</span>时，可以会抛出<span>java.security.InvalidKeyException: Illegal key size</span>的错误信息。</span></p>
+<p><span style="font-size: 10.5pt">策略文件包括<span>local_policy.jar</span>和<span>US_export_policy.jar</span>文件，将其拷贝到<span>&lt;<em>JAVA_HOME</em>&gt;/jre/lib/security</span>目录下。</span><br>
+2、&nbsp;&nbsp;<strong><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">安装<span>SecurityProvider</span></span></strong></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">WSS4J</span><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">使用了<span>BouncyCastle</span>的<span>SecurityProvider</span>，所以需要事先在<span>java.security</span>文件中进行配置，否则运 行加密模式的<span>XFire</span>认证时，会抛出以下的出错信息：<span>org.apache.ws.security.WSSecurityException: An unsupported signature or encryption algorithm was used unsupported key</span></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">在<span>java.security</span>文件中<span>(</span>位于<span>&lt;<em>JAVA_HOME</em>&gt;/jre/lib/security</span>目录中<span>)</span>添加<span>BouncyCastleProvider</span>的配置：</span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">…</span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">security.provider.1=sun.security.provider.Sun</span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">security.provider.2=sun.security.rsa.SunRsaSign</span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">security.provider.3=com.sun.net.ssl.internal.ssl.Provider</span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">security.provider.4=com.sun.crypto.provider.SunJCE</span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">security.provider.5=sun.security.jgss.SunProvider</span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">security.provider.6=com.sun.security.sasl.Provider</span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><strong><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">security.provider.7=org.bouncycastle.jce.provider.BouncyCastleProvider</span></strong></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt">…</span></p>
+<p><span style="font-size: 10.5pt">XFire</span><span style="font-size: 10.5pt">发布包中包含了<span>BouncyCastle SecurityProvider</span>的类包，位于<span>&lt;<em>XFIRE_HOME</em>&gt; /lib/bcprov-jdk15-133.jar</span>下。必须将<span>bcprov-jdk15-133.jar</span>加入到类路径中。</span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"> </p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"> </p>
+</font></span>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan; mso-outline-level: 4" class="MsoNormal" align="left"><strong><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="4">三、创建密钥对和数字证书</font></span></strong></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan; mso-outline-level: 4" class="MsoNormal" align="left"> </p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">签名和加密需要使用到数字证书和密钥对，可以使用<span>JDK</span>提供的<span>KeyTool</span>工具创建密钥对和数字证书。我们分别为服务端和客户端创建<span>RSA</span>密钥 对，并生成各自的<span>X509</span>数字证书（包含公钥和数字签名）。服务端和客户端拥有各自的密钥库<span>JKS</span>文件，服务端的密钥库保存服务端的密钥对和客户端的数字 证书，而客户端的密钥库保存客户端的密钥对和服务端的数字证书。</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">下面，我们来完成创建服务端和客户端密钥库的工作：</font></span></p>
+<ul style="margin-top: 0cm" type="disc">
+    <li style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan; mso-list: l0 level1 lfo1" class="MsoNormal"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">编写一个用于创建<span>RSA</span>密钥对和<span>generateKeyPair.bat</span>批处理文件：<span> </span></font></span></li>
+</ul>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">rem @echo off</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">#</span><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">接受参数</span></font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">echo alias %1</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">echo keypass %2</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">echo keystoreName %3</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">echo KeyStorePass %4</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">echo keyName %5</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3"><strong><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">①</span></strong><strong><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">创建<span>RSA</span>密钥对</span></strong></font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">keytool -genkey -alias %1 -keypass %2 -keystore %3 -storepass %4-dname &quot;cn=%1&quot; -keyalg RSA </font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">keytool -selfcert -alias %1 -keystore %3 -storepass %4 -keypass %2 <strong>②</strong></span><strong><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">使用私钥进行自签名</span></strong></font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">keytool -export -alias %1 -file %5 -keystore %3 -storepass %4 <strong>③</strong></span><strong><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">导出数字证书</span></strong></font></p>
+<ul style="margin-top: 0cm" type="disc">
+    <li style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan; mso-list: l1 level1 lfo2" class="MsoNormal"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">编写一个使用<span>generateKeyPair.bat</span>创建服务端和客户端的密钥库的<span>generateKeyStore.bat</span>批处理文件：<span> </span></font></span></li>
+</ul>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3"><strong><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">①</span></strong><strong><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">下面两行命名分别调用<span>generateKeyPair.bat</span>批处理文件为服务端和客户端生成密钥对</span></strong></font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">call <strong>generateKeyPair.bat</strong> server serverpass serverStore.jks storepass serverKey.rsa </font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">call <strong>generateKeyPair.bat</strong> clientclientpassclientStore.jks storepass clientKey.rsa</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3"><strong><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">②</span></strong><strong><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">将服务端的数字证书导入客户端的密钥库</span></strong></font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">keytool -import -alias server -file serverKey.rsa -keystore clientStore.jks -storepass storepass -noprompt</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3"><strong><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">③</span></strong><strong><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">将客户端的数字证书导入服务端的密钥库</span></strong></font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">keytool -import -alias client -file clientKey.rsa -keystore serverStore.jks -storepass storepass -noprompt</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">运行该批处理文件后，将分别为服务端和客户端生成一个<span>Java</span>密钥库文件，它们分别拥有一个自己的密钥对和对方的数字证书。我们通过表<span>1</span>对两者密钥库文件的内容进行说明：</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><a name="_Ref163917821"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">表</font></span></a><font size="3"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">1</span><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">密钥库说明</span></font></p>
+<p>
+<table style="border-bottom: #cccccc 1pt outset; border-left: #cccccc 1pt outset; border-top: #cccccc 1pt outset; border-right: #cccccc 1pt outset; mso-cellspacing: .7pt; mso-border-alt: outset #CCCCCC .75pt" class="MsoNormalTable" border="1" cellspacing="1" cellpadding="0">
+    <tbody>
+        <tr style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 122.25pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" width="163">
+            <p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"> </p>
+            </td>
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 152.25pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" width="203">
+            <p style="text-align: center; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="center"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">服务端<span>Java</span>密钥库</font></span></p>
+            </td>
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 153.75pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" width="205">
+            <p style="text-align: center; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="center"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">客户端<span>Java</span>密钥库</font></span></p>
+            </td>
+        </tr>
+        <tr style="mso-yfti-irow: 1">
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 122.25pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" width="163">
+            <p style="text-align: center; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="center"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">对应密钥库文件</font></span></p>
+            </td>
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 152.25pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" valign="top" width="203">
+            <p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">serverStore.jks</font></span></p>
+            </td>
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 153.75pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" valign="top" width="205">
+            <p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">clientStore.jks</font></span></p>
+            </td>
+        </tr>
+        <tr style="mso-yfti-irow: 2">
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 122.25pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" width="163">
+            <p style="text-align: center; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="center"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">密钥库密码</font></span></p>
+            </td>
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 152.25pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" valign="top" width="203">
+            <p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">storepass</font></span></p>
+            </td>
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 153.75pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" valign="top" width="205">
+            <p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">storepass</font></span></p>
+            </td>
+        </tr>
+        <tr style="mso-yfti-irow: 3">
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 122.25pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" width="163">
+            <p style="text-align: center; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="center"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">库中包含的内容</font></span></p>
+            </td>
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 152.25pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" valign="top" width="203">
+            <p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">server</span><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">密钥对、<span>client</span>数字证书</span></font></p>
+            </td>
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 153.75pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" valign="top" width="205">
+            <p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">client</span><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">密钥对、<span>server</span>数字证书</span></font></p>
+            </td>
+        </tr>
+        <tr style="mso-yfti-irow: 4">
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 122.25pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" width="163">
+            <p style="text-align: center; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="center"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">密钥对别名</font></span></p>
+            </td>
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 152.25pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" valign="top" width="203">
+            <p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">server</font></span></p>
+            </td>
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 153.75pt; padding-right: 0.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" valign="top" width="205">
+            <p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">client</font></span></p>
+            </td>
+        </tr>
+        <tr style="height: 9.75pt; mso-yfti-irow: 5; mso-yfti-lastrow: yes">
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 122.25pt; padding-right: 0.75pt; height: 9.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" width="163">
+            <p style="text-align: center; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="center"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">密钥对私钥的保护密码</font></span></p>
+            </td>
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 152.25pt; padding-right: 0.75pt; height: 9.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" valign="top" width="203">
+            <p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">serverpass</font></span></p>
+            </td>
+            <td style="border-bottom: #cccccc 1pt inset; border-left: #cccccc 1pt inset; padding-bottom: 0.75pt; background-color: transparent; padding-left: 0.75pt; width: 153.75pt; padding-right: 0.75pt; height: 9.75pt; border-top: #cccccc 1pt inset; border-right: #cccccc 1pt inset; padding-top: 0.75pt; mso-border-alt: inset #CCCCCC .75pt" valign="top" width="205">
+            <p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">clientpass</font></span></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</p>
+<ul style="margin-top: 0cm" type="disc">
+    <li style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan; mso-list: l2 level1 lfo3" class="MsoNormal"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">将<span>serverStore.jks</span>和<span>clientStore.jks</span>拷贝到<span>&lt;</span><em>工程目录</em><span>&gt;/src/META-INF/xfire</span>的目录下，以便后面的实例代码使用。<span> </span></font></span></li>
+</ul></div></body></html>

@@ -1,0 +1,156 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Web Service实践——Xfire的ws-security数字签名和报文加密安全验证（二）</title></head><body><h1>Web Service实践——Xfire的ws-security数字签名和报文加密安全验证（二）</h1><div><p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><strong><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">二、服务器端</font></span></strong></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><strong><font size="3">1、insecurity.properties文件，放在META-INF/xfire/下。<span>定义了</span><span>serverStore.jks的位置以及访问密码</span></font></strong></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt">org.apache.ws.security.crypto.provider=org.apache.ws.security.components.crypto.Merlin<br>
+org.apache.ws.security.crypto.merlin.keystore.type=jks//<span><strong>密钥库类型</strong></span><br>
+org.apache.ws.security.crypto.merlin.keystore.password=storepass//<span><strong>serverStore.jks的访问密码</strong></span><br>
+org.apache.ws.security.crypto.merlin.file=META-INF/xfire/serverStore.jks</span>//<span><strong>密钥库文件所在位置</strong></span></font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3"><strong>2、service.xml文件，放在META-INF/xfire/下</strong></font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">&lt;beans xmlns=&quot;</font><a href="http://xfire.codehaus.org/config/1.0"><font size="3">http://xfire.codehaus.org/config/1.0</font></a><font size="3">&quot;&gt;<br>
+&lt;service&gt;<br>
+&lt;name&gt;hrwebservice&lt;/name&gt;<br>
+&lt;namespace&gt;com.channelsoft.hr&lt;/namespace&gt;<br>
+&lt;serviceClass&gt;com.channelsoft.hr.webservice.DepartmentAndPersonInfo&lt;/serviceClass&gt;<br>
+&lt;implementationClass&gt;com.channelsoft.hr.webservice.impl.DepartmentAndPersonInfoImpl&lt;/implementationClass&gt;<br>
+&lt;inHandlers&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;!-- &lt;handler handlerClass =&quot;com.channelsoft.hr.webservice.validate.AuthenticationHandler&quot; &gt;&lt;/handler &gt; --&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;handler handlerClass=&quot;org.codehaus.xfire.util.dom.DOMInHandler&quot; /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;bean<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  class=&quot;org.codehaus.xfire.security.wss4j.WSS4JInHandler&quot; xmlns=&quot;&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;property name=&quot;properties&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;props&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;prop key=&quot;action&quot;&gt;Encrypt&lt;/prop<strong>&gt;//Encrypt代表报文加密；<span><font face="宋体">Signature代表数字签名</font></span></strong></font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </font></span></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><font size="3"><strong><span style="font-size: 10.5pt">//验证数字签名需要访问保存着<span>client</span>数字证书的密钥库，</span></strong></font></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><font size="3"><strong><span style="font-size: 10.5pt">//通过属性文件提供相应的配置信息。</span></strong><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;prop key=&quot;signaturePropFile&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  META-INF/xfire/insecurity.properties<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/prop&gt;</font></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><font size="3"><strong><span style="font-size: 10.5pt">//解密操作需要访问保存着<span>server</span>私钥的密钥库，</span></strong></font></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><font size="3"><strong><span style="font-size: 10.5pt">//通过属性文件提供相应的配置信息</span></strong><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;prop key=&quot;decryptionPropFile&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  META-INF/xfire/insecurity.properties<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/prop&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;prop key=&quot;passwordCallbackClass&quot;&gt;//<span style="font-size: 10.5pt"><strong>指定一个密码回调实现类</strong></span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  com.channelsoft.hr.wssecurity.PasswordHandler<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/prop&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/props&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/property&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/bean&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;/inHandlers&gt;<br>
+&lt;/service&gt;<br>
+&lt;/beans&gt;<br>
+</font></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"> </p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"> </p>
+<p> </p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3"><strong>3、PasswordHandler类，继承自javax.security.auth.callback.CallbackHandler</strong></font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">package hr;</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">import java.io.IOException;</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">public class PasswordHandler implements CallbackHandler {<br>
+&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+private Map passwords = new HashMap();</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+public PasswordHandler() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  passwords.put(&quot;server&quot;, &quot;serverpass&quot;);<br>
+&nbsp;&nbsp;&nbsp;  }</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">&nbsp;&nbsp;&nbsp;  public void handle(Callback[] callbacks) throws IOException,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  UnsupportedCallbackException {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;Handling Password!&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String id = pc.getIdentifer();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;id:&quot;+id+&quot; ,password:&quot;+(String) passwords.get(id));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  pc.setPassword((String) passwords.get(id));<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+}</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"> </p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><strong><font size="3">三、客户端</font></strong></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><strong><font size="3">1、PasswordHandler类，继承自javax.security.auth.callback.CallbackHandler</font></strong></span></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"> </p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"> </p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"> </p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"> </p>
+<p> </p>
+<p> </p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">package hr;</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">import java.io.IOException;</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">public class PasswordHandler implements CallbackHandler {<br>
+&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+private Map passwords = new HashMap();</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+public PasswordHandler() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  passwords.put(&quot;server&quot;, &quot;serverpass&quot;);<br>
+&nbsp;&nbsp;&nbsp;  }</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><font size="3">&nbsp;&nbsp;&nbsp;  public void handle(Callback[] callbacks) throws IOException,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  UnsupportedCallbackException {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;Handling Password!&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String id = pc.getIdentifer();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;id:&quot;+id+&quot; ,password:&quot;+(String) passwords.get(id));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  pc.setPassword((String) passwords.get(id));<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+}</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"> </p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><strong><font size="3">2、<span>outsecurity.properties文件，位于<font face="宋体">META-INF/xfire/下。<span>定义了</span><span>clientStore.jks</span><span>的位置以及访问密码</span></font></span></font></strong></span></p>
+<span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><span><font face="宋体">
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><span style="font-size: 10.5pt"><font size="3">org.apache.ws.security.crypto.provider=org.apache.ws.security.components.crypto.Merlin</font></span></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><span style="font-size: 10.5pt"><font size="3">org.apache.ws.security.crypto.merlin.keystore.type=jks</font></span></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><font size="3"><span style="font-size: 10.5pt">org.apache.ws.security.crypto.merlin.keystore.password=storepass<strong><span>//</span></strong></span><strong><span style="font-size: 10.5pt">访问<span>clientStore.jks</span>的密码</span></strong></font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span><font size="3">org.apache.ws.security.crypto.merlin.file=META-INF/xfire/clientStore.jks</font></span></p>
+<span style="mso-bidi-font-size: 10.5pt; mso-bidi-: 0pt"><span><font face="宋体">
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"> </p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><strong><font size="3">3、客户端访问类</font></strong></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3">package hr;</font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3">import java.net.MalformedURLException;</font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3">public class getHRInfoBySignature<br>
+{<br>
+public static void main(String args[])<br>
+{ <br>
+&nbsp;&nbsp;  String serviceURL = &quot;</font><a href="http://localhost:8080/HRWebService/services/hrwebservice"><font size="3">http://localhost:8080/HRWebService/services/hrwebservice</font></a><font size="3">&quot;;<br>
+&nbsp;&nbsp;  // 创建service对象<br>
+&nbsp;&nbsp;  Service serviceModel = new ObjectServiceFactory().create(DepartmentAndPersonInfo.class);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;  XFireProxyFactory serviceFactory = new XFireProxyFactory();</font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3">&nbsp;&nbsp;  try<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  // 获取服务对象<br>
+&nbsp;&nbsp;&nbsp;  DepartmentAndPersonInfo service = (DepartmentAndPersonInfo) serviceFactory.create(serviceModel, serviceURL);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;  // 忽略http连接的超时时间,0为不设置超时时间，》=1为超时毫秒数<br>
+&nbsp;&nbsp;&nbsp;  Client client = Client.getInstance(service);<br>
+&nbsp;&nbsp;&nbsp;  client.setProperty(CommonsHttpMessageSender.HTTP_TIMEOUT, &quot;0&quot;);<br>
+&nbsp;&nbsp;&nbsp;  //发送授权信息<br>
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(new ClientAuthenticationHandler(&quot;abcd&quot;,&quot;1234&quot;));</font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><br>
+<font size="3">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //WS-Security<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  WSS4JOutHandler wsOut = new WSS4JOutHandler(); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String actions =WSHandlerConstants.ENCRYPT;<strong> //报文加密；WSHandlerConstants.SIGNATURE代表数字签名</strong> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.ACTION, actions);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.ENC_PROP_FILE, &quot;META-INF/xfire/outsecurity.properties&quot;);//<strong>WSHandlerConstants.SIG_PROP_FILE代表数字签名</strong></font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PASSWORD_DIGEST);//<strong>密码为加密<br>
+</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.USER, &quot;client&quot;); <strong>//<span>用户名为密钥库中密钥对的别名，密码为私钥</span><span> </span><span>的访问密钥(数字签名为client，报文加密为server)</span></strong>&nbsp;&nbsp;&nbsp;</font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style=" mso-bidi-font-size: 10.5pt; mso-bidi- mso-font-kerning: 0pt"><font size="3">properties.setProperty(WSHandlerConstants.ENCRYPTION_USER, &quot;server&quot;);//<strong>报文加密为server</strong></font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3">&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, PasswordHandler.class.getName());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.SIG_KEY_ID, &quot;IssuerSerial&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(new DOMOutHandler());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(wsOut);</font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  // 调用服务<br>
+&nbsp;&nbsp;&nbsp;  String hello = service.queryDepartmentInfo();<br>
+&nbsp;&nbsp;&nbsp;  String hello2 = service.queryPersonnelInfo(&quot;&quot;, &quot;&quot;, &quot;&quot;);<br>
+&nbsp;&nbsp;&nbsp;  System.out.println(hello);<br>
+&nbsp;&nbsp;&nbsp;  System.out.println(hello2);</font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3">//&nbsp;&nbsp;&nbsp;  hello = service.startSLEEChannel(&quot;10.130.24.55&quot;, &quot;inbound2.usml&quot;,&quot;456&quot;);<br>
+//&nbsp;&nbsp;&nbsp;  System.out.println(&quot;启动SLEE通道返回值：：&quot; + hello);<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  catch (MalformedURLException e)<br>
+&nbsp;&nbsp;  { <br>
+&nbsp;&nbsp;&nbsp;  System.out.println(&quot;错误！！！&quot;);<br>
+&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;  }<br>
+}<br>
+}<br>
+</font></p>
+</font></span></span></font></span></span></div></body></html>

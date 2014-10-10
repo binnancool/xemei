@@ -1,0 +1,95 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Openfire3.6.4用户密码的保存及加密、解密</title></head><body><h1>Openfire3.6.4用户密码的保存及加密、解密</h1><div><h2 style="margin: 13pt 0cm"><span style="line-height: 173%; font-size: 10.5pt">1</span><span style="line-height: 173%;  font-size: 10.5pt; mso-ascii-">、用户密码保存在表：</span><span style="line-height: 173%; font-size: 10.5pt">ofUser</span><span style="line-height: 173%;  font-size: 10.5pt; mso-ascii-">中，表的字段信息如下图所示：</span></h2>
+<h2 style="margin: 13pt 0cm"><span style="line-height: 173%; font-size: 10.5pt"><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/9b8aea6135a6969c8cb10d6a.jpg"><br>
+</span></span></h2>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span >字段信息：</span></p>
+<table style="border-bottom: medium none; border-left: medium none; border-collapse: collapse; border-top: medium none; border-right: medium none; mso-border-alt: solid windowtext .5pt; mso-yfti-tbllook: 480; mso-padding-alt: 0cm 5.4pt 0cm 5.4pt; mso-border-insideh: .5pt solid windowtext; mso-border-insidev: .5pt solid windowtext" class="MsoTableGrid" border="1" cellspacing="0" cellpadding="0">
+    <tbody>
+        <tr style="mso-yfti-irow: 0; mso-yfti-firstrow: yes">
+            <td style="border-bottom: windowtext 1pt solid; border-left: windowtext 1pt solid; padding-bottom: 0cm; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; background: #33cccc; border-top: windowtext 1pt solid; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span >字段名称</span></p>
+            </td>
+            <td style="border-bottom: windowtext 1pt solid; border-left: #ffffff; padding-bottom: 0cm; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; background: #33cccc; border-top: windowtext 1pt solid; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-left-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span >含义</span></p>
+            </td>
+        </tr>
+        <tr style="mso-yfti-irow: 1">
+            <td style="border-bottom: windowtext 1pt solid; border-left: windowtext 1pt solid; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">username</font></span></p>
+            </td>
+            <td style="border-bottom: windowtext 1pt solid; border-left: #ffffff; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-left-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span >登录名</span></p>
+            </td>
+        </tr>
+        <tr style="mso-yfti-irow: 2">
+            <td style="border-bottom: windowtext 1pt solid; border-left: windowtext 1pt solid; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">plainPassword</font></span></p>
+            </td>
+            <td style="border-bottom: windowtext 1pt solid; border-left: #ffffff; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-left-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span >原始密码</span></p>
+            </td>
+        </tr>
+        <tr style="mso-yfti-irow: 3">
+            <td style="border-bottom: windowtext 1pt solid; border-left: windowtext 1pt solid; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">encryptedPassword</font></span></p>
+            </td>
+            <td style="border-bottom: windowtext 1pt solid; border-left: #ffffff; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-left-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">MD5</font></span><span >加密密码</span></p>
+            </td>
+        </tr>
+        <tr style="mso-yfti-irow: 4">
+            <td style="border-bottom: windowtext 1pt solid; border-left: windowtext 1pt solid; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">name</font></span></p>
+            </td>
+            <td style="border-bottom: windowtext 1pt solid; border-left: #ffffff; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-left-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span >真实姓名</span></p>
+            </td>
+        </tr>
+        <tr style="mso-yfti-irow: 5">
+            <td style="border-bottom: windowtext 1pt solid; border-left: windowtext 1pt solid; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">email</font></span></p>
+            </td>
+            <td style="border-bottom: windowtext 1pt solid; border-left: #ffffff; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-left-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span >邮箱</span></p>
+            </td>
+        </tr>
+        <tr style="mso-yfti-irow: 6">
+            <td style="border-bottom: windowtext 1pt solid; border-left: windowtext 1pt solid; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">creationDate</font></span></p>
+            </td>
+            <td style="border-bottom: windowtext 1pt solid; border-left: #ffffff; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-left-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span >创建日期</span></p>
+            </td>
+        </tr>
+        <tr style="mso-yfti-irow: 7; mso-yfti-lastrow: yes">
+            <td style="border-bottom: windowtext 1pt solid; border-left: windowtext 1pt solid; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font face="Times New Roman">modificationDate</font></span></p>
+            </td>
+            <td style="border-bottom: windowtext 1pt solid; border-left: #ffffff; padding-bottom: 0cm; background-color: transparent; padding-left: 5.4pt; width: 213.05pt; padding-right: 5.4pt; border-top: #ffffff; border-right: windowtext 1pt solid; padding-top: 0cm; mso-border-alt: solid windowtext .5pt; mso-border-left-alt: solid windowtext .5pt; mso-border-top-alt: solid windowtext .5pt" valign="top" width="284">
+            <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span >修改日期</span></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<h2 style="margin: 13pt 0cm"><span style="line-height: 173%; font-size: 10.5pt">2</span><span style="line-height: 173%;  font-size: 10.5pt; mso-ascii-">、用户密码加密、解密</span><span style="line-height: 173%; font-size: 10.5pt"></span></h2>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"><span><font face="Times New Roman">2.1 Openfire</font></span><span >的加密实现类是：</span><span><font face="Times New Roman">org.jivesoftware.util.Blowfish</font></span><span >；加密使用的字符串</span><span><font face="Times New Roman">key</font></span><span >是通过</span><span><font face="Times New Roman">org.jivesoftware.util.JiveGlobals.getProperty(&quot;passwordKey&quot;);</font></span><span >方法获得的。</span></p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"><span><font face="Times New Roman">2.2 passwordKey</font></span><span >是一个系统属性，设置如下图：</span></p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"><span ><span><span><span><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/e47575fccd185a06d7887d7f.jpg"><br>
+</span><br>
+</span><br>
+<br>
+</span><br>
+</span></span></p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"> </p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"><span >点击&ldquo;编辑&rdquo;图标，进入下图所示：</span></p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"><span ><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/bf99c40fa9ef1f897acbe179.jpg"><br>
+</span></span></p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"> </p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"><span >所有系统属性保存在数据库中表：</span><span><font face="Times New Roman">ofProperty</font></span><span >中，如下图所示：</span></p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"><span ><span > <span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/fe42612bd570ed6ed52af14e.jpg"><br>
+</span></span></span></p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"><span ><span><br>
+</span></span> </p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"> </p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"><span><font face="Times New Roman">2.3 Junit</font></span><span >测试</span><span><font face="Times New Roman">Blowfish</font></span><span >类的加密、解密方法代码</span></p>
+<p style="margin: 0cm 0cm 0pt 18pt" class="MsoNormal"><span ><span ><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/aaabb7e8d81fe97cb90e2d7b.jpg"></span></span></span></p></div></body></html>

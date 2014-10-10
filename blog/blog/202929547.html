@@ -1,0 +1,153 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Web Service实践——基于Xfire SOAP Header的WebService安全验证</title></head><body><h1>Web Service实践——基于Xfire SOAP Header的WebService安全验证</h1><div><p>一、基于Xfire SOAP Header的WebService安全验证</p>
+<p>1、服务器端验证类</p>
+<p>package com.channelsoft.hr.webservice.validate;</p>
+<p>import org.codehaus.xfire.MessageContext;<br>
+import org.codehaus.xfire.handler.AbstractHandler;<br>
+import org.jdom.Element;</p>
+<p>public class AuthenticationHandler extends AbstractHandler<br>
+{<br>
+ public void invoke(MessageContext cfx) throws Exception<br>
+ {<br>
+&nbsp;&nbsp; if (cfx.getInMessage().getHeader() == null)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; throw new org.codehaus.xfire.fault.XFireFault(&quot;请求必须包含验证信息&quot;,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.codehaus.xfire.fault.XFireFault.SENDER);<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; Element token = cfx.getInMessage().getHeader().getChild(&quot;AuthenticationToken&quot;);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp; if (token == null)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; throw new org.codehaus.xfire.fault.XFireFault(&quot;请求必须包含身份验证信息&quot;,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.codehaus.xfire.fault.XFireFault.SENDER);<br>
+&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp; String username = token.getChild(&quot;Username&quot;).getValue();<br>
+&nbsp;&nbsp; String password = token.getChild(&quot;Password&quot;).getValue();<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; // 进行身份验证 ，只有<a href="mailto:abcd@1234">abcd@1234</a>的用户为授权用户<br>
+&nbsp;&nbsp;&nbsp; if (username.equals(&quot;abcd&quot;) &amp;&amp; password.equals(&quot;1234&quot;))<br>
+&nbsp;&nbsp;&nbsp;&nbsp; // 这语句不显示<br>
+&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(&quot;身份验证通过&quot;);<br>
+&nbsp;&nbsp;&nbsp; else<br>
+&nbsp;&nbsp;&nbsp;&nbsp; throw new Exception();<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (Exception e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; throw new org.codehaus.xfire.fault.XFireFault(&quot;非法的用户名和密码&quot;,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; org.codehaus.xfire.fault.XFireFault.SENDER);<br>
+&nbsp;&nbsp; }<br>
+ }<br>
+}<br>
+2、客户端类</p>
+<p>package hr;</p>
+<p>import org.codehaus.xfire.MessageContext;<br>
+import org.codehaus.xfire.handler.AbstractHandler;<br>
+import org.jdom.Element;</p>
+<p>public class ClientAuthenticationHandler extends AbstractHandler<br>
+{<br>
+ private String username = null;</p>
+<p> private String password = null;</p>
+<p> public ClientAuthenticationHandler()<br>
+ {<br>
+ }</p>
+<p> public ClientAuthenticationHandler(String username, String password)<br>
+ {<br>
+&nbsp;&nbsp; this.username = username;<br>
+&nbsp;&nbsp; this.password = password;<br>
+ }</p>
+<p> public void setUsername(String username)<br>
+ {<br>
+&nbsp;&nbsp; this.username = username;<br>
+ }</p>
+<p> public void setPassword(String password)<br>
+ {<br>
+&nbsp;&nbsp; this.password = password;<br>
+ }</p>
+<p> public void invoke(MessageContext context) throws Exception<br>
+ {</p>
+<p>&nbsp;&nbsp; // 为SOAP Header构造验证信息<br>
+&nbsp;&nbsp; Element el = new Element(&quot;header&quot;);<br>
+&nbsp;&nbsp; context.getOutMessage().setHeader(el);<br>
+&nbsp;&nbsp; Element auth = new Element(&quot;AuthenticationToken&quot;);<br>
+&nbsp;&nbsp; Element username_el = new Element(&quot;Username&quot;);<br>
+&nbsp;&nbsp; username_el.addContent(username);<br>
+&nbsp;&nbsp; Element password_el = new Element(&quot;Password&quot;);<br>
+&nbsp;&nbsp; password_el.addContent(password);<br>
+&nbsp;&nbsp; auth.addContent(username_el);<br>
+&nbsp;&nbsp; auth.addContent(password_el);<br>
+&nbsp;&nbsp; el.addContent(auth);<br>
+ }</p>
+<p>}<br>
+<span style="color: #0000ff"><strong><font size="4">3、修改services.xml为web services绑定Handler</font></strong></span></p>
+<p>&lt;beans xmlns=&quot;<a href="http://xfire.codehaus.org/config/1.0">http://xfire.codehaus.org/config/1.0</a>&quot;&gt;<br>
+&lt;service&gt;<br>
+ &lt;name&gt;hrwebservice&lt;/name&gt;<br>
+ &lt;namespace&gt;com.channelsoft.hr&lt;/namespace&gt;<br>
+ &lt;serviceClass&gt;com.channelsoft.hr.webservice.DepartmentAndPersonInfo&lt;/serviceClass&gt;<br>
+ &lt;implementationClass&gt;com.channelsoft.hr.webservice.impl.DepartmentAndPersonInfoImpl&lt;/implementationClass&gt;<br>
+ <strong><font color="#ff0000">&lt;inHandlers&gt; <br>
+&nbsp;&nbsp;&nbsp;   &lt;handler handlerClass =&quot;com.channelsoft.hr.webservice.validate.AuthenticationHandler&quot; &gt;</font></strong><strong><font color="#ff0000">&lt;/handler&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;/inHandlers&gt;<br>
+</font></strong> <br>
+&lt;/service&gt;<br>
+&lt;/beans&gt;<br>
+<strong><font size="4">4、客户端测试类</font></strong></p>
+<p><font size="3">package hr;</font></p>
+<p><font size="3">import java.net.MalformedURLException;</font></p>
+<p><font size="3">public class getHRInfo<br>
+{<br>
+ public static void main(String args[])<br>
+ { <br>
+&nbsp;&nbsp; String serviceURL = &quot;</font><a href="http://localhost:8080/HRWebService/services/hrwebservice"><font size="3">http://localhost:8080/HRWebService/services/hrwebservice</font></a><font size="3">&quot;;<br>
+&nbsp;&nbsp; // 创建service对象<br>
+&nbsp;&nbsp; Service serviceModel = new ObjectServiceFactory().create(DepartmentAndPersonInfo.class);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp; XFireProxyFactory serviceFactory = new XFireProxyFactory();</font></p>
+<p><font size="3">&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;  // 获取服务对象<br>
+&nbsp;&nbsp;&nbsp; DepartmentAndPersonInfo service = (DepartmentAndPersonInfo) serviceFactory.create(serviceModel, serviceURL);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;<strong> // 忽略http连接的超时时间,0为不设置超时时间，》=1为超时毫秒数<br>
+&nbsp;&nbsp;&nbsp; Client client = Client.getInstance(service);<br>
+&nbsp;&nbsp;&nbsp; client.setProperty(CommonsHttpMessageSender.HTTP_TIMEOUT, &quot;0&quot;);<br>
+&nbsp;&nbsp;&nbsp; //发送授权信息<br>
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(new ClientAuthenticationHandler(&quot;abcd&quot;,&quot;1234&quot;));</strong></font></p>
+<p><br>
+<font size="3">&nbsp;&nbsp;&nbsp; // 调用服务<br>
+&nbsp;&nbsp;&nbsp; String hello = service.queryDepartmentInfo();<br>
+&nbsp;&nbsp;&nbsp; String hello2 = service.queryPersonnelInfo(&quot;&quot;, &quot;&quot;, &quot;&quot;);<br>
+&nbsp;&nbsp;&nbsp; System.out.println(hello);<br>
+&nbsp;&nbsp;&nbsp; System.out.println(hello2);</font></p>
+<p><font size="3">//&nbsp;&nbsp;&nbsp; hello = service.startSLEEChannel(&quot;10.130.24.55&quot;, &quot;inbound2.usml&quot;,&quot;456&quot;);<br>
+//&nbsp;&nbsp;&nbsp; System.out.println(&quot;启动SLEE通道返回值：：&quot; + hello);<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (MalformedURLException e)<br>
+&nbsp;&nbsp; { <br>
+&nbsp;&nbsp;&nbsp; System.out.println(&quot;错误！！！&quot;);<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp; }<br>
+ }<br>
+}<br>
+</font></p>
+<p><span style="color: #000000"><strong><font size="4">三、这样我们就完成了编码，下面启动web services，运行客户端代码，本文为</font></strong></span><a href="mailto:abcd@1234"><span style="color: #000000"><strong><font size="4">abcd@1234</font></strong></span></a><span style="color: #000000"><strong><font size="4">位授权用户，<br>
+使用</font></strong></span><a href="mailto:abcd@1234"><span style="color: #000000"><strong><font size="4">abcd@1234</font></strong></span></a><span style="color: #000000"><strong><font size="4">,可以正常访问web services,如果用错误帐号，则会有以下异常:</font></strong></span></p>
+<p><font color="#ff9900">Exception in thread &quot;main&quot; org.codehaus.xfire.XFireRuntimeException: Could not invoke service.. Nested exception is org.codehaus.xfire.fault.XFireFault: 请求必须包含验证信息<br>
+org.codehaus.xfire.fault.XFireFault: 请求必须包含验证信息<br>
+ at org.codehaus.xfire.fault.Soap11FaultSerializer.readMessage(Soap11FaultSerializer.java:31)<br>
+ at org.codehaus.xfire.fault.SoapFaultSerializer.readMessage(SoapFaultSerializer.java:28)<br>
+ at org.codehaus.xfire.soap.handler.ReadHeadersHandler.checkForFault(ReadHeadersHandler.java:111)<br>
+ at org.codehaus.xfire.soap.handler.ReadHeadersHandler.invoke(ReadHeadersHandler.java:67)<br>
+ at org.codehaus.xfire.handler.HandlerPipeline.invoke(HandlerPipeline.java:131)<br>
+ at org.codehaus.xfire.client.Client.onReceive(Client.java:406)<br>
+ at org.codehaus.xfire.transport.http.HttpChannel.sendViaClient(HttpChannel.java:139)<br>
+ at org.codehaus.xfire.transport.http.HttpChannel.send(HttpChannel.java:48)<br>
+ at org.codehaus.xfire.handler.OutMessageSender.invoke(OutMessageSender.java:26)<br>
+ at org.codehaus.xfire.handler.HandlerPipeline.invoke(HandlerPipeline.java:131)<br>
+ at org.codehaus.xfire.client.Invocation.invoke(Invocation.java:79)<br>
+ at org.codehaus.xfire.client.Invocation.invoke(Invocation.java:114)<br>
+ at org.codehaus.xfire.client.Client.invoke(Client.java:336)<br>
+ at org.codehaus.xfire.client.XFireProxy.handleRequest(XFireProxy.java:77)<br>
+ at org.codehaus.xfire.client.XFireProxy.invoke(XFireProxy.java:57)<br>
+ at $Proxy0.queryDepartmentInfo(Unknown Source)<br>
+ at hr.getHRInfo.main(getHRInfo.java:36)</font></p></div></body></html>

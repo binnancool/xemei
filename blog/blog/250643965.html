@@ -1,0 +1,79 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>JEditorPane使用说明及代码举例</title></head><body><h1>JEditorPane使用说明及代码举例</h1><div><p><strong><font size="3">JEditorPane适合用于静态的渲染页面，使用html格式渲染，不适合时时更新页面。下面是代码举例：</font></strong></p>
+<p>import java.awt.Color;<br>
+import java.awt.GridBagLayout;</p>
+<p>import javax.swing.JEditorPane;<br>
+import javax.swing.JFrame;<br>
+import javax.swing.JScrollPane;</p>
+<p>public class TestJeditPanel {<br>
+public static void main(String[] args)<br>
+{</p>
+<p>&nbsp;&nbsp;  JEditorPane editorPane = new JEditorPane();<br>
+&nbsp;&nbsp;  editorPane = new JEditorPane();<br>
+&nbsp;&nbsp;  editorPane.setVisible(true);<br>
+&nbsp;&nbsp;  editorPane.setLayout(new GridBagLayout());</p>
+<p>&nbsp;&nbsp;  editorPane.setBackground(Color.white);<br>
+<strong><font color="#ff0000">//设置显示类型<br>
+&nbsp;&nbsp;  editorPane.setContentType(&quot;text/html&quot;);<br>
+&nbsp;&nbsp;  //必须设置为false，才能显示html<br>
+&nbsp;&nbsp;  editorPane.setEditable(false);<br>
+&nbsp;&nbsp;  //必须放在JScrollPane面板上显示<br>
+&nbsp;&nbsp;  JScrollPane scrollPane = new JScrollPane(editorPane);</font><br>
+</strong>&nbsp;&nbsp;  // 获得editorPane的宽度<br>
+&nbsp;&nbsp;  int editorPaneLength = 300;<br>
+&nbsp;&nbsp;  int work_name_length = editorPaneLength * 2 / 10;<br>
+&nbsp;&nbsp;  int work_content_length = editorPaneLength * 6 / 10;<br>
+&nbsp;&nbsp;  int apply_name_length = editorPaneLength * 2 / 10;</p>
+<p>&nbsp;&nbsp;  StringBuffer content = new StringBuffer();<br>
+&nbsp;&nbsp;  content.append(&quot;&lt;table width='&quot; + editorPaneLength<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;' height='5' bgcolor='#FFFFFF'&gt;&quot;);<br>
+&nbsp;&nbsp;  content.append(&quot;&lt;tr&gt;&quot;);<br>
+&nbsp;&nbsp;  content.append(&quot;&lt;td colspan='3' bgcolor='#FF8040'&gt;&amp;nbsp;&amp;nbsp;&lt;/td&gt;&quot;);<br>
+&nbsp;&nbsp;  content.append(&quot;&lt;/tr&gt;&quot;);<br>
+&nbsp;&nbsp;  content.append(&quot;&lt;tr&gt;&quot;);<br>
+&nbsp;&nbsp;  content<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  .append(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &quot;&lt;td width='&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + work_name_length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;' bgcolor='#E8E7FE' align='center'&gt;&lt;b&gt;分类&lt;/b&gt;&lt;/td&gt;&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  .append(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &quot;&lt;td width='&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + work_content_length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;' bgcolor='#E8E7FE' align='center'&gt;&lt;b&gt;事项&lt;/b&gt;&lt;/td&gt;&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  .append(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &quot;&lt;td width='&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + apply_name_length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;' bgcolor='#E8E7FE' align='center'&gt;&lt;b&gt;申请人&lt;/b&gt;&lt;/td&gt;&quot;);<br>
+&nbsp;&nbsp;  content.append(&quot;&lt;/tr&gt;&quot;);<br>
+&nbsp;&nbsp;  for (int i = 0; i &lt; 3; i++) {<br>
+&nbsp;&nbsp;&nbsp;  // 解析待办各项的内容<br>
+&nbsp;&nbsp;&nbsp;  String work_name = &quot;111&quot;, work_content = &quot;1111&quot;, apply_name = &quot;111&quot;;<br>
+&nbsp;&nbsp;&nbsp;  if (i % 2 == 0) {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;  content.append(&quot;&lt;tr bgcolor='#E8E7FE'&gt;&quot;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;  content.append(&quot;&lt;td width='&quot; + work_name_length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;' align='center'&gt;&quot; + work_name + &quot;&lt;/td&gt;&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;&lt;td width='&quot; + work_content_length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;' align='center'&gt;&quot; + work_content + &quot;&lt;/td&gt;&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;&lt;td width='&quot; + apply_name_length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;' align='center'&gt;&quot; + apply_name + &quot;&lt;/td&gt;&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  content.append(&quot;&lt;/tr&gt;&quot;);<br>
+&nbsp;&nbsp;&nbsp;  } else {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;  content.append(&quot;&lt;tr&gt;&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  content.append(&quot;&lt;td width='&quot; + work_name_length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;' align='center'&gt;&quot; + work_name + &quot;&lt;/td&gt;&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;&lt;td width='&quot; + work_content_length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;' align='center'&gt;&quot; + work_content + &quot;&lt;/td&gt;&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;&lt;td width='&quot; + apply_name_length<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + &quot;' align='center'&gt;&quot; + apply_name + &quot;&lt;/td&gt;&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  content.append(&quot;&lt;/tr&gt;&quot;);<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  content.append(&quot;&lt;/table&gt;&quot;);<br>
+&nbsp;&nbsp;  editorPane.setText(content.toString());</p>
+<p>&nbsp;&nbsp;  JFrame frame = new JFrame(&quot;JTableDemo&quot;);<br>
+&nbsp;&nbsp;  frame.setSize(800, 600);<br>
+&nbsp;&nbsp;  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</p>
+<p>&nbsp;&nbsp;  frame.setContentPane(scrollPane);</p>
+<p>&nbsp;&nbsp;  frame.pack();<br>
+&nbsp;&nbsp;  frame.setVisible(true);<br>
+}<br>
+}</p></div></body></html>

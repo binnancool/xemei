@@ -1,0 +1,101 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Java的URL类</title></head><body><h1>Java的URL类</h1><div><div align="left" style="line-height: 120%;"><strong><span style="font-size: 15pt; color: rgb(231, 111, 0); line-height: 120%;">创建</span></strong><strong><span style="font-size: 15pt; color: rgb(231, 111, 0); line-height: 120%;">  URL</span></strong><strong><span style="font-size: 15pt; color: rgb(231, 111, 0); line-height: 120%;">对象：</span></strong></div>
+<div align="left" style="line-height: 120%;"><font face="宋体" size="5"><strong><span style="font-size: 12pt; line-height: 120%;">1</span><span style="font-size: 12pt; line-height: 120%;">、创建一个URL对象： </span></strong></font></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">URL gamelan = new  URL(&quot;http://www.gamelan.com/&quot;);</span></div>
+<div align="left" style="line-height: 120%;"><span style="font-size: 12pt; line-height: 120%;">以上是绝对URL对象，也可以创建相对的URL 对象。 </span></div>
+<div align="left" style="line-height: 120%;"><strong><span style="font-size: 13.5pt; color: rgb(231, 111, 0); line-height: 120%;">创 建相对的</span></strong><strong><span style="font-size: 13.5pt; color: rgb(231, 111, 0); line-height: 120%;">URL</span></strong><strong><span style="font-size: 13.5pt; color: rgb(231, 111, 0); line-height: 120%;">对 象：</span></strong></div>
+<div align="left" style="line-height: 120%;"><span style="font-size: 12pt; line-height: 120%;">相对URL一般用在html文件之中。</span></div>
+<div align="left" style="line-height: 120%;"><span style="font-size: 12pt; line-height: 120%;">在java 程序中，你可以创建如下的相对URL，但是他是基于绝对URL的。</span></div>
+<div align="left" style="line-height: 120%;"><span style="font-size: 12pt; line-height: 120%;">比如：</span></div>
+<div align="left" style="line-height: 120%;"><span style="font-size: 12pt; line-height: 120%;">主URL是：http://www.gamelan.com/pages/</span></div>
+<div align="left" style="line-height: 120%;"><span style="font-size: 12pt; line-height: 120%;">其下还有URL ：</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">&#160;&#160;&#160;&#160;&#160;&#160;&#160;  http://www.gamelan.com/pages/Gamelan.game.html</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">&#160;&#160;&#160;&#160;&#160;&#160;&#160;  http://www.gamelan.com/pages/Gamelan.net.html</span></div>
+<div align="left" style="line-height: 120%;"><span style="font-size: 12pt; line-height: 120%;">你就可以创建如下的URL对象：</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">&#160;&#160;&#160;&#160;&#160;&#160;&#160; URL gamelan = new  URL(&quot;http://www.gamelan.com/pages/&quot;);</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">&#160;&#160;&#160;&#160;&#160;&#160;&#160; URL gamelanGames =  new URL(gamelan, &quot;Gamelan.game.html&quot;);</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">&#160;&#160;&#160;&#160;&#160;&#160;&#160; URL gamelanNetwork =  new URL(gamelan, &quot;Gamelan.net.html&quot;);</span></div>
+<div align="left" style="line-height: 120%;"><span style="font-size: 12pt; line-height: 120%;">因为，URL类有如下的构造函数：</span></div>
+<div align="left" style="text-indent: 48pt; line-height: 120%;"><span style="font-size: 12pt; color: black; line-height: 120%;">public </span>URL(String  &#160;str);</div>
+<div align="left" style="text-indent: 48pt; line-height: 120%; text-align: left;"><span style="font-size: 12pt; color: black; line-height: 120%;">public URL(</span><span style="font-size: 12pt; color: blue; line-height: 120%;">URL</span><span style="font-size: 12pt; color: black; line-height: 120%;"> context,&#160;&#160; &#160;</span><span style="font-size: 12pt; color: blue; line-height: 120%;">String</span><span style="font-size: 12pt; color: black; line-height: 120%;"> str)</span></div>
+<div align="left" style="line-height: 120%;">另外：使用这种相对URL还可以创建到网页内部某个标记的 URL对象：</div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">URL gamelanNetworkBottom =  new URL(gamelanNetwork, &quot;#BOTTOM&quot;);</span></div>
+<div align="left" style="line-height: 120%; text-align: left;">&#160;</div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">其他的几种URL构造函数：</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">new URL(&quot;http&quot;,  &quot;www.gamelan.com&quot;, &quot;/pages/Gamelan.net.html&quot;);</span></div>
+<div align="left" style="line-height: 120%; text-align: left;">&#160;</div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">new  URL(&quot;http://www.gamelan.com/pages/Gamelan.net.html&quot;);</span></div>
+<div align="left" style="line-height: 120%; text-align: left;">&#160;</div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">URL gamelan = new  URL(&quot;http&quot;, &quot;www.gamelan.com&quot;, 80,</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  &quot;pages/Gamelan.network.html&quot;);</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">（指 向：http://www.gamelan.com:80/pages/Gamelan.network.html）</span></div>
+<div align="left" style="line-height: 120%;"><strong>&#160;</strong></div>
+<div align="left" style="line-height: 120%;"><font size="5"><strong><strong><span style="font-size: 13.5pt; color: rgb(231, 111, 0); line-height: 120%;">URL  </span></strong><strong><span style="font-size: 13.5pt; color: rgb(231, 111, 0); line-height: 120%;">中的含有特殊字符的情况：</span></strong></strong></font></div>
+<div align="left" style="line-height: 120%;"><strong><span style="font-size: 12pt; line-height: 120%;">有些URL含有特殊字符，比如空格： </span></strong></div>
+<div align="left" style="line-height: 120%; text-align: left;"><strong><span style="font-size: 12pt; line-height: 120%;">http://foo.com/hello world/</span></strong></div>
+<div align="left" style="line-height: 120%; text-align: left;"><strong><span style="font-size: 12pt; line-height: 120%;">这时的URL就必须进行编码：将空格用%20替代：</span></strong></div>
+<div align="left" style="line-height: 120%; text-align: left;"><strong><span style="font-size: 12pt; line-height: 120%;">URL url = new  URL(&quot;http://foo.com/hello%20world&quot;);</span></strong></div>
+<div align="left" style="line-height: 120%;"><strong><span style="font-size: 12pt; line-height: 120%;">以上URL中只有一个特殊字符，因此手动编码相对简单。</span></strong></div>
+<div align="left" style="line-height: 120%;"><strong><span style="font-size: 12pt; line-height: 120%;">当URL中的特殊字符很多时，或者特殊字符数目不确定时，就不能使用手动编码了，这时需要使用<a href="http://java.sun.com/javase/6/docs/api/java/net/URI.html" target="_blank">java.net.URI</a>  类去自动完成编码： </span></strong></div>
+<div align="left" style="line-height: 120%; text-align: left;"><strong><span style="font-size: 12pt; line-height: 120%;">URI uri = new URI(&quot;http&quot;,  &quot;foo.com&quot;, &quot;/hello world/&quot;, &quot;&quot;);</span></strong></div>
+<div align="left" style="line-height: 120%;"><strong><span style="font-size: 12pt; line-height: 120%;">然后，将URI转换成URL： </span></strong></div>
+<div align="left" style="line-height: 120%; text-align: left;"><strong><span style="font-size: 12pt; line-height: 120%;">URL url = uri.toURL();</span></strong></div>
+<div align="left" style="line-height: 120%;"><strong><span style="font-size: 13.5pt; color: rgb(231, 111, 0); line-height: 120%;">异 常：</span></strong><strong><span style="font-size: 13.5pt; color: rgb(231, 111, 0); line-height: 120%;">MalformedURLException</span></strong></div>
+<div align="left" style="line-height: 120%;"><span style="font-size: 12pt; line-height: 120%;">URL</span><span style="font-size: 12pt; line-height: 120%;">构造函数可能会抛出异常，使用如下方法捕获异常: </span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">try {</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">&#160;&#160;&#160; URL myURL = new URL(. .  .)</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">} catch  (MalformedURLException e) {</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">&#160;&#160;&#160; . . .</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">&#160;&#160;&#160; // <em>exception handler  code here</em></span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">&#160;&#160;&#160; . . .</span></div>
+<div align="left" style="line-height: 120%; text-align: left;"><span style="font-size: 12pt; line-height: 120%;">}<br>
+<font face="宋体" size="5"><strong>2、解析URL地址</strong></font><br>
+</span>例：
+<p>import java.net.*;</p>
+<p>import java.io.*;</p>
+<p>public class ParseURL {</p>
+<p>public static void main(String[] args)</p>
+<p>throws Exception {</p>
+<p>URL aURL = new URL(&quot;http://java.sun.com:80/docs/books/tutorial&quot; +  &quot;/index.html?name=networking#DOWNLOADING&quot;);</p>
+<p>System.out.println(&quot;protocol = &quot; + aURL.getProtocol());</p>
+<p>System.out.println(&quot;authority = &quot; + aURL.getAuthority());  System.out.println(&quot;host = &quot; + aURL.getHost());</p>
+<p>System.out.println(&quot;port = &quot; + aURL.getPort());</p>
+<p>System.out.println(&quot;path = &quot; + aURL.getPath());</p>
+<p>System.out.println(&quot;query = &quot; + aURL.getQuery());</p>
+<p>System.out.println(&quot;filename = &quot; + aURL.getFile());</p>
+<p>System.out.println(&quot;ref = &quot; + aURL.getRef());</p>
+<p>}</p>
+<p>}</p>
+<font face="宋体" size="5"><strong>3、下载网页</strong></font><br>
+<br>
+
+
+<p>import java.net.*;</p>
+<p>import java.io.*;</p>
+<p>public class Test {</p>
+<p><br>
+public static void main(String[] args) throws Exception {</p>
+<p><br>
+URL url = new URL(http://www.sina.com/);</p>
+<p><br>
+BufferedReader in = new BufferedReader(</p>
+<p><br>
+new InputStreamReader(</p>
+<p><br>
+url.openStream()));</p>
+<p>&#160;String inputLine;</p>
+<p><br>
+FileOutputStream fos=new  FileOutputStream(&quot;d:\\mydownloadhtml.html&quot;);</p>
+<p><br>
+while ((inputLine = in.readLine()) != null)</p>
+<p><br>
+{<br>
+<br>
+fos.write(inputLine.getBytes());//写入文件</p>
+<p><br>
+//&#160;&#160;&#160; System.out.println(inputLine);//显示到控制台</p>
+<p><br>
+}</p>
+<p>&#160;in.close();</p>
+<br>
+}<br>
+}</div></div></body></html>

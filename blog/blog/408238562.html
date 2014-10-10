@@ -1,0 +1,7 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ntpdate命令失败及解决方法</title></head><body><h1>ntpdate命令失败及解决方法</h1><div><p><strong><span style="COLOR: #ff0000; FONT-SIZE: 20px">1、错误：</span></strong></p>
+<p><a href="mailto:root@r8915301"><span style="FONT-SIZE: 18px">[root@r8915301</span></a><span style="FONT-SIZE: 18px">etc]# ntpdate us.pool.ntp.org</span><br><span style="FONT-SIZE: 18px">Error : Temporary failure in name resolution</span><br><span style="FONT-SIZE: 18px">&nbsp;3 Jun 02:39:35 ntpdate[27430]: can't find host us.pool.ntp.org</span></p>
+<p><span style="FONT-SIZE: 18px">&nbsp;3 Jun 02:39:35 ntpdate[27430]: no servers can be used, exiting</span></p>
+<p><strong><span style="COLOR: #ff0000; FONT-SIZE: 20px">2、解决方法：设置DNS服务器</span></strong></p>
+<p><span style="FONT-SIZE: 18px">vi /etc/resolv.conf</span></p>
+<p><span style="FONT-SIZE: 18px">添加： nameserver 202.106.196.115</span></p>
+<p>&nbsp;</p></div></body></html>

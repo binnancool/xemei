@@ -1,0 +1,41 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>MySQL数据库备份和还原的常用命令—LINUX篇</title></head><body><h1>MySQL数据库备份和还原的常用命令—LINUX篇</h1><div><p><span></p>
+<p><strong><span style="COLOR: #00cc22; FONT-SIZE: 16px">备份MySQL数据库的命令</span></strong></p>
+<div>
+<div><span style="BACKGROUND-COLOR: #ffff99; COLOR: #ff0000; FONT-SIZE: 16px">mysqldump -hhostname -uusername -ppassword databasename &gt; backupfile.sql</span></div></div>
+<p>&nbsp;<br><strong><span style="COLOR: #00cc22; FONT-SIZE: 16px">备份MySQL数据库为带删除表的格式，能够让该备份覆盖已有数据库而不需要手动删除原有数据库</span></strong></p>
+<div>
+<div><span style="BACKGROUND-COLOR: #ffffcc; FONT-SIZE: 16px">mysqldump -–add-drop-table -uusername -ppassword databasename &gt; backupfile.sql</span></div></div>
+<p><strong><span style="FONT-SIZE: 16px"></span></strong>&nbsp;</p>
+<p><strong><span style="COLOR: #00cc22; FONT-SIZE: 16px">直接将MySQL数据库压缩备份</span></strong></p>
+<div>
+<div><span style="BACKGROUND-COLOR: #ffffcc; COLOR: #000000; FONT-SIZE: 16px">mysqldump -hhostname -uusername -ppassword databasename | gzip &gt; backupfile.sql.gz</span></div></div>
+<p><strong><span style="FONT-SIZE: 16px"></span></strong>&nbsp;</p>
+<p><strong><span style="COLOR: #00cc22; FONT-SIZE: 16px">备份MySQL数据库某个(些)表</span></strong></p>
+<div>
+<div><span style="BACKGROUND-COLOR: #ffffcc; FONT-SIZE: 16px">mysqldump -hhostname -uusername -ppassword databasename specific_table1 specific_table2 &gt; backupfile.sql</span></div></div>
+<p><strong><span style="FONT-SIZE: 16px"></span></strong>&nbsp;</p>
+<p><strong><span style="COLOR: #00cc22; FONT-SIZE: 16px">同时备份多个MySQL数据库</span></strong></p>
+<div>
+<div><span style="BACKGROUND-COLOR: #ffffcc; FONT-SIZE: 16px">mysqldump -hhostname -uusername -ppassword –databases databasename1 databasename2 databasename3 &gt; multibackupfile.sql</span></div></div>
+<p><strong><span style="FONT-SIZE: 16px"></span></strong>&nbsp;</p>
+<p><strong><span style="COLOR: #00cc22; FONT-SIZE: 16px">仅仅备份数据库结构</span></strong></p>
+<div>
+<div><span style="BACKGROUND-COLOR: #ffffcc; FONT-SIZE: 16px">mysqldump –no-data –databases databasename1 databasename2 databasename3 &gt; structurebackupfile.sql</span></div></div>
+<p><strong><span style="FONT-SIZE: 16px"></span></strong>&nbsp;</p>
+<p><strong><span style="COLOR: #00cc22; FONT-SIZE: 16px">备份服务器上所有数据库</span></strong></p>
+<div>
+<div><span style="BACKGROUND-COLOR: #ffffcc; COLOR: #000000; FONT-SIZE: 16px">mysqldump –all-databases &gt; allbackupfile.sql</span></div></div>
+<p><strong><span style="FONT-SIZE: 16px"></span></strong>&nbsp;</p>
+<p><strong><span style="COLOR: #ff0000; FONT-SIZE: 16px">还原MySQL数据库的命令</span></strong></p>
+<div>
+<div><span style="BACKGROUND-COLOR: #d9ffe0; FONT-SIZE: 16px">mysql -hhostname -uusername -ppassword databasename &lt; backupfile.sql</span></div></div>
+<p><strong><span style="FONT-SIZE: 16px"></span></strong>&nbsp;</p>
+<p><strong><span style="COLOR: #ff0000; FONT-SIZE: 16px">还原压缩的MySQL数据库</span></strong></p>
+<div>
+<div><span style="BACKGROUND-COLOR: #d9ffe0; FONT-SIZE: 16px">gunzip &lt; backupfile.sql.gz | mysql -uusername -ppassword databasename</span></div></div>
+<p><strong><span style="FONT-SIZE: 16px"></span></strong>&nbsp;</p>
+<p><strong><span style="COLOR: #ff0000; FONT-SIZE: 16px">将数据库转移到新服务器</span></strong></p>
+<div>
+<div><span style="BACKGROUND-COLOR: #eeffcc; FONT-SIZE: 16px">mysqldump -uusername -ppassword databasename | mysql –host=*.*.*.* -C databasename</span></div>
+<div><br></div></div>
+<p></span>&nbsp;</p></div></body></html>

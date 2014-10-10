@@ -1,0 +1,125 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java利用commons net jar包实现文件ftp上传和下载功能</title></head><body><h1>java利用commons net jar包实现文件ftp上传和下载功能</h1><div><p>1、<a target="_blank" href="http://commons.apache.org/net/"><font color="#000000">commons net下载</font></a></p>
+<p>2、java使用comments-net包的API实现文件ftp上传和下载的例子</p>
+<div><font color="#0000ff">import java.io.File;<br>
+import java.io.FileOutputStream;<br>
+import java.io.IOException;<br>
+import java.io.InputStream;<br>
+import java.io.OutputStream; import org.apache.commons.net.ftp.FTPClient;<br>
+import org.apache.commons.net.ftp.FTPFile;<br>
+import org.apache.commons.net.ftp.FTPReply;   public class SeforgeFtpUtils implements ISeforgeFtpUtils {<br>
+ /**<br>
+  * Description: 向FTP服务器上传文件<br>
+  * @param url FTP服务器hostname<br>
+  * @param port FTP服务器端口<br>
+  * @param username FTP登录账号<br>
+  * @param password FTP登录密码<br>
+  * @param path FTP服务器保存目录<br>
+  * @param filename 上传到FTP服务器上的文件名<br>
+  * @param input&nbsp;&nbsp;&nbsp;  输入流<br>
+  * @return 成功返回true，否则返回false<br>
+  */<br>
+ public boolean uploadFile(String url, int port, String username,<br>
+&nbsp;&nbsp;&nbsp; String password, String path, String filename, InputStream input) {<br>
+&nbsp;&nbsp; // 初始表示上传失败<br>
+&nbsp;&nbsp; boolean success = false;<br>
+&nbsp;&nbsp; // 创建FTPClient对象<br>
+&nbsp;&nbsp; FTPClient ftp = new FTPClient();<br>
+&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp; int reply;<br>
+&nbsp;&nbsp;&nbsp; // 连接FTP服务器<br>
+&nbsp;&nbsp;&nbsp; // 如果采用默认端口，可以使用ftp.connect(url)的方式直接连接FTP服务器<br>
+&nbsp;&nbsp;&nbsp; ftp.connect(url, port);<br>
+&nbsp;&nbsp;&nbsp; // 登录ftp<br>
+&nbsp;&nbsp;&nbsp; ftp.login(username, password);<br>
+&nbsp;&nbsp;&nbsp; // 看返回的值是不是230，如果是，表示登陆成功<br>
+&nbsp;&nbsp;&nbsp; reply = ftp.getReplyCode();<br>
+&nbsp;&nbsp;&nbsp; // 以2开头的返回值就会为真<br>
+&nbsp;&nbsp;&nbsp; if (!FTPReply.isPositiveCompletion(reply)) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp; ftp.disconnect();<br>
+&nbsp;&nbsp;&nbsp;&nbsp; return success;<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; // 转到指定上传目录<br>
+&nbsp;&nbsp;&nbsp; ftp.changeWorkingDirectory(path);<br>
+&nbsp;&nbsp;&nbsp; // 将上传文件存储到指定目录<br>
+&nbsp;&nbsp;&nbsp; ftp.storeFile(filename, input);<br>
+&nbsp;&nbsp;&nbsp; // 关闭输入流<br>
+&nbsp;&nbsp;&nbsp; input.close();<br>
+&nbsp;&nbsp;&nbsp; // 退出ftp<br>
+&nbsp;&nbsp;&nbsp; ftp.logout();<br>
+&nbsp;&nbsp;&nbsp; // 表示上传成功<br>
+&nbsp;&nbsp;&nbsp; success = true;<br>
+&nbsp;&nbsp; } catch (IOException e) {<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp; } finally {<br>
+&nbsp;&nbsp;&nbsp; if (ftp.isConnected()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ftp.disconnect();<br>
+&nbsp;&nbsp;&nbsp;&nbsp; } catch (IOException ioe) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; return success;<br>
+ }  </font></div>
+<div> </div>
+<div><font color="#0000ff">&nbsp;&nbsp; /**<br>
+  * Description: 从FTP服务器下载文件<br>
+  * @param url  FTP服务器hostname<br>
+  * @param port&nbsp;&nbsp;  FTP服务器端口<br>
+  * @param username  FTP登录账号<br>
+  * @param password&nbsp;&nbsp;  FTP登录密码<br>
+  * @param remotePath&nbsp;&nbsp;  FTP服务器上的相对路径<br>
+  * @param fileName  要下载的文件名<br>
+  * @param localPath  下载后保存到本地的路径<br>
+  * @return<br>
+  */<br>
+ public boolean downFile(String url, int port, String username,<br>
+&nbsp;&nbsp;&nbsp; String password, String remotePath, String fileName,<br>
+&nbsp;&nbsp;&nbsp; String localPath) {<br>
+&nbsp;&nbsp; // 初始表示下载失败<br>
+&nbsp;&nbsp; boolean success = false;<br>
+&nbsp;&nbsp; // 创建FTPClient对象<br>
+&nbsp;&nbsp; FTPClient ftp = new FTPClient();<br>
+&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp; int reply;<br>
+&nbsp;&nbsp;&nbsp; // 连接FTP服务器<br>
+&nbsp;&nbsp;&nbsp; // 如果采用默认端口，可以使用ftp.connect(url)的方式直接连接FTP服务器<br>
+&nbsp;&nbsp;&nbsp; ftp.connect(url, port);<br>
+&nbsp;&nbsp;&nbsp; // 登录ftp<br>
+&nbsp;&nbsp;&nbsp; ftp.login(username, password);<br>
+&nbsp;&nbsp;&nbsp; reply = ftp.getReplyCode();<br>
+&nbsp;&nbsp;&nbsp; if (!FTPReply.isPositiveCompletion(reply)) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp; ftp.disconnect();<br>
+&nbsp;&nbsp;&nbsp;&nbsp; return success;<br>
+&nbsp;&nbsp;&nbsp; }   &nbsp;&nbsp;&nbsp; // 转到指定下载目录<br>
+&nbsp;&nbsp;&nbsp; ftp.changeWorkingDirectory(remotePath);<br>
+&nbsp;&nbsp;&nbsp; // 列出该目录下所有文件<br>
+&nbsp;&nbsp;&nbsp; FTPFile[] fs = ftp.listFiles();<br>
+&nbsp;&nbsp;&nbsp; // 遍历所有文件，找到指定的文件<br>
+&nbsp;&nbsp;&nbsp; for (FTPFile ff : fs) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp; if (ff.getName().equals(fileName)) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 根据绝对路径初始化文件<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; File localFile = new File(localPath + &quot;/&quot; + ff.getName());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 输出流<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OutputStream is = new FileOutputStream(localFile);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 下载文件<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ftp.retrieveFile(ff.getName(), is);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; is.close();<br>
+&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; // 退出ftp<br>
+&nbsp;&nbsp;&nbsp; ftp.logout();<br>
+&nbsp;&nbsp;&nbsp; // 下载成功<br>
+&nbsp;&nbsp;&nbsp; success = true;<br>
+&nbsp;&nbsp; } catch (IOException e) {<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp; } finally {<br>
+&nbsp;&nbsp;&nbsp; if (ftp.isConnected()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ftp.disconnect();<br>
+&nbsp;&nbsp;&nbsp;&nbsp; } catch (IOException ioe) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; return success;<br>
+ }<br>
+</font></div></div></body></html>

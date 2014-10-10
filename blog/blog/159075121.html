@@ -1,0 +1,106 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>多线程时，如果确保每秒发送100条消息？</title></head><body><h1>多线程时，如果确保每秒发送100条消息？</h1><div><p><font size="3" face="宋体">1、情况一：发送100条信息的时间非常小，可以忽略不计。</font></p>
+<p><font size="3" face="宋体">//发送信息(情况一：发送100条信息的时间非常小，可以忽略不计)<br>
+public class SendSmsMsgThread1 extends Thread {<br>
+public static int SEND_MSG_NUMBER = 100;//要发送信息的数目<br>
+public static int SendSmsMsgNum = 0;//发送信息的数目<br>
+public static long TotalSendMsgNum = 0;//总共发送信息的数目<br>
+private int nRet = 0;// 返回值类型标识</font></p>
+<p><font size="3" face="宋体">public void run() {<br>
+&nbsp;&nbsp;  while (true) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  while (SendSmsMsgNum &lt; SEND_MSG_NUMBER) {</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  synchronized (SendSmsMsgThread1.class) {// 多个实例对于类是同步的<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  nRet = Gateway.SendSmsMsgEx(&quot;8613301338833&quot;, &quot;10655188&quot;,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &quot;test from 测试！&quot;);// 发送信息<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;SendSmsMsgEx return: &quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  + (nRet == Gateway.ERR_Success ? &quot;Success.&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  : Integer.toString(nRet)));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  SendSmsMsgNum++;// 发送信息数目+1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  TotalSendMsgNum++;//总的发送信息数目+1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;  //休眠1秒 <br>
+&nbsp;&nbsp;&nbsp;  try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  if(SendSmsMsgNum==SEND_MSG_NUMBER){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  sleep(1000);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  if(SendSmsMsgNum==SEND_MSG_NUMBER)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  SendSmsMsgNum = 0;//发送消息数赋值为0，重新记录每秒发送的消息数<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  }&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;  } catch (InterruptedException e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;&nbsp;  } <br>
+&nbsp;&nbsp;  }</font></p>
+<p><font size="3" face="宋体">}<br>
+}</font></p>
+<p> </p>
+<p><font size="3" face="宋体">2、情况二：发送100条信息的时间小于1秒，但是需要一定时间。</font></p>
+<p><font size="3" face="宋体">//发送信息（情况二：发送100条信息的时间小于1秒，但是需要一定时间。）<br>
+public class SendSmsMsgThread2 extends Thread {<br>
+public static int SEND_MSG_NUMBER = 100;<br>
+public static int SendSmsMsgNum = 0;<br>
+public static long TotalSendMsgNum=0;<br>
+private int nRet = 0;// 返回值类型标识</font></p>
+<p><font size="3" face="宋体">public void run() {<br>
+&nbsp;&nbsp;  while(true){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while(SendSmsMsgNum&lt;SEND_MSG_NUMBER){ </font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; synchronized (SendSmsMsgThread2.class){// 多个实例对于类是同步的<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  nRet = Gateway.SendSmsMsgEx(&quot;8613301338833&quot;, &quot;10655188&quot;,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;  &quot;test from 测试！&quot;);// 发送信息<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;  System.out.println(&quot;SendSmsMsgEx return: &quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;  + (nRet == Gateway.ERR_Success ? &quot;Success.&quot; : Integer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  .toString(nRet)));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;  SendSmsMsgNum++;// 发送信息数目+1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;  TotalSendMsgNum++;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //等待下一秒</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;  synchronized(this){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wait();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } catch (InterruptedException e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+&nbsp;&nbsp;<br>
+}<br>
+}</font></p>
+<p><font size="3" face="宋体">3、情况一和情况二的调用方法：</font></p>
+<p><font size="3" face="宋体">public class ExecuteMethod {<br>
+public static Vector&lt;Thread&gt; vh=new Vector&lt;Thread&gt;();//保存线程<br>
+<br>
+//发送信息(情况一：发送100条信息的时间非常小，可以忽略不计)<br>
+public static void SendSmsMsg1(int msgNum,int threadNum){&nbsp;&nbsp;<br>
+&nbsp;&nbsp;  SendSmsMsgThread1.SEND_MSG_NUMBER=msgNum;<br>
+&nbsp;&nbsp;  for(int i=0;i&lt;threadNum;i++){<br>
+&nbsp;&nbsp;&nbsp;  Thread t=new SendSmsMsgThread1();<br>
+&nbsp;&nbsp;&nbsp;  vh.add(i,t);<br>
+&nbsp;&nbsp;&nbsp;  t.start();<br>
+&nbsp;&nbsp;  }<br>
+}<br>
+<br>
+//发送信息(情况二：发送100条信息的时间小于1秒，但是需要一定时间)<br>
+public static void SendSmsMsg2(int msgNum,final int threadNum){<br>
+&nbsp;&nbsp;  SendSmsMsgThread2.SEND_MSG_NUMBER=msgNum;<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;  for(int i=0;i&lt;threadNum;i++){<br>
+&nbsp;&nbsp;&nbsp;  Thread t=new SendSmsMsgThread2();<br>
+&nbsp;&nbsp;&nbsp;  vh.add(i,t);<br>
+&nbsp;&nbsp;&nbsp;  t.start();<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  //定时器，每隔一秒<br>
+&nbsp;&nbsp;  Timer timer=new Timer();<br>
+&nbsp;&nbsp;  timer.schedule(new TimerTask(){<br>
+&nbsp;&nbsp;&nbsp;  public void run() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  SendSmsMsgThread2.SendSmsMsgNum=0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  for(int i=0;i&lt;threadNum;i++){</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;  synchronized(vh.get(i)){</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  vh.get(i).notify();</font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  }&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;  }}, 1000,1000);//延迟1秒后，第一次执行，以后每次间隔1秒执行<br>
+}<br>
+}</font></p>
+<p> </p>
+<p> </p></div></body></html>

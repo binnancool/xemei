@@ -1,0 +1,9 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>while(true)循环对于CPU的占用率</title></head><body><h1>while(true)循环对于CPU的占用率</h1><div><p>1、while（true）{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  system.out.println(&quot;CPU&quot;);</p>
+<p>}</p>
+<p>上面语句CPU的占用率为100%</p>
+<p>2、while（true）{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  system.out.println(&quot;CPU&quot;);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Sleep（1）；//休眠1毫秒</p>
+<p>}</p>
+<p>上面语句CPU的占用率在0-80%之间的各个阶段跳动。</p></div></body></html>

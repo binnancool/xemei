@@ -1,0 +1,144 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>107条Javascript的常用语句</title></head><body><h1>107条Javascript的常用语句</h1><div><h1> </h1>
+<div >
+<div class="content_right">
+
+
+
+
+
+
+</div>
+1. document.write( &quot; &quot;); 输出语句 <br>
+2.JS中的注释为// <br>
+3.传统的HTML文档顺序是:document- &gt;html- &gt;(head,body) <br>
+4.一个浏览器窗口中的DOM顺序是:window- &gt;(navigator,screen,history,location,document) <br>
+5.得到表单中元素的名称和值:document.getElementById( &quot;表单中元素的ID號 &quot;).name(或value) <br>
+6.一个小写转大写的JS: document.getElementById( &quot;output &quot;).value = document.getElementById( &quot;input &quot;).value.toUpperCase(); <br>
+7.JS中的值类型:String,Number,Boolean,Null,Object,Function <br>
+8.JS中的字符型转换成数值型:parseInt(),parseFloat() <br>
+9.JS中的数字转换成字符型:( &quot; &quot; 变量) <br>
+10.JS中的取字符串长度是:(length) <br>
+11.JS中的字符与字符相连接使用號. <br>
+12.JS中的比较操作符有:==等于,!=不等于, &gt;, &gt;=, &lt;. &lt;= <br>
+13.JS中声明变量使用:var来进行声明 <br>
+14.JS中的判定语句结构:if(condition){}else{} <br>
+15.JS中的循环结构:for([initial expression];[condition];[upadte expression]) {inside loop} <br>
+16.循环中止的命令是:break <br>
+17.JS中的函数定义:function functionName([parameter],...){statement[s]} <br>
+18.当文件中出现多个form表单时.可以用document.forms[0],document.forms[1]来代替. <br>
+19.窗口:打开窗口window.open(), 关闭一个窗口:window.close(), 窗口本身:self <br>
+20.状態栏的设置:window.status= &quot;字符 &quot;; <br>
+21.弹出提示信息:window.alert( &quot;字符 &quot;); <br>
+22.弹出確认框:window.confirm(); <br>
+23.弹出输入提示框:window.prompt(); <br>
+24.指定当前显示链接的位置:window.location.href= &quot;URL &quot; <br>
+25.取出窗体中的所有表单的数量:document.forms.length <br>
+26.关闭文档的输出流:document.close(); <br>
+27.字符串追加连接符: = <br>
+28.创建一个文档元素:document.createElement(),document.createTextNode() <br>
+29.得到元素的方法:document.getElementById() <br>
+30.设置表单中所有文本型的成员的值为空: <br>
+var form = window.document.forms[0] <br>
+for (var i = 0; i &lt;form.elements.length;i ){ <br>
+if (form.elements.type == &quot;text &quot;){ <br>
+form.elements.value = &quot; &quot;; <br>
+} <br>
+} <br>
+31.复选按钮在JS中判定是否选中:document.forms[0].checkThis.checked (checked属性代表为是否选中返回TRUE或FALSE) <br>
+32.单选按钮组(单选按钮的名称必须相同):取单选按钮组的长度document.forms[0].groupName.length <br>
+33.单选按钮组判定是否被选中也是用checked. <br>
+34.下拉列表框的值:document.forms[0].selectName.options[n].value (n有时用下拉列表框名称加上.selectedIndex来確定被选中的值) <br>
+35.字符串的定义:var myString = new String( &quot;This is lightsword &quot;); <br>
+36.字符串转成大写:string.toUpperCase(); 字符串转成小写:string.toLowerCase(); <br>
+37.返回字符串2在字符串1中出现的位置:String1.indexOf( &quot;String2 &quot;)!=-1则说明没找到. <br>
+38.取字符串中指定位置的一个字符:StringA.charAt(9); <br>
+39.取出字符串中指定起点和终点的子字符串:stringA.substring(2,6); <br>
+40.数学函数:Math.PI(返回圆周率),Math.SQRT2(返回开方),Math.max(value1,value2)返回两个数中的最在值,Math.pow(value1,10)返回 <br>
+<br>
+value1的十次方,Math.round(value1)四舍五入函数,Math.floor(Math.random()*(n 1))返回隨机数 <br>
+41.定义日期型变量:var today = new Date(); <br>
+42.日期函数列表:dateObj.getTime()得到时间,dateObj.getYear()得到年份,dateObj.getFullYear()得到四位的年份,dateObj.getMonth()得 <br>
+<br>
+到月份,dateObj.getDate()得到日,dateObj.getDay()得到日期几,dateObj.getHours()得到小时,dateObj.getMinutes()得到 <br>
+<br>
+分,dateObj.getSeconds()得到秒,dateObj.setTime(value)设置时间,dateObj.setYear(val)设置年,dateObj.setMonth(val)设置 <br>
+<br>
+月,dateObj.setDate(val)设置日,dateObj.setDay(val)设置星期几,dateObj.setHours设置小时,dateObj.setMinutes(val)设置 <br>
+<br>
+分,dateObj.setSeconds(val)设置秒 [注重:此日期时间从0开始计] <br>
+43.FRAME的表示方式: [window.]frames[n].ObjFuncVarName,frames[ &quot;frameName &quot;].ObjFuncVarName,frameName.ObjFuncVarName <br>
+44.parent代表父亲对象,top代表最顶端对象 <br>
+45.打开子窗口的父窗口为:opener <br>
+46.表示当前所属的位置:this <br>
+47.当在超链接中调用JS函数时用:(javascript :)来开头后面加函数名 <br>
+48.在老的浏览器中不执行此JS: &lt;!-- //-- &gt; <br>
+49.引用一个文件式的JS: &lt;script type= &quot;text/javascript &quot; src= &quot;aaa.js &quot; &gt; &lt;/script &gt; <br>
+50.指定在不支持脚本的浏览器显示的HTML: &lt;noscript &gt; &lt;/noscript &gt; <br>
+51.当超链和onCLICK事件都有时,则老版本的浏览器转向a.html,否则转向b.html.例: &lt;a href= &quot;a.html &quot; &gt;dfsadf &lt;/a &gt; <br>
+52.JS的內建对象 <br>
+<br>
+有:Array,Boolean,Date,Error,EvalError,Function,Math,Number,Object,RangeError,ReferenceError,RegExp,String,SyntaxError,TypeErr <br>
+<br>
+or,URIError <br>
+53.JS中的换行:\n <br>
+54.窗口全屏大小: &lt;script &gt;function fullScreen(){ this.moveTo <br>
+<br>
+(0,0);this.outerWidth=screen.availWidth;this.outerHeight=screen.availHeight;}window.maximize=fullScreen; &lt;/script &gt; <br>
+55.JS中的all代表其下层的全部元素 <br>
+56.JS中的焦点顺序:document.getElementByid( &quot;表单元素 &quot;).tabIndex = 1 <br>
+57.innerHTML的值是表单元素的值:如 &lt;p id= &quot;para &quot; &gt; &quot;how are &lt;em &gt;you &lt;/em &gt; &quot; &lt;/p &gt;,则innerHTML的值就是:how are &lt;em &gt;you &lt;/em &gt;<br>
+<br>
+2.  &nbsp;&nbsp;    58.innerTEXT的值和上面的一样,只不过不会把 &lt;em &gt;这种標记显示出来. <br>
+59.contentEditable可设置元素是否可被修改,isContentEditable返回是否可修改的状態. <br>
+60.isDisabled判定是否为禁止状態.disabled设置禁止状態 <br>
+61.length取得长度,返回整型数值 <br>
+62.addBehavior()是一种JS调用的外部函数文件其扩展名为.htc <br>
+63.window.focus()使当前的窗口在所有窗口之前. <br>
+64.blur()指失去焦点.与FOCUS()相反. <br>
+65.select()指元素为选中状態. <br>
+66.防止用户对文本框中输入文本: <br>
+67.取出该元素在页面中出现的数量:document.all.tags( &quot;div(或其它HTML標记符) &quot;).length <br>
+68.JS中分为两种窗体输出:模態和非模態.window.showModaldialog(),window.showModeless() <br>
+69.状態栏文字的设置:window.status= &amp;apos;文字 &amp;apos;,默认的状態栏文字设置:window.defaultStatus = &amp;apos;文字. &amp;apos;; <br>
+70.添加到收藏夹:external.AddFavorite( &quot;http://www.dannyg.com &quot;;, &quot;jaskdlf &quot;); <br>
+71.JS中碰到脚本错误时不做任何操作:window.onerror = doNothing; 指定错误句柄的语法为:window.onerror = handleError; <br>
+72.JS中指定当前打开窗口的父窗口:window.opener,支持opener.opener...的多重继续. <br>
+73.JS中的self指的是当前的窗口 <br>
+74.JS中状態栏显示內容:window.status= &quot;內容 &quot; <br>
+75.JS中的top指的是框架集中最顶层的框架 <br>
+76.JS中关闭当前的窗口:window.close(); <br>
+77.JS中提出是否確认的框:if(confirm( &quot;Are you sure? &quot;)){alert( &quot;ok &quot;);}else{alert( &quot;Not Ok &quot;);} <br>
+78.JS中的窗口重定向:window.navigate( &quot;http://www.sina.com.cn &quot;;); <br>
+79.JS中的打印:window.print() <br>
+80.JS中的提示输入框:window.prompt( &quot;message &quot;, &quot;defaultReply &quot;); <br>
+81.JS中的窗口滚动条:window.scroll(x,y) <br>
+82.JS中的窗口滚动到位置:window.scrollby <br>
+83.JS中设置时间间隔:setInterval( &quot;expr &quot;,msecDelay)或setInterval(funcRef,msecDelay)或setTimeout <br>
+84.JS中的模態显示在IE4 行,在NN中不行:showModalDialog( &quot;URL &quot;[,arguments][,features]); <br>
+85.JS中的退出之前使用的句柄:function verifyClose(){event.returnValue= &quot;we really like you and hope you will stay longer. &quot;;}} <br>
+<br>
+window.=verifyClose; <br>
+86.当窗体第一次调用时使用的文件句柄:onload() <br>
+87.当窗体关闭时调用的文件句柄:onunload() <br>
+88.window.location的属性: protocol(http:),hostname(<a href="http://www.example.com/" target="_blank">www.example.com</a>),port(80),host(<a href="http://www.example.com/" target="_blank">www.example.com:80</a>),pathname <br>
+<br>
+( &quot;/a/a.html &quot;),hash( &quot;#giantGizmo &quot;,指跳转到相应的锚记),href(全部的信息) <br>
+89.window.location.reload()刷新当前页面. <br>
+90.window.history.back()返回上一页,window.history.forward()返回下一页,window.history.go(返回第几页,也可以使用访问过的URL) <br>
+91.document.write()不换行的输出,document.writeln()换行输出 <br>
+92.document.body.noWrap=true;防止链接文字折行. <br>
+93.变量名.charAt(第几位),取该变量的第几位的字符. <br>
+94. &quot;abc &quot;.charCodeAt(第几个),返回第几个字符的ASCii码值. <br>
+95.字符串连接:string.concat(string2),或用 =进行连接 <br>
+96.变量.indexOf( &quot;字符 &quot;,起始位置),返回第一个出现的位置(从0开始计算) <br>
+97.string.lastIndexOf(searchString[,startIndex])最后一次出现的位置. <br>
+98.string.match(regExpression),判定字符是否匹配. <br>
+99.string.replace(regExpression,replaceString)替换现有字符串. <br>
+100.string.split(分隔符)返回一个数组存储值. <br>
+101.string.substr(start[,length])取从第几位到指定长度的字符串. <br>
+102.string.toLowerCase()使字符串全部变为小写. <br>
+103.string.toUpperCase()使全部字符变为大写. <br>
+104.parseInt(string[,radix(代表进制)])强制转换成整型. <br>
+105.parseFloat(string[,radix])强制转换成浮点型. <br>
+106.isNaN(变量):测试是否为数值型. <br>
+107.定义常量的要害字:const,定义变量的要害字:var</div></div></body></html>

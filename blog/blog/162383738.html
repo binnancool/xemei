@@ -1,0 +1,23 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>通过sleep（1）方法实现，连续10秒钟空闲，则停止</title></head><body><h1>通过sleep（1）方法实现，连续10秒钟空闲，则停止</h1><div><p><font size="3" face="宋体">1、void Startserver() </font></p>
+<p><font size="3" face="宋体">{<br>
+ </font><font size="3" face="宋体"> SendAndGetStatus = true;<br>
+&nbsp;&nbsp; while(SendAndGetStatus){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  GetAndSend();<br>
+  }<br>
+ }</font></p>
+<p><font size="3" face="宋体">2、void GetAndSend(){<br>
+ int nRet;<br>
+</font><font size="3" face="宋体"> if ( nRet == false ) <br>
+ {<br>
+&nbsp;&nbsp;<strong>Sleep(1);<br>
+&nbsp;&nbsp; StopNum++;<br>
+</strong>&nbsp;&nbsp;<strong>//连续10秒没有接收到消息，结束循环<br>
+&nbsp;&nbsp; if(StopNum&gt;=10000)<br>
+&nbsp;&nbsp;&nbsp; SendAndGetStatus=false;<br>
+</strong>&nbsp;&nbsp; return ;<br>
+ }<br>
+ </font></p>
+<p><font size="3" face="宋体"> if(nRet==true){<br>
+&nbsp;&nbsp;&nbsp;<strong>StopNum=0;//赋值为0</strong></font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp; }<br>
+}</font></p></div></body></html>

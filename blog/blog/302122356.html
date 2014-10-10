@@ -1,0 +1,97 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>配置Tomcat访问日志</title></head><body><h1>配置Tomcat访问日志</h1><div><p><span style="WIDOWS: 2; TEXT-TRANSFORM: none; TEXT-INDENT: 0px; BORDER-COLLAPSE: separate; FONT: medium Simsun; WHITE-SPACE: normal; ORPHANS: 2; LETTER-SPACING: normal; COLOR: rgb(0,0,0); WORD-SPACING: 0px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px; -webkit-text-decorations-in-effect: none; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px" class="Apple-style-span"><span style="TEXT-ALIGN: left; LINE-HEIGHT: 21px; FONT-FAMILY: verdana, sans-serif; FONT-SIZE: 14px" class="Apple-style-span"></p>
+<p style="PADDING-BOTTOM: 0px; MARGIN: 1em 0px 0.5em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px">最近需要配置tomcat访问日志，通过造访他人的博客，再根据apache官方的一些文章，才逐渐清晰了许多<br>配置方法很简单：在server.xml里的&lt;host&gt;标签下加上<span ><br>&lt;Valve className="org.apache.catalina.valves.AccessLogValve"<br>directory="logs" prefix="localhost_access_log." suffix=".txt"<br>pattern="common" resolveHosts="false"/&gt;<br>就可以了，下面咱们逐一分析各个参数。<br></span></p>
+<p>
+<table style="WIDTH: 586px; HEIGHT: 363px" border="1">
+<tbody>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px"><span >className&nbsp;</span></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px"><span >官方文档上说了</span><span class="Apple-converted-space">&nbsp;</span>This MUST be set to<span class="Apple-converted-space">&nbsp;</span><strong>org.apache.catalina.valves.AccessLogValve</strong><span class="Apple-converted-space">&nbsp;</span>to use the default access log valve. &amp;&lt;60; 想配置访问日志？这就必须得写成这样。<br><br></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px">directory&nbsp;<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px">这个东西是日志文件放置的目录，在tomcat下面有个logs文件夹，那里面是专门放置日志文件的，当然你也可以修改，我就给改成了D:\</td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top"><span >prefix</span></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">这个是日志文件的名称前缀，我的日志名称为localhost_access_log.2007-09-22.txt，前面的前缀就是这个localhost_access_log</td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top"><span >suffix</span></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">这就是后缀名啦，可以改成别的<br></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">pattern<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">这个是最主要的参数了，具体的咱们下面讲，这个参数的内容比较丰富。<br></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top"><span >resolveHosts</span></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">如果这个值是true的话，tomcat会将这个服务器IP地址通过DNS转换为主机名，如果是false，就直接写服务器IP地址啦<br></td></tr></tbody></table></p>
+<p style="PADDING-BOTTOM: 0px; MARGIN: 1em 0px 0.5em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px">还有一些参数：</p>
+<p>
+<table style="WIDTH: 585px; HEIGHT: 268px" border="1">
+<tbody>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px"><code style="FONT-STYLE: normal"><span style="FONT-FAMILY: NSimsun">rotatable</span></code></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px">默认为true，默认的设置使得你的tomcat生成的文件命为<span >prefix（前缀）+.+时间（一般是按天算）+.+</span><span class="Apple-converted-space">&nbsp;</span><span >suffix（</span><span class="Apple-converted-space">&nbsp;</span><span >后缀），参照我的日志名就知道了：</span><span class="Apple-converted-space">&nbsp;</span>localhost_access_log.2007-09-22.txt<br>使用这个需要谨慎，因为你将其设置为false的话，tomcat会忽略时间，不会新生成文件，最后导致你的文件超级大，这样生成的文件名就是：localhost_access_log.txt</td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px"><code style="FONT-STYLE: normal"><span style="FONT-FAMILY: NSimsun">condition</span></code></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px">这个参数不太实用，可以设置任何值，比如咱们设置成condition="tkq"，那么只有当<tt><span style="FONT-FAMILY: NSimsun">ServletRequest.getAttribute</span></tt><span class="Apple-converted-space">&nbsp;</span>("tkq")为空的时候，才会被记录下来</td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top"><code style="FONT-STYLE: normal"><span style="FONT-FAMILY: NSimsun">fileDateFormat</span></code></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">最后的一个参数，很明白，这就是时间格式嘛，但是这个时间格式是针对日志文件起作用 的，还记得咱们生成的日志文件全名么：localhost_access_log.2007-09-22.txt，这里面的2007-09-22就是这么 来的，如果你想让tomcat每小时生成一个日志文件，也很简单，将这个值设置为：<code style="FONT-STYLE: normal"><span style="FONT-FAMILY: NSimsun">fileDateFormat="</span></code><span class="Apple-converted-space">&nbsp;</span><tt><span style="FONT-FAMILY: NSimsun">yyyy-MM-dd.HH"，当然也可以按分钟生成什么的，自己改改吧</span></tt></td></tr></tbody></table></p>
+<p style="PADDING-BOTTOM: 0px; MARGIN: 1em 0px 0.5em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px">上面是所有的9个参数，刚才咱们说了，<code style="FONT-STYLE: normal"><span style="FONT-FAMILY: NSimsun">pattern这个参数的值比较多，咱们拿下来单独说：<br>pattern可以设置成两种方式，第一种是pattern="common"，第二种是pattern="combined"<br>这就可以控制日志里面的格式，各位说了，pattern就这两种？common和combined又是什么意思，具体是什么格式呢？<br>别着急，咱们一点一点看，其实pattern是可以设置的，common和combined只是集成了一些显示方式，就是将显示方式给组合了，pattern的实际值有如下几种，都是</span></code><span class="Apple-converted-space">&nbsp;</span><code style="FONT-STYLE: normal"><span style="FONT-FAMILY: NSimsun"><code style="FONT-STYLE: normal">后面</code><span class="Apple-converted-space">&nbsp;</span><code style="FONT-STYLE: normal">一个字母，</code><span class="Apple-converted-space">&nbsp;</span><code style="FONT-STYLE: normal">前面</code><span class="Apple-converted-space">&nbsp;</span></span><code style="FONT-STYLE: normal"><span style="FONT-FAMILY: NSimsun">一个%百分号<br>咱们先贴出来我的日志里面的一条记录，对应着看<br><br>127.0.0.1 192.168.254.108 - -1 127.0.0.1 HTTP/1.1 - GET 80&amp;&lt;60; GET /rightmainima/leftbott4.swf HTTP/1.1 304 5563A67708646B6AA299C33D59BE132A [22/Sep/2007:10:08:52 +0800] - /rightmainima/leftbott4.swf localhost 0 0.000<br></span></code></code><br><code style="FONT-STYLE: normal"><code style="FONT-STYLE: normal"><br></code></code></p>
+<p>
+<table style="WIDTH: 576px; HEIGHT: 707px" border="1">
+<tbody>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px"><code style="FONT-STYLE: normal"><span style="FONT-FAMILY: NSimsun">%a&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span></code></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px"><span style="FONT-FAMILY: NSimsun"><code style="FONT-STYLE: normal"><code style="FONT-STYLE: normal">这是记录访问者的IP，在日志里是</code><span class="Apple-converted-space">&nbsp;</span></code><code style="FONT-STYLE: normal">127.0.0.1</code></span></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px"><code style="FONT-STYLE: normal"><code style="FONT-STYLE: normal"><span style="FONT-FAMILY: NSimsun">%A</span></code></code></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px"><span style="FONT-FAMILY: NSimsun"><code style="FONT-STYLE: normal"><code style="FONT-STYLE: normal">这是记录本地服务器的IP</code><span class="Apple-converted-space">&nbsp;</span></code><code style="FONT-STYLE: normal"><code style="FONT-STYLE: normal">，在日志里是</code><span class="Apple-converted-space">&nbsp;</span></code><code style="FONT-STYLE: normal">192.168.254.108</code></span></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%b<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">这是发送信息的字节数，不涵括http头，如果字节数为0的话，显示为-<br></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%B<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">看tomcat的解释，没看出来与b%的区别，但我这里显示为-1，没想明白，望知道者告知，我把官方解释贴出来吧 Bytes sent, excluding HTTP headers</td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%h<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">这个就是服务器名称了，如果<span >resolveHosts为false的话，这里就是IP地址了，我的日志里是</span><span class="Apple-converted-space">&nbsp;</span><code style="FONT-STYLE: normal"><span style="FONT-FAMILY: NSimsun">127.0.0.1</span></code></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%H<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">访问者使用的协议，这里是<code style="FONT-STYLE: normal"><span style="FONT-FAMILY: NSimsun">HTTP/1.1</span></code></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%l<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">这个也不太清楚，官方也说这个always return '-' 官方解释：Remote logical username from identd (可能这样翻译：记录浏览者进行身份验证时提供的名字)(always returns '-')</td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%m<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">访问的方式，是GET还是POST，我这是GET<br></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%p<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">本地接收访问的端口，呵呵，我这里是80啦<br></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%q<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">比如你访问的是aaa.jsp?bbb=ccc，那么这里就显示?bbb=ccc，明白了吧，这个q是querystring的意思</td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%r<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">官方解释：First line of the request (method and request URI)，不是很明白</td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%s<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">这个是http的状态，我这里返回的是304，咱们经常看见访问某个网页报错误500什么的，那也会返回500<br></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%S<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">用户的session ID,这个session ID大家可以另外查一下详细的解释，反正每次都会生成不同的session ID<br></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%t<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">这就是时间啦，好像有一个Common Log Format可以改，不过我没找到</td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%u<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">得到了验证的访问者，否则就是"-"<br></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%U<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">访问的URL地址，我这里是<code style="FONT-STYLE: normal"><span style="FONT-FAMILY: NSimsun">/rightmainima/leftbott4.swf</span></code></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%v<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">服务器名称，可能就是你url里面写的那个吧，我这里是localhost<br></td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%D<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">官方解释：Time taken to process the request, in millis，应该是访问发生的时间，以毫秒记</td></tr>
+<tr>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">%T<br></td>
+<td style="LINE-HEIGHT: 16px; FONT-SIZE: 12px; VERTICAL-ALIGN: top">官方解释：Time taken to process the request, in seconds，应该是访问发生的时间，以秒记</td></tr></tbody></table><br><br><span style="FONT-FAMILY: NSimsun"><code style="FONT-STYLE: normal"><code style="FONT-STYLE: normal">common的值：</code><span class="Apple-converted-space">&nbsp;</span></code><code style="FONT-STYLE: normal">%h %l %u %t %r %s %b</code></span><span class="Apple-converted-space">&nbsp;</span><br><span style="FONT-FAMILY: NSimsun"><code style="FONT-STYLE: normal"><code style="FONT-STYLE: normal">combined的值：</code><span class="Apple-converted-space">&nbsp;</span></code><code style="FONT-STYLE: normal">%h %l %u %t %r %s %b %{Referer}i %{User-Agent}i</code></span><span class="Apple-converted-space">&nbsp;</span><br></p></span></span></div></body></html>

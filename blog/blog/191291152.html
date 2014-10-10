@@ -1,0 +1,22 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Java程序启动时的JMX配置</title></head><body><h1>Java程序启动时的JMX配置</h1><div>JMX 的配置主要在Java程序启动的时候使用，这里重新整理了一下，更加清晰易懂一些：
+<p><font color="#ff0000">方法1</font>： 最简单的方式：不用密码，不用SSL</p>
+<blockquote>
+<p>-Dcom.sun.management.jmxremote.port=9010</p>
+<p>-Dcom.sun.management.jmxremote.authenticate=false<br>
+-Dcom.sun.management.jmxremote.ssl=false<br>
+-Dcom.sun.management.jmxremote.port=&lt;define a random port&gt;</p>
+</blockquote>
+<p><font color="#ff0000">方法2</font>： 使用密码，不用SSL</p>
+<blockquote>
+<p>-Dcom.sun.management.jmxremote.port=9010</p>
+<p>-Dcom.sun.management.jmxremote.authenticate=<strong>true</strong><br>
+-Dcom.sun.management.jmxremote.password.file=../conf/jmxremote.password<br>
+-Dcom.sun.management.jmxremote.access.file=../conf/jmxremote.access</p>
+<p>在<em>$CATALINA_BASE/conf/</em>目录下添加jmxremote.password文件，并添加下面两行：</p>
+<p>monitorRole &lt;Your password&gt;<br>
+controlRole &lt;Your password&gt;</p>
+<p>在<em>$CATALINA_BASE/conf/</em>目录下添加jmxremote.access文件，并添加下面两行：</p>
+<p>monitorRole readOnly<br>
+controlRole readWrite</p>
+</blockquote>
+<p>这两种方法是最简单的，并且第二种方法具有一定的安全性。</p></div></body></html>

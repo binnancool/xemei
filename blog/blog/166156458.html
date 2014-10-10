@@ -1,0 +1,43 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>VMWare WorkStation虚拟机上安装CentOS5.0步骤（Red Hat安装过程与CentOS相似）</title></head><body><h1>VMWare WorkStation虚拟机上安装CentOS5.0步骤（Red Hat安装过程与CentOS相似）</h1><div><p>实验环境：<br>
+vmware workstation6.0.4<br>
+centos 5.0<br>
+<br>
+1.vmware虚拟机设置从ISO启动，选择centos ISO文件。<br>
+启动界面：</p>
+<p><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd%5Ftaiyangxue/pic/item/327580d2b7f8932b3bf3cfcd.jpg"></p>
+<p><br>
+这一步是用来检测安装系统的完整性的，可以选择skip跳过。</p>
+<p> </p>
+<p>选择简体中文</p>
+<p><br>
+选择键盘：默认选择美式键盘即可，</p>
+<p><br>
+下一步，正常会出现如下界面进行分区：</p>
+<p><br>
+如果你出现的是这个界面，无法看到当前可以使用的分区，那是因为VM默认使用scsi硬盘模式，系统不支持，换成IDE模式即可。详细可参考：vmware 安装linux 找不到硬盘</p>
+<p> </p>
+<p> </p>
+<p><br>
+解决方法，关闭当前虚拟机，设置，把当前硬盘删除，重新添加一个硬盘，选择IDE模式。</p>
+<p> </p>
+<p><br>
+地址可以默认获取，也可以手动配置。</p>
+<p> </p>
+<p>可以现在定制，选择需要安装的工具。（新手最好安装上开发工具及服务，方便后期各种软件及环境的安装）</p>
+<p><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd%5Ftaiyangxue/pic/item/86ff1b352f4e979cd1a2d3d0.jpg"></p>
+<p><font size="3" face="宋体"><strong>选择&ldquo;现在定制&rdquo;后，出现如下图，选择要安装的服务或工具，这里选择&rdquo;开发工具&ldquo;</strong></font></p>
+<p><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd%5Ftaiyangxue/pic/item/735c80d0a5fd9c139a5027df.jpg"></p>
+<p> </p>
+<p>点击&ldquo;下一步&rdquo;开始安装CentOS5.0</p>
+<p> </p>
+<p><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd%5Ftaiyangxue/pic/item/5f4b4137af2b5c1a0b55a9b4.jpg"></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p><strong><font size="3" face="宋体">安装成功后，启动CentOS，要新建账号、是否允许SSH、Telnet、FTP、Mail、WWW、DHCP等</font></strong></p>
+<p><br>
+本文来自CSDN博客，转载请标明出处：<a href="http://blog.csdn.net/muyangzhe/archive/2009/08/02/4399586.aspx">http://blog.csdn.net/muyangzhe/archive/2009/08/02/4399586.aspx</a></p></div></body></html>

@@ -1,0 +1,74 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>tail命令</title></head><body><h1>tail命令</h1><div><div class="cnt"><font style="font-size: 14px" color="#000000" size="3" face="宋体"><strong>用途</strong><br>
+从指定点开始将文件写到标准输出。使用tail命令的-f选项可以方便的查阅正在改变的日志文件，tail -f filename会把filename里最尾部的内容显示在屏幕上，并且不但刷新，使你看到最新的文件内容。<br>
+<br>
+<br>
+<strong>语法<br>
+标准语法</strong><br>
+tail [ -f ] [ -c Number | -n Number | -m Number | -b Number | -k Number ] [ File ]<br>
+<br>
+<br>
+<strong>要以逆序显示行<br>
+</strong>tail [ -r ] [ -n Number ] [ File ]<br>
+<br>
+<br>
+<strong>描述</strong><br>
+tail 命令从指定点开始将 File 参数指定的文件写到标准输出。如果没有指定文件，则会使用标准输入。 Number 变量指定将多少单元写入标准输出。 Number 变量的值可以是正的或负的整数。如果值的前面有 +（加号），从文件开头指定的单元数开始将文件写到标准输出。如果值的前面有 -（减号），则从文件末尾指定的单元数开始将文件写到标准输出。如果值前面没有 +（加号）或 -（减号），那么从文件末尾指定的单元号开始读取文件。<br>
+<br>
+<br>
+Number 变量用于确定计数的起点的单元类型由 -b、-c、-k、-m 以及 -n 标志确定。如果没有指定其中的任何一个标志，那么 tail 命令就会读取指定文件的最后十行，并将其写到标准输出。这与在命令行输入 -n 10 是相同的。<br>
+<br>
+<br>
+-m 标志在单字节和双字节字符环境中提供了一致的结果。当输入是包含多字节字符的文本文件时应谨慎使用 -c 标志，因为产生的输出可能不从字符边界开始。<br>
+<br>
+<br>
+标志<br>
+<br>
+-b Number<br>
+从 Number 变量表示的 512 字节块位置开始读取指定文件。<br>
+<br>
+-c Number<br>
+从 Number 变量表示的字节位置开始读取指定文件。<br>
+<br>
+-f<br>
+如果输入文件是常规文件或如果 File 参数指定 FIFO（先进先出），那么 tail 命令不会在复制了输入文件的最后的指定单元后终止，而是继续从输入文件读取和复制额外的单元（当这些单元可用时）。如果没有指定 File 参数，并且标准输入是管道，则会忽略 -f 标志。tail -f 命令可用于监视另一个进程正在写入的文件的增长。<br>
+<br>
+-k Number<br>
+从 Number 变量表示的 1KB 块位置开始读取指定文件。<br>
+<br>
+-m Number<br>
+从 Number 变量表示的多字节字符位置开始读取指定文件。使用该标志提供在单字节和双字节字符代码集环境中的一致结果。<br>
+<br>
+-n Number<br>
+从 Number 变量表示的行位置开始读取指定文件。<br>
+<br>
+-r<br>
+从文件末尾以逆序方式显示输出。-r 标志的缺省值是以逆序方式打印整个文件。如果文件大于 20,480 字节，那么 -r 标志只显示最后的 20,480 字节。<br>
+<br>
+-r 标志只有与 -n 标志一起时才有效。否则，就会将其忽略。<br>
+<br>
+<br>
+退出状态<br>
+该命令返回下列的退出值：<br>
+<br>
+<br>
+0<br>
+成功完成。<br>
+<br>
+&gt;0<br>
+出现错误。<br>
+<br>
+<br>
+示例<br>
+要显示 notes 文件的最后十行，输入：<br>
+<br>
+tail notes要指定从 notes 文件末尾开始读取的行数，输入：<br>
+tail -n 20 notes<br>
+要从第 200 字节开始，每次显示一页 notes 文件，输入：<br>
+tail -c +200 notes | pg<br>
+要跟踪文件的增长，输入：<br>
+tail -f accounts<br>
+这显示 accounts 文件的最后十行。tail 命令继续显示添加到 accounts 文件中的行。显示会一直继续，直到您按下 Ctrl-C 按键顺序来停止。<br>
+文件<br>
+<br>
+/usr/bin/tail<br>
+包含 tail 命令。</font></div></div></body></html>

@@ -1,0 +1,79 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Java中创建对象的四种方法</title></head><body><h1>Java中创建对象的四种方法</h1><div><p><span style="FONT-SIZE: 16px">有4种显式地创建对象的方式：</span></p>
+<p><strong><span style="FONT-SIZE: 16px">1.用new语句创建对象，这是最常用的创建对象的方式。</span></strong></p>
+<p><strong><span style="FONT-SIZE: 16px">2.运用反射手段，调用java.lang.Class或者java.lang.reflect.Constructor类的newInstance()实例方法。</span></strong></p>
+<p><strong><span style="FONT-SIZE: 16px">3.调用对象的clone()方法。</span></strong></p>
+<p><strong><span style="FONT-SIZE: 16px">4.运用反序列化手段，调用java.io.ObjectInputStream对象的readObject()方法.</span></strong></p>
+<p><span style="FONT-SIZE: 16px">下面演示了用前面3种方式创建对象的过程。</span></p>
+<p><span style="FONT-SIZE: 16px">public class Customer implements Cloneable{</span></p>
+<p><span style="FONT-SIZE: 16px">private String name;</span></p>
+<p><span style="FONT-SIZE: 16px">private int age;</span></p>
+<p><span style="FONT-SIZE: 16px">public Customer(){</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp; this("unknown",0);</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp; System.out.println("call default constructor");</span></p>
+<p><span style="FONT-SIZE: 16px">}</span></p>
+<p><span style="FONT-SIZE: 16px">public Customer(String name,int age){</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp; this.name=name;</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp; this.age=age;</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp; System.out.println("call second constructor");</span></p>
+<p><span style="FONT-SIZE: 16px">}</span></p>
+<p><span style="FONT-SIZE: 16px">public Object clone()throws CloneNotSupportedException{</span></p>
+<p><span style="FONT-SIZE: 16px">return super.clone();</span></p>
+<p><span style="FONT-SIZE: 16px">}</span></p>
+<p><span style="FONT-SIZE: 16px">public boolean equals(Object o){</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp; if(this==o)return true;</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp; if(! (o instanceof Customer)) return false;</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp; final Customer other=(Customer)o;</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp; if(this.name.equals(other.name) &amp;&amp; this.age==other.age)</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp;&nbsp;&nbsp;&nbsp; return true;</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp; else</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp;&nbsp;&nbsp;&nbsp; return false;</span></p>
+<p><span style="FONT-SIZE: 16px">}</span></p>
+<p><span style="FONT-SIZE: 16px">public String toString(){</span></p>
+<p><span style="FONT-SIZE: 16px">return "name="+name+",age="+age;</span></p>
+<p><span style="FONT-SIZE: 16px">}</span></p>
+<p><span style="FONT-SIZE: 16px">public static void main(String args[])throws Exception{</span></p>
+<p><span style="COLOR: #ff0000; FONT-SIZE: 16px">//运用反射手段创建Customer对象</span></p>
+<p><span style="FONT-SIZE: 16px">Class objClass=Class.forName("Customer");</span></p>
+<p><span style="FONT-SIZE: 16px">Customer c1=(Customer)objClass.newInstance(); //会调用Customer类的默认构造方法</span></p>
+<p><span style="FONT-SIZE: 16px">System.out.println("c1: "+c1); //打印name=unknown,age=0</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp;</span></p>
+<p><span style="COLOR: #ff0000; FONT-SIZE: 16px">//用new语句创建Customer对象</span></p>
+<p><span style="FONT-SIZE: 16px">Customer c2=new Customer("Tom",20);</span></p>
+<p><span style="FONT-SIZE: 16px">System.out.println("c2: "+c2); //打印name=tom,age=20</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp;</span></p>
+<p><span style="COLOR: #ff0000; FONT-SIZE: 16px">//运用克隆手段创建Customer对象</span></p>
+<p><span style="FONT-SIZE: 16px">Customer c3=(Customer)c2.clone(); //不会调用Customer类的构造方法</span></p>
+<p><span style="FONT-SIZE: 16px">System.out.println("c2==c3 : "+(c2==c3)); //打印false</span></p>
+<p><span style="FONT-SIZE: 16px">System.out.println("c2.equals(c3) : "+c2.equals(c3)); //打印true</span></p>
+<p><span style="FONT-SIZE: 16px">System.out.println("c3: "+c3); //打印name=tom,age=20</span></p>
+<p><span style="FONT-SIZE: 16px">}</span></p>
+<p><span style="FONT-SIZE: 16px">}</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp;</span></p>
+<p><span style="FONT-SIZE: 16px">以上程序的打印结果如下：</span></p>
+<p><span style="FONT-SIZE: 16px">call second constructor</span></p>
+<p><span style="FONT-SIZE: 16px">call default constructor</span></p>
+<p><span style="FONT-SIZE: 16px">c1: name=unknown,age=0</span></p>
+<p><span style="FONT-SIZE: 16px">call second constructor</span></p>
+<p><span style="FONT-SIZE: 16px">c2: name=Tom,age=20</span></p>
+<p><span style="FONT-SIZE: 16px">c2==c3 : false</span></p>
+<p><span style="FONT-SIZE: 16px">c2.equals(c3) : true</span></p>
+<p><span style="FONT-SIZE: 16px">c3: name=Tom,age=20</span></p>
+<p><span style="FONT-SIZE: 16px">从以上打印结果看出，用new语句或Class对象的newInstance()方法创建Customer对象时，都会执行Customer类的构造方法，而用对象的clone()方法创建Customer对象时，不会执行Customer类的构造方法。（区别）</span></p>
+<p><strong><span style="FONT-SIZE: 16px">除了以上4种显式地创建对象的方式以外，在程序中还可以隐含地创建对象，包括以下几种情况：</span></strong></p>
+<p><span style="COLOR: #ff0000; FONT-SIZE: 16px">1.对于java命令中的每个命令行参数，Java虚拟机都会创建相应的String对象，并把它们组织到一个String数组中，再把该数组作为参数传给程序入口main(String args[])方法。</span></p>
+<p><span style="COLOR: #ff0000; FONT-SIZE: 16px">2.程序代码中的String类型的直接数对应一个String对象，例如：</span></p>
+<p><span style="FONT-SIZE: 16px">String s1="Hello";</span></p>
+<p><span style="FONT-SIZE: 16px">String s2="Hello"; //s2和s1引用同一个String对象</span></p>
+<p><span style="FONT-SIZE: 16px">String s3=new String("Hello");</span></p>
+<p><span style="FONT-SIZE: 16px">System.out.println(s1==s2); //打印true</span></p>
+<p><span style="FONT-SIZE: 16px">System.out.println(s1==s3); //打印false</span></p>
+<p><span style="FONT-SIZE: 16px">执行完以上程序，内存中实际上只有两个String对象，一个是直接数，由Java虚拟机隐含地创建，还有一个通过new语句显式地创建。</span></p>
+<p><span style="FONT-SIZE: 16px"><span style="COLOR: #ff0000">3.字符串操作符“+”的运算结果为一个新的String对象。</span>例如：</span></p>
+<p><span style="FONT-SIZE: 16px">String s1="H";</span></p>
+<p><span style="FONT-SIZE: 16px">String s2=" ello";</span></p>
+<p><span style="FONT-SIZE: 16px">String s3=s1+s2; //s3引用一个新的String对象</span></p>
+<p><span style="FONT-SIZE: 16px">System.out.println(s3=="Hello"); //打印false</span></p>
+<p><span style="FONT-SIZE: 16px">System.out.println(s3.equals("Hello")); //打印true</span></p>
+<p><span style="COLOR: #ff0000; FONT-SIZE: 16px">4.当Java虚拟机加载一个类时，会隐含地创建描述这个类的Class实例.</span></p>
+<p><span style="FONT-SIZE: 16px">&nbsp;</span></p>
+<p><span style="FONT-SIZE: 16px">本文来自CSDN博客，转载请标明出处：</span><a href="http://blog.csdn.net/yakihappy/archive/2009/03/11/3979348.aspx"><span style="FONT-SIZE: 16px">http://blog.csdn.net/yakihappy/archive/2009/03/11/3979348.aspx</span></a></p></div></body></html>

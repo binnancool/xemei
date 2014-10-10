@@ -1,0 +1,11 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Jconsole监控java虚拟机配置</title></head><body><h1>Jconsole监控java虚拟机配置</h1><div><p><strong><font color="#ff0000" size="3">1、本地监控</font></strong></p>
+<p>查找java.exe进程的进程号：xxxx</p>
+<p>运行：jconsole xxxx</p>
+<p><strong><font color="#ff0000" size="3">2、远程监控tomcat</font></strong></p>
+<p>在tomcat的bin/catalina.sh中的最上面写入：</p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span >set JAVA_OPTS=-Xms256m -Xmx512m -XX:PermSize=56M -XX:MaxNewSize=128m -XX:MaxPermSize=128m -Dcom.sun.management.jmxremote.port=<strong>9088</strong> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"> </p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span >运行：jcosole，弹出如下图：IP：9088（上面黑体设置），加远程计算机的用户名和密码</span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal" align="center"><span ><img class="alignnone size-full wp-image-1267" alt="jconsolee8bf9ee68ea5" src="http://rdc.taobao.com/blog/qa/wp-content/uploads/2009/03/jconsolee8bf9ee68ea5.jpg" width="381" height="388"></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal" align="left"><span ><strong><font color="#ff0000" size="3">3、java命令行</font></strong></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal" align="left"><span >java -Dcom.sun.management.jmxremote.port=<strong>9088</strong> -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -classpath com.test</span></p></div></body></html>

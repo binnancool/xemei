@@ -1,0 +1,461 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Java学习总结三</title></head><body><h1>Java学习总结三</h1><div><p><font size="3" face="宋体"><strong><font size="5">网络编程<br>
+</font></strong><br>
+　<strong><font size="4">网络基础知识</font></strong><br>
+<br>
+　　计算机网络形式多样，内容繁杂。网络上的计算机要互相通信，必须遵循一定的协议。目前使用最广泛的网络协议是Internet上所使用的TCP/IP协议。<br>
+&nbsp;&nbsp;&nbsp;  网络编程的目的就是指直接或间接地通过网络协议与其他计算机进行通讯。网络编程中有两个主要的问题，一个是如何准确的定位网络上一台或多台主机，另一个就是找到主机后如何可靠高效的进行数据传输。在TCP/IP协议中IP层主要负责网络主机的定位，数据传输的路由，由IP地址可以唯一地确定Internet上的一台主机。而TCP层则提供面向应用的可靠的或非可靠的数据传输机制，这是网络编程的主要对象，一般不需要关心IP层是如何处理数据的。<br>
+　<br>
+　　目前较为流行的网络编程模型是客户机/服务器（C/S）结构。即通信双方一方作为服务器等待客户提出请求并予以响应。客户则在需要服务时向服务器提出申请。服务器一般作为守护进程始终运行，监听网络端口，一旦有客户请求，就会启动一个服务进程来响应该客户，同时自己继续监听服务端口，使后来的客户也能及时得到服务。<br>
+<br>
+&nbsp;&nbsp;&nbsp;  IP地址：标识计算机等网络设备的网络地址，由四个8位的二进制数组成，中间以小数点分隔。<br>
+　　　　如：166.111.136.3 , 166.111.52.80<br>
+<br>
+　　主机名(hostname)：网络地址的助记名，按照域名进行分级管理。<br>
+　　　　如：</font><a href="http://www.tsinghua.edu.cn/"><font size="3" face="宋体">www.tsinghua.edu.cn</font></a><br>
+<font size="3" face="宋体">　　　　　　</font><a href="http://www.fanso.com/"><font size="3" face="宋体">www.fanso.com</font></a><br>
+<font size="3" face="宋体">　　<br>
+　　端口号(port number)：网络通信时同一机器上的不同进程的标识。<br>
+　　　　如:80，21，23，25，其中1~1024为系统保留的端口号<br>
+　　<br>
+　　服务类型(service)：网络的各种服务。<br>
+　　　　http, telnet, ftp, smtp<br>
+　<br>
+　　在Internet上IP地址和主机名是一一对应的，通过域名解析可以由主机名得到机器的IP，由于机器名更接近自然语言，容易记忆，所以使用比IP地址广泛，但是对机器而言只有IP地址才是有效的标识符。<br>
+<br>
+　　通常一台主机上总是有很多个进程需要网络资源进行网络通讯。网络通讯的对象准确的讲不是主机，而应该是主机中运行的进程。这时候光有主机名或IP地址来标识这么多个进程显然是不够的。端口号就是为了在一台主机上提供更多的网络资源而采取得一种手段，也是TCP层提供的一种机制。只有通过主机名或IP地址和端口号的组合才能唯一的确定网络通讯中的对象：进程。<br>
+<br>
+服务类型是在TCP层上面的应用层的概念。基于TCP/IP协议可以构建出各种复杂的应用，服务类型是那些已经被标准化了的应用，一般都是网络服务器（软件）。读者可以编写自己的基于网络的服务器，但都不能被称作标准的服务类型。<br>
+<br>
+&nbsp;&nbsp;&nbsp;  <strong><font size="5">两类传输协议：TCP；UDP</font></strong><br>
+<br>
+　　尽管TCP/IP协议的名称中只有TCP这个协议名，但是在TCP/IP的传输层同时存在TCP和UDP两个协议。<br>
+<br>
+&nbsp;&nbsp;&nbsp;  TCP是Tranfer Control Protocol的简称，是一种面向连接的保证可靠传输的协议。通过TCP协议传输，得到的是一个顺序的无差错的数据流。发送方和接收方的成对的两个socket之间必须建立连接，以便在TCP协议的基础上进行通信，当一个socket（通常都是server socket）等待建立连接时，另一个socket可以要求进行连接，一旦这两个socket连接起来，它们就可以进行双向数据传输，双方都可以进行发送或接收操作。<br>
+<br>
+　　UDP是User Datagram Protocol的简称，是一种无连接的协议，每个数据报都是一个独立的信息，包括完整的源地址和目的地址，它在网络上以任何可能的路径传往目的地，因此能否到达目的地，到达目的地的时间以及内容的正确性都是不能被保证的。 <br>
+<br>
+　　<strong>下面我们对这两种协议做简单比较：</strong><br>
+　<br>
+　　使用UDP时，每个数据报中都给出了完整的地址信息，因此无需要建立发送方和接收方的连接。对于TCP协议，由于它是一个面向连接的协议，在socket之间进行数据传输之前必然要建立连接，所以在TCP中多了一个连接建立的时间。<br>
+<br>
+　　使用UDP传输数据时是有大小限制的，每个被传输的数据报必须限定在64KB之内。而TCP没有这方面的限制，一旦连接建立起来，双方的socket就可以按统一的格式传输大量的数据。UDP是一个不可靠的协议，发送方所发送的数据报并不一定以相同的次序到达接收方。而TCP是一个可靠的协议，它确保接收方完全正确地获取发送方所发送的全部数据。<br>
+<br>
+　　总之，TCP在网络通信上有极强的生命力，例如远程连接（Telnet）和文件传输（FTP）都需要不定长度的数据被可靠地传输。相比之下UDP操作简单，而且仅需要较少的监护，因此通常用于局域网高可靠性的分散系统中client/server应用程序。<br>
+<br>
+　　既然有了保证可靠传输的TCP协议，为什么还要非可靠传输的UDP协议呢？主要的原因有两个。一是可靠的传输是要付出代价的，对数据内容正确性的检验必然占用计算机的处理时间和网络的带宽，因此TCP传输的效率不如UDP高。二是在许多应用中并不需要保证严格的传输可靠性，比如视频会议系统，并不要求音频视频数据绝对的正确，只要保证连贯性就可以了，这种情况下显然使用UDP会更合理一些。<br>
+<br>
+-----------------------------<br>
+<strong><font size="5">基于URL的高层次Java网络编程</font></strong><br>
+<br>
+　一致资源定位器URL<br>
+<br>
+&nbsp;&nbsp;&nbsp;  URL(Uniform Resource Locator)是一致资源定位器的简称，它表示Internet上某一资源的地址。通过URL我们可以访问Internet上的各种网络资源，比如最常见的WWW，FTP站点。浏览器通过解析给定的URL可以在网络上查找相应的文件或其他资源。<br>
+<br>
+　　URL是最为直观的一种网络定位方法。使用URL符合人们的语言习惯，容易记忆，所以应用十分广泛。而且在目前使用最为广泛的TCP/IP中对于URL中主机名的解析也是协议的一个标准，即所谓的域名解析服务。使用URL进行网络编程，不需要对协议本身有太多的了解，功能也比较弱，相对而言是比较简单的.<br>
+<br>
+URL的组成:<br>
+<br>
+&nbsp;&nbsp;&nbsp;  protocol://resourceName<br>
+　　协议名（protocol）指明获取资源所使用的传输协议，如http、ftp、file等，资源名（resourceName）则应该是资源的完整地址，包括主机名、端口号、文件名或文件内部的一个引用。例如：<br>
+　　</font><a href="http://www.sun.com/"><font size="3" face="宋体">http://www.sun.com/</font></a><font size="3" face="宋体"> 协议名://主机名<br>
+　　</font><a href="http://home.netscape.com/home/welcome.html"><font size="3" face="宋体">http://home.netscape.com/home/welcome.html</font></a><font size="3" face="宋体"> 协议名://机器名＋文件名<br>
+　　</font><a href="http://www.gamelan.com/Gamelan/network.html#BOTTOM"><font size="3" face="宋体">http://www.gamelan.com:80/Gamelan/network.html#BOTTOM</font></a><font size="3" face="宋体"> 协议名://机器名＋端口号＋文件名＋内部引用<br>
+<br>
+创建一个URL:<br>
+<br>
+&nbsp;&nbsp;&nbsp;  为了表示URL， java.net中实现了类URL。我们可以通过下面的构造方法来初始化一个URL对象：<br>
+　　（1） public URL (String spec);<br>
+　　　　　通过一个表示URL地址的字符串可以构造一个URL对象。<br>
+　　　　　URL urlBase=new URL(&quot;</font><a href="http://www/"><font size="3" face="宋体">http://www</font></a><font size="3" face="宋体">. 263.net/&quot;) <br>
+<br>
+　　（2） public URL(URL context, String spec);<br>
+　　　　　通过基URL和相对URL构造一个URL对象。<br>
+　　　　　URL net263=new URL (&quot;</font><a href="http://www.263.net/"><font size="3" face="宋体">http://www.263.net/</font></a><font size="3" face="宋体">&quot;);<br>
+　　　　　URL index263=new URL(net263, &quot;index.html&quot;)<br>
+<br>
+　　（3） public URL(String protocol, String host, String file);<br>
+　　　　　new URL(&quot;http&quot;, &quot;</font><a href="http://www.gamelan.com/"><font size="3" face="宋体">www.gamelan.com</font></a><font size="3" face="宋体">&quot;, &quot;/pages/Gamelan.net. html&quot;);<br>
+<br>
+　　（4） public URL(String protocol, String host, int port, String file);<br>
+　　　　　URL gamelan=new URL(&quot;http&quot;, &quot;</font><a href="http://www.gamelan.com/"><font size="3" face="宋体">www.gamelan.com</font></a><font size="3" face="宋体">&quot;, 80, &quot;Pages/Gamelan.network.html&quot;);<br>
+<br>
+　　注意：类URL的构造方法都声明抛弃非运行时例外（MalformedURLException），因此生成URL对象时，我们必须要对这一例外进行处理，通常是用try-catch语句进行捕获。格式如下：<br>
+<br>
+<br>
+　　try{<br>
+　　　　　URL myURL= new URL(…)<br>
+　　}catch (MalformedURLException e){<br>
+　　…<br>
+　　//exception handler code here<br>
+　　…<br>
+　　}<br>
+<br>
+解析一个URL:<br>
+<br>
+&nbsp;&nbsp;&nbsp;  一个URL对象生成后，其属性是不能被改变的，但是我们可以通过类URL所提供的方法来获取这些属性：<br>
+　　　public String getProtocol() 获取该URL的协议名。<br>
+　　　public String getHost() 获取该URL的主机名。<br>
+　　　public int getPort() 获取该URL的端口号，如果没有设置端口，返回-1。<br>
+　　　public String getFile() 获取该URL的文件名。<br>
+　　　public String getRef() 获取该URL在文件中的相对位置。<br>
+　　　public String getQuery() 获取该URL的查询信息。<br>
+　　　public String getPath() 获取该URL的路径<br>
+　　　public String getAuthority() 获取该URL的权限信息<br>
+　　　public String getUserInfo() 获得使用者的信息<br>
+　　　public String getRef() 获得该URL的锚<br>
+<br>
+<br>
+　　下面的例子中，我们生成一个URL对象，并获取它的各个属性。<br>
+<br>
+　　import java.net.*;<br>
+　　import java.io.*;<br>
+<br>
+　　public class ParseURL{<br>
+　　public static void main (String [] args) throws Exception{<br>
+<br>
+　　URL Aurl=new URL(&quot;</font><a href="http://java.sun.com/docs/books/"><font size="3" face="宋体">http://java.sun.com:80/docs/books/</font></a><font size="3" face="宋体">&quot;);<br>
+　　URL tuto=new URL(Aurl,&quot;tutorial.intro.html#DOWNLOADING&quot;); <br>
+　　System.out.println(&quot;protocol=&quot;+ tuto.getProtocol());<br>
+　　System.out.println(&quot;host =&quot;+ tuto.getHost());<br>
+　　System.out.println(&quot;filename=&quot;+ tuto.getFile());<br>
+　　System.out.println(&quot;port=&quot;+ tuto.getPort());<br>
+　　System.out.println(&quot;ref=&quot;+tuto.getRef());<br>
+　　System.out.println(&quot;query=&quot;+tuto.getQuery());<br>
+　　System.out.println(&quot;path=&quot;+tuto.getPath());<br>
+　　System.out.println(&quot;UserInfo=&quot;+tuto.getUserInfo());<br>
+　　System.out.println(&quot;Authority=&quot;+tuto.getAuthority());<br>
+　　}<br>
+　　}<br>
+<br>
+　　执行结果为：<br>
+　　　protocol=http host =java.sun.com filename=/docs/books/tutorial.intro.html <br>
+　　　port=80 <br>
+　　　ref=DOWNLOADING <br>
+　　　query=null <br>
+　　　path=/docs/books/tutorial.intro.html <br>
+　　　UserInfo=null <br>
+　　　Authority=java.sun.com:80<br>
+<br>
+从URL读取WWW网络资源:<br>
+<br>
+&nbsp;&nbsp;&nbsp;  当我们得到一个URL对象后，就可以通过它读取指定的WWW资源。这时我们将使用URL的方法openStream()，其定义为：<br>
+　　　　　　　　　InputStream openStream();<br>
+　　<br>
+　　方法openSteam()与指定的URL建立连接并返回InputStream类的对象以从这一连接中读取数据。<br>
+例：<br>
+public class URLReader <br>
+{<br>
+　　public static void main(String[] args) throws Exception <br>
+&nbsp;&nbsp;  { <br>
+　　　　　　　　　　　　　　　　　　　　　　//声明抛出所有例外<br>
+　　　　URL tirc = new URL(&quot;</font><a href="http://www.tirc1.cs.tsinghua.edu.cn/"><font size="3" face="宋体">http://www.tirc1.cs.tsinghua.edu.cn/</font></a><font size="3" face="宋体">&quot;); <br>
+　　　　　　　　　　　　　　　　　　　　　　//构建一URL对象<br>
+　　　　BufferedReader in = new BufferedReader(new InputStreamReader(tirc.openStream()));<br>
+　　　　//使用openStream得到一输入流并由此构造一个BufferedReader对象<br>
+　　　　String inputLine;<br>
+　　　　while ((inputLine = in.readLine()) != null) <br>
+　　　　　　　　　　　　　　　　　//从输入流不断的读数据，直到读完为止<br>
+　　　　　　　System.out.println(inputLine); //把读入的数据打印到屏幕上<br>
+　　　　in.close(); //关闭输入流<br>
+　　}<br>
+}<br>
+<br>
+通过URLConnetction连接WWW:<br>
+<br>
+&nbsp;&nbsp;&nbsp;  通过URL的方法openStream()，我们只能从网络上读取数据，如果我们同时还想输出数据，例如向服务器端的CGI程序发送一些数据，我们必须先与URL建立连接，然后才能对其进行读写，这时就要用到类URLConnection了。CGI是公共网关接口（Common Gateway Interface）的简称，它是用户浏览器和服务器端的应用程序进行连接的接口，有关CGI程序设计，请读者参考有关书籍。<br>
+<br>
+　　类URLConnection也在包java.net中定义，它表示Java程序和URL在网络上的通信连接。当与一个URL建立连接时，首先要在一个URL对象上通过方法openConnection()生成对应的URLConnection对象。例如下面的程序段首先生成一个指向地址</font><a href="http://edu.chinaren.com/index.shtml"><font size="3" face="宋体">http://edu.chinaren.com/index.shtml</font></a><font size="3" face="宋体">的对象，然后用openConnection（）打开该URL对象上的一个连接，返回一个URLConnection对象。如果连接过程失败，将产生IOException.<br>
+<br>
+Try{<br>
+　　　　URL netchinaren = new URL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  (&quot;</font><a href="http://edu.chinaren.com/index.shtml"><font size="3" face="宋体">http://edu.chinaren.com/index.shtml</font></a><font size="3" face="宋体">&quot;);<br>
+　　　　URLConnectonn tc = netchinaren.openConnection();<br>
+　　}catch(MalformedURLException e){ //创建URL()对象失败<br>
+　　&nbsp;&nbsp;&nbsp;  …<br>
+　　}catch (IOException e){ //openConnection()失败<br>
+　　&nbsp;&nbsp;&nbsp;  …<br>
+　　}<br>
+<br>
+　　类URLConnection提供了很多方法来设置或获取连接参数，程序设计时最常使用的是getInputStream()和getOutputStream(),其定义为：<br>
+　　　　　InputSteram getInputSteram();<br>
+　　　　　OutputSteram getOutputStream();<br>
+<br>
+　　通过返回的输入/输出流我们可以与远程对象进行通信。看下面的例子：<br>
+　　URL url =new URL (&quot;</font><a href="http://www.javasoft.com/cgi-bin/backwards"><font size="3" face="宋体">http://www.javasoft.com/cgi-bin/backwards</font></a><font size="3" face="宋体">&quot;); <br>
+　　//创建一URL对象<br>
+　　URLConnectin con=url.openConnection(); <br>
+　　//由URL对象获取URLConnection对象<br>
+　　DataInputStream dis=new DataInputStream (con.getInputSteam()); <br>
+　　//由URLConnection获取输入流，并构造DataInputStream对象<br>
+　　PrintStream ps=new PrintSteam(con.getOutupSteam());<br>
+　　//由URLConnection获取输出流，并构造PrintStream对象<br>
+　　String line=dis.readLine(); //从服务器读入一行<br>
+　　ps.println(&quot;client…&quot;); //向服务器写出字符串 &quot;client…&quot;<br>
+　　<br>
+　　其中backwards为服务器端的CGI程序。实际上，类URL的方法openSteam（）是通过URLConnection来实现的。它等价于<br>
+　　　　openConnection().getInputStream();<br>
+　　<br>
+　　基于URL的网络编程在底层其实还是基于下面要讲的Socket接口的。WWW，FTP等标准化的网络服务都是基于TCP协议的，所以本质上讲URL编程也是基于TCP的一种应用。<br>
+&nbsp;&nbsp;&nbsp;  <br>
+<br>
+--------------------------<br>
+<strong><font size="5">基于Socket（套接字）的低层次Java网络编程</font></strong><br>
+<br>
+　<strong>Socket通讯</strong><br>
+<br>
+&nbsp;&nbsp;&nbsp;  网络上的两个程序通过一个双向的通讯连接实现数据的交换，这个双向链路的一端称为一个Socket。Socket通常用来实现客户方和服务方的连接。Socket是TCP/IP协议的一个十分流行的编程界面，一个Socket由一个IP地址和一个端口号唯一确定。<br>
+<br>
+　　在传统的UNIX环境下可以操作TCP/IP协议的接口不止Socket一个，Socket所支持的协议种类也不光TCP/IP一种，因此两者之间是没有必然联系的。在Java环境下，Socket编程主要是指基于TCP/IP协议的网络编程。<br>
+<br>
+　　说Socket编程是低层次网络编程并不等于它功能不强大，恰恰相反，正因为层次低，Socket编程比基于URL的网络编程提供了更强大的功能和更灵活的控制，但是却要更复杂一些。由于Java本身的特殊性，Socket编程在Java中可能已经是层次最低的网络编程接口，在Java中要直接操作协议中更低的层次，需要使用Java的本地方法调用（JNI），在这里就不予讨论了。<br>
+<br>
+-------------------<br>
+Socket通讯的一般过程<br>
+<br>
+&nbsp;&nbsp;&nbsp;  前面已经提到Socket通常用来实现C/S结构。<br>
+<br>
+　　使用Socket进行Client/Server程序设计的一般连接过程是这样的：Server端Listen(监听)某个端口是否有连接请求，Client端向Server端发出Connect(连接)请求，Server端向Client端发回Accept（接受）消息。一个连接就建立起来了。Server端和Client端都可以通过Send，Write等方法与对方通信。<br>
+　　<br>
+　　对于一个功能齐全的Socket，都要包含以下基本结构，其工作过程包含以下四个基本的步骤：<br>
+　　（1） 创建Socket；<br>
+　　（2） 打开连接到Socket的输入/出流；<br>
+　　（3） 按照一定的协议对Socket进行读/写操作；<br>
+　　（4） 关闭Socket.<br>
+<br>
+　　第三步是程序员用来调用Socket和实现程序功能的关键步骤，其他三步在各种程序中基本相同。<br>
+<br>
+　　以上4个步骤是针对TCP传输而言的，使用UDP进行传输时略有不同，在后面会有具体讲解。<br>
+<br>
+----------------<br>
+创建Socket:<br>
+<br>
+&nbsp;&nbsp;&nbsp;  java在包java.net中提供了两个类Socket和ServerSocket，分别用来表示双向连接的客户端和服务端。这是两个封装得非常好的类，使用很方便。其构造方法如下：<br>
+　　Socket(InetAddress address, int port);<br>
+　　Socket(InetAddress address, int port, boolean stream);<br>
+　　Socket(String host, int prot);<br>
+　　Socket(String host, int prot, boolean stream);<br>
+　　Socket(SocketImpl impl)<br>
+　　Socket(String host, int port, InetAddress localAddr, int localPort)<br>
+　　Socket(InetAddress address, int port, InetAddress localAddr, int localPort)<br>
+　　ServerSocket(int port);<br>
+　　ServerSocket(int port, int backlog);<br>
+　　ServerSocket(int port, int backlog, InetAddress bindAddr)<br>
+<br>
+　　其中address、host和port分别是双向连接中另一方的IP地址、主机名和端口号，stream指明socket是流socket还是数据报socket，localPort表示本地主机的端口号，localAddr和bindAddr是本地机器的地址（ServerSocket的主机地址），impl是socket的父类，既可以用来创建serverSocket又可以用来创建Socket。count则表示服务端所能支持的最大连接数。例如：<br>
+　　Socket client = new Socket(&quot;127.0.0.1&quot;, 80);<br>
+　　ServerSocket server = new ServerSocket(80);<br>
+<br>
+　　注意，在选择端口时，必须小心。每一个端口提供一种特定的服务，只有给出正确的端口，才能获得相应的服务。0~1023的端口号为系统所保留，例如http服务的端口号为80,telnet服务的端口号为21,ftp服务的端口号为23, 所以我们在选择端口号时，最好选择一个大于1023的数以防止发生冲突。<br>
+<br>
+　　在创建socket时如果发生错误，将产生IOException，在程序中必须对之作出处理。所以在创建Socket或ServerSocket是必须捕获或抛出例外。<br>
+<br>
+----------------<br>
+客户端的Socket<br>
+<br>
+&nbsp;&nbsp;&nbsp;  下面是一个典型的创建客户端Socket的过程。<br>
+　　　try{<br>
+　　　　　Socket socket=new Socket(&quot;127.0.0.1&quot;,4700); <br>
+　　　　　//127.0.0.1是TCP/IP协议中默认的本机地址<br>
+　　　}catch(IOException e){<br>
+　　　　　System.out.println(&quot;Error:&quot;+e);<br>
+　　　}<br>
+-----------------<br>
+服务器端的ServerSocket:<br>
+<br>
+&nbsp;&nbsp;&nbsp;  下面是一个典型的创建Server端ServerSocket的过程。<br>
+　　ServerSocket server=null;<br>
+　　try {<br>
+　　　　　server=new ServerSocket(4700); <br>
+　　　　　//创建一个ServerSocket在端口4700监听客户请求<br>
+　　}catch(IOException e){<br>
+　　　　　System.out.println(&quot;can not listen to :&quot;+e);<br>
+　　}<br>
+　　Socket socket=null;<br>
+　　try {<br>
+　　　　socket=server.accept(); <br>
+　　　　//accept()是一个阻塞的方法，一旦有客户请求，它就会返回一个Socket对象用于同客户进行交互<br>
+　　}catch(IOException e){<br>
+　　　　System.out.println(&quot;Error:&quot;+e);<br>
+　　}<br>
+<br>
+　　以上的程序是Server的典型工作模式，只不过在这里Server只能接收一个请求，接受完后Server就退出了。实际的应用中总是让它不停的循环接收，一旦有客户请求，Server总是会创建一个服务线程来服务新来的客户，而自己继续监听。程序中accept()是一个阻塞函数，所谓阻塞性方法就是说该方法被调用后，将等待客户的请求，直到有一个客户启动并请求连接到相同的端口，然后accept()返回一个对应于客户的socket。这时，客户方和服务方都建立了用于通信的socket，接下来就是由各个socket分别打开各自的输入/输出流。<br>
+<br>
+------------<br>
+打开输入/出流<br>
+<br>
+&nbsp;&nbsp;&nbsp;  类Socket提供了方法getInputStream ()和getOutStream()来得到对应的输入/输出流以进行读/写操作，这两个方法分别返回InputStream和OutputSteam类对象。为了便于读/写数据，我们可以在返回的输入/输出流对象上建立过滤流，如DataInputStream、DataOutputStream或PrintStream类对象，对于文本方式流对象，可以采用InputStreamReader和OutputStreamWriter、PrintWirter等处理。<br>
+<br>
+　　例如：<br>
+　　PrintStream os=new PrintStream(new BufferedOutputStreem(socket.getOutputStream()));<br>
+　　DataInputStream is=new DataInputStream(socket.getInputStream());<br>
+　　PrintWriter out=new PrintWriter(socket.getOutStream(),true);<br>
+　　BufferedReader in=new ButfferedReader(new InputSteramReader(Socket.getInputStream()));<br>
+<br>
+----------------<br>
+关闭Socket<br>
+<br>
+&nbsp;&nbsp;&nbsp;  每一个Socket存在时，都将占用一定的资源，在Socket对象使用完毕时，要其关闭。关闭Socket可以调用Socket的Close（）方法。在关闭Socket之前，应将与Socket相关的所有的输入/输出流全部关闭，以释放所有的资源。而且要注意关闭的顺序，与Socket相关的所有的输入/输出该首先关闭，然后再关闭Socket。<br>
+　　os.close();<br>
+　　is.close();<br>
+　　socket.close();<br>
+<br>
+　　尽管Java有自动回收机制，网络资源最终是会被释放的。但是为了有效的利用资源，建议读者按照合理的顺序主动释放资源。<br>
+<br>
+----------------<br>
+<strong><font size="5">简单的Client/Server程序设计</font></strong><br>
+<br>
+　　下面我们给出一个用Socket实现的客户和服务器交互的典型的C/S结构的演示程序，读者通过仔细阅读该程序，会对前面所讨论的各个概念有更深刻的认识。程序的意义请参考注释。<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  　1. 客户端程序<br>
+<br>
+　　import java.io.*;<br>
+　　import java.net.*;<br>
+　　public class TalkClient {<br>
+　　　　public static void main(String args[]) {<br>
+　　　　　　try{<br>
+　　　　　　　　Socket socket=new Socket(&quot;127.0.0.1&quot;,4700); <br>
+　　　　　　　　//向本机的4700端口发出客户请求<br>
+　　　　　　　　BufferedReader sin=new BufferedReader(new InputStreamReader(System.in));<br>
+　　　　　　　　//由系统标准输入设备构造BufferedReader对象<br>
+　　　　　　　　PrintWriter os=new PrintWriter(socket.getOutputStream());<br>
+　　　　　　　　//由Socket对象得到输出流，并构造PrintWriter对象<br>
+　　　　　　　　BufferedReader is=new BufferedReader(new InputStreamReader(socket.getInputStream()));<br>
+　　　　　　　　//由Socket对象得到输入流，并构造相应的BufferedReader对象<br>
+　　　　　　　　String readline;<br>
+　　　　　　　　readline=sin.readLine(); //从系统标准输入读入一字符串<br>
+　　　　　　　　while(!readline.equals(&quot;bye&quot;)){ <br>
+　　　　　　　　//若从标准输入读入的字符串为 &quot;bye&quot;则停止循环<br>
+　　　　　　　　　　os.println(readline); <br>
+　　　　　　　　　　//将从系统标准输入读入的字符串输出到Server<br>
+　　　　　　　　　　os.flush(); <br>
+　　　　　　　　　　//刷新输出流，使Server马上收到该字符串<br>
+　　　　　　　　　　System.out.println(&quot;Client:&quot;+readline); <br>
+　　　　　　　　　　//在系统标准输出上打印读入的字符串<br>
+　　　　　　　　　　System.out.println(&quot;Server:&quot;+is.readLine()); <br>
+　　　　　　　　　　//从Server读入一字符串，并打印到标准输出上<br>
+　　　　　　　　　　readline=sin.readLine(); //从系统标准输入读入一字符串<br>
+　　　　　　　　} //继续循环<br>
+　　　　　　　　os.close(); //关闭Socket输出流<br>
+　　　　　　　　is.close(); //关闭Socket输入流<br>
+　　　　　　　　socket.close(); //关闭Socket<br>
+　　　　　　}catch(Exception e) {<br>
+　　　　　　　　System.out.println(&quot;Error&quot;+e); //出错，则打印出错信息<br>
+　　　　　　}<br>
+　　}<br>
+}<br>
+<br>
+　2. 服务器端程序<br>
+<br>
+　　import java.io.*;<br>
+　　import java.net.*;<br>
+　　import java.applet.Applet;<br>
+　　public class TalkServer{<br>
+　　　　public static void main(String args[]) {<br>
+　　　　　　try{<br>
+　　　　　　　　ServerSocket server=null;<br>
+　　　　　　　　try{ <br>
+　　　　　　　　　　server=new ServerSocket(4700); <br>
+　　　　　　　　//创建一个ServerSocket在端口4700监听客户请求<br>
+　　　　　　　　}catch(Exception e) {<br>
+　　　　　　　　　　System.out.println(&quot;can not listen to:&quot;+e); <br>
+　　　　　　　　//出错，打印出错信息<br>
+　　　　　　　　}<br>
+<br>
+　　　　　　　　Socket socket=null;<br>
+　　　　　　　　try{<br>
+　　　　　　　　　　socket=server.accept(); <br>
+　　　　　　　　　　//使用accept()阻塞等待客户请求，有客户<br>
+　　　　　　　　　　//请求到来则产生一个Socket对象，并继续执行<br>
+　　　　　　　　}catch(Exception e) {<br>
+　　　　　　　　　　System.out.println(&quot;Error.&quot;+e); <br>
+　　　　　　　　　　//出错，打印出错信息<br>
+　　　　　　　　}<br>
+　　　　　　　　String line;<br>
+　　　　　　　　BufferedReader is=new BufferedReader(new InputStreamReader(socket.getInputStream()));<br>
+　　　　　　　　　//由Socket对象得到输入流，并构造相应的BufferedReader对象<br>
+　　　　　　　　PrintWriter os=newPrintWriter(socket.getOutputStream());<br>
+　　　　　　　　　//由Socket对象得到输出流，并构造PrintWriter对象<br>
+　　　　　　　　BufferedReader sin=new BufferedReader(new InputStreamReader(System.in));<br>
+　　　　　　　　　//由系统标准输入设备构造BufferedReader对象<br>
+<br>
+　　　　　　　　System.out.println(&quot;Client:&quot;+is.readLine()); <br>
+　　　　　　　　//在标准输出上打印从客户端读入的字符串<br>
+　　　　　　　　line=sin.readLine(); <br>
+　　　　　　　　//从标准输入读入一字符串<br>
+　　　　　　　　while(!line.equals(&quot;bye&quot;)){ <br>
+　　　　　　　　//如果该字符串为 &quot;bye&quot;，则停止循环<br>
+　　　　　　　　　　os.println(line); <br>
+　　　　　　　　　　//向客户端输出该字符串<br>
+　　　　　　　　　　os.flush(); <br>
+　　　　　　　　　　//刷新输出流，使Client马上收到该字符串<br>
+　　　　　　　　　　System.out.println(&quot;Server:&quot;+line); <br>
+　　　　　　　　　　//在系统标准输出上打印读入的字符串<br>
+　　　　　　　　　　System.out.println(&quot;Client:&quot;+is.readLine());<br>
+　　　　　　　　　　//从Client读入一字符串，并打印到标准输出上<br>
+　　　　　　　　　　line=sin.readLine(); <br>
+　　　　　　　　　　//从系统标准输入读入一字符串<br>
+　　　　　　　　} 　//继续循环<br>
+　　　　　　　　os.close(); //关闭Socket输出流<br>
+　　　　　　　　is.close(); //关闭Socket输入流<br>
+　　　　　　　　socket.close(); //关闭Socket<br>
+　　　　　　　　server.close(); //关闭ServerSocket<br>
+　　　　　　}catch(Exception e){<br>
+　　　　　　　　System.out.println(&quot;Error:&quot;+e); <br>
+　　　　　　　　//出错，打印出错信息<br>
+　　　　　　}<br>
+　　　　}<br>
+　　}<br>
+<br>
+--------------------<br>
+<strong><font size="5">支持多客户的client/server程序设计:</font></strong><br>
+<br>
+&nbsp;&nbsp;&nbsp;  前面提供的Client/Server程序只能实现Server和一个客户的对话。在实际应用中，往往是在服务器上运行一个永久的程序，它可以接收来自其他多个客户端的请求，提供相应的服务。为了实现在服务器方给多个客户提供服务的功能，需要对上面的程序进行改造，利用多线程实现多客户机制。服务器总是在指定的端口上监听是否有客户请求，一旦监听到客户请求，服务器就会启动一个专门的服务线程来响应该客户的请求，而服务器本身在启动完线程之后马上又进入监听状态，等待下一个客户的到来。<br>
+&nbsp;&nbsp;&nbsp;  例：ThreadedEchoServer<br>
+<br>
+<br>
+-----------------<br>
+什么是Datagram：<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  所谓数据报（Datagram）就跟日常生活中的邮件系统一样，是不能保证可靠的寄到的，而面向链接的TCP就好比电话，双方能肯定对方接受到了信息。在本章前面，我们已经对UDP和TCP进行了比较，在这里再稍作小节：<br>
+<br>
+　　TCP，可靠，传输大小无限制，但是需要连接建立时间，差错控制开销大。<br>
+　　UDP，不可靠，差错控制开销较小，传输大小限制在64K以下，不需要建立连接。<br>
+<br>
+　　总之，这两种协议各有特点，应用的场合也不同，是完全互补的两个协议，在TCP/IP协议中占有同样重要的地位，要学好网络编程，两者缺一不可。<br>
+<br>
+-------------------<br>
+Datagram通讯的表示方法：<br>
+DatagramSocket；<br>
+DatagramPacket<br>
+<br>
+&nbsp;&nbsp;&nbsp;  包java.net中提供了两个类DatagramSocket和DatagramPacket用来支持数据报通信，DatagramSocket用于在程序之间建立传送数据报的通信连接， DatagramPacket则用来表示一个数据报。先来看一下DatagramSocket的构造方法：<br>
+　　　DatagramSocket（）；<br>
+　　　DatagramSocket（int prot）;<br>
+　　　DatagramSocket(int port, InetAddress laddr)<br>
+　　<br>
+　　其中，port指明socket所使用的端口号，如果未指明端口号，则把socket连接到本地主机上一个可用的端口。laddr指明一个可用的本地地址。给出端口号时要保证不发生端口冲突，否则会生成SocketException类例外。注意：上述的两个构造方法都声明抛弃非运行时例外SocketException，程序中必须进行处理，或者捕获、或者声明抛弃。<br>
+<br>
+用数据报方式编写client/server程序时，无论在客户方还是服务方，首先都要建立一个DatagramSocket对象，用来接收或发送数据报，然后使用DatagramPacket类对象作为传输数据的载体。下面看一下DatagramPacket的构造方法 ：<br>
+　　　DatagramPacket（byte buf[],int length）；<br>
+　　　DatagramPacket(byte buf[], int length, InetAddress addr, int port);<br>
+　　　DatagramPacket(byte[] buf, int offset, int length)；<br>
+　　　DatagramPacket(byte[] buf, int offset, int length, InetAddress address, int port)；<br>
+<br>
+　　其中，buf中存放数据报数据，length为数据报中数据的长度，addr和port旨明目的地址，offset指明了数据报的位移量。<br>
+<br>
+　　在接收数据前，应该采用上面的第一种方法生成一个DatagramPacket对象，给出接收数据的缓冲区及其长度。然后调用DatagramSocket 的方法receive()等待数据报的到来，receive()将一直等待，直到收到一个数据报为止。<br>
+　　DatagramPacket packet=new DatagramPacket(buf, 256);<br>
+　　Socket.receive (packet);<br>
+<br>
+　　发送数据前，也要先生成一个新的DatagramPacket对象，这时要使用上面的第二种构造方法，在给出存放发送数据的缓冲区的同时，还要给出完整的目的地址，包括IP地址和端口号。发送数据是通过DatagramSocket的方法send()实现的，send()根据数据报的目的地址来寻径，以传递数据报。<br>
+　　DatagramPacket packet=new DatagramPacket(buf, length, address, port);<br>
+　　Socket.send(packet)；<br>
+<br>
+在构造数据报时，要给出InetAddress类参数。类InetAddress在包java.net中定义，用来表示一个Internet地址，我们可以通过它提供的类方法getByName（）从一个表示主机名的字符串获取该主机的IP地址，然后再获取相应的地址信息。<br>
+<br>
+-------------<br>
+<strong><font size="5">基于UDP的简单的Client/Server程序设计：<br>
+</font></strong><br>
+<br>
+&nbsp;&nbsp;&nbsp;  可以看出使用UDP和使用TCP在程序上还是有很大的区别的。一个比较明显的区别是，UDP的Socket编程是不提供监听功能的，也就是说通信双方更为平等，面对的接口是完全一样的。但是为了用UDP实现C/S结构，在使用UDP时可以使用DatagramSocket.receive()来实现类似于监听的功能。因为receive()是阻塞的函数，当它返回时，缓冲区里已经填满了接受到的一个数据报，并且可以从该数据报得到发送方的各种信息，这一点跟accept()是很相象的，因而可以根据读入的数据报来决定下一步的动作，这就达到了跟网络监听相似的效果。</font></p>
+<p><br>
+<font size="3" face="宋体">本文来自CSDN博客，转载请标明出处：</font><a href="http://blog.csdn.net/allan_sun/archive/2006/02/21/604353.aspx"><font size="3" face="宋体">http://blog.csdn.net/allan_sun/archive/2006/02/21/604353.aspx</font></a></p></div></body></html>

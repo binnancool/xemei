@@ -1,0 +1,28 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java.util.Timer类中的方法schedule()说明</title></head><body><h1>java.util.Timer类中的方法schedule()说明</h1><div><p><strong>方法：</strong><a href="http://hi.baidu.com/java/util/Timer.html#schedule(java.util.TimerTask, long, long)"><font face="NSimsun"><strong>schedule</strong></font></a><font face="NSimsun">(</font><a title="java.util 中的类" href="http://hi.baidu.com/java/util/TimerTask.html"><font face="NSimsun">TimerTask</font></a><font face="NSimsun"> task, long delay, long period)</font> <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  安排指定的任务从指定的延迟后开始进行重复的<em>固定延迟执行</em>。</p>
+<dt><strong>参数：</strong>
+<p> </p>
+</dt><dd><code><font face="NSimsun">task</font></code> - 所要安排的任务。 </dd><dd><code><font face="NSimsun">delay</font></code> - 执行任务前的延迟时间，单位是毫秒。 </dd><dd><code><font face="NSimsun">period</font></code> - 执行各后续任务之间的时间间隔，单位是毫秒。
+<p> </p>
+<p><font size="2" face="宋体"><strong>&nbsp;&nbsp;&nbsp;  在Java程序中，把period=1000，即1秒重复执行一次，但是在实际的运行中每次触发的间隔小于一秒，为什么？</strong></font></p>
+<p><font size="2" face="宋体"><strong>测试实例：</strong></font></p>
+<font size="2" face="宋体">
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><strong><font size="3">环境：</font></strong></span><strong><font size="3"><span style=" mso-ascii- mso-hansi-">结果：</span><span></span></font></strong></p>
+<p style="margin: 0cm 0cm 0pt 21pt" class="MsoNormal"><font size="3"><span style=" mso-ascii- mso-hansi-">操作系统：</span><span><font face="Times New Roman">Windows XP</font></span></font></p>
+<p style="margin: 0cm 0cm 0pt 21pt" class="MsoNormal"><font size="3"><span><font face="Times New Roman">CPU</font></span><span style=" mso-ascii- mso-hansi-">：</span><span><font face="Times New Roman">AMD Sempron(tm) Processor 2800+ 1.6GHz</font></span></font></p>
+<p style="margin: 0cm 0cm 0pt 21pt" class="MsoNormal"><font size="3"><span style=" mso-ascii- mso-hansi-">内存：</span><st1:chmetcnv tcsc="0" numbertype="1" negative="False" hasspace="False" sourcevalue="1" unitname="g"><span><font face="Times New Roman">1G</font></span></st1:chmetcnv></font></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"> </p>
+<p style="margin: 0cm 0cm 0pt 21pt; mso-para-margin-left: 2.0gd" class="MsoNormal"><span><font size="3" face="Times New Roman">========================</font></span></p>
+<p style="margin: 0cm 0cm 0pt 21pt; mso-para-margin-left: 2.0gd" class="MsoNormal"><font size="3"><span style=" mso-ascii- mso-hansi-">定时器触发的次数：</span><span><font face="Times New Roman"><span style="mso-spacerun: yes">  </span>5</font></span></font></p>
+<p style="margin: 0cm 0cm 0pt 21pt; mso-para-margin-left: 2.0gd" class="MsoNormal"><font size="3"><span style=" mso-ascii- mso-hansi-">测试记录时间：</span><span><font face="Times New Roman">2009-8-11 15:26:17</font></span></font></p>
+<p style="margin: 0cm 0cm 0pt 21pt; mso-para-margin-left: 2.0gd" class="MsoNormal"><span><font size="3" face="Times New Roman">========================</font></span></p>
+<p style="margin: 0cm 0cm 0pt 21pt; mso-para-margin-left: 2.0gd" class="MsoNormal"><font size="3"><span style=" mso-ascii- mso-hansi-">定时器触发的次数：</span><span><font face="Times New Roman"><span style="mso-spacerun: yes">  </span>7419</font></span></font></p>
+<p style="margin: 0cm 0cm 0pt 21pt; mso-para-margin-left: 2.0gd" class="MsoNormal"><font size="3"><span style=" mso-ascii- mso-hansi-">测试记录时间：</span><span><font face="Times New Roman">2009-8-11 16:28:21</font></span></font></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><strong><font size="3"><span style=" mso-ascii- mso-hansi-">分析：</span><span></span></font></strong></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span><font size="3"><span style="mso-tab-count: 1"><font face="Times New Roman"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;  </strong></font></span>时间<span>t=3724</span>秒<span></span></font></span></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><font size="3"><span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;  </span></span><span>定时器触发次数<span>timer=7414</span>次<span></span></span></font></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><font size="3"><span><span style="mso-tab-count: 1">&nbsp;&nbsp;&nbsp;&nbsp;  </span></span><span>每秒触发次数<span>averageTimer=1.99</span>次<span></span></span></font></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><strong><font size="3"><span style=" mso-ascii- mso-hansi-">结论：</span><span></span></font></strong></p>
+<p style="margin: 0cm 0cm 0pt" class="MsoNormal"><font size="3"><span><span style="mso-tab-count: 1"><font face="Times New Roman"><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </strong></font></span>平均</span><span>每秒定时器触发<span>1.99</span>次。</span></font></p>
+<p> </p>
+</font> </dd></div></body></html>

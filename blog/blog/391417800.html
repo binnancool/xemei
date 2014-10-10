@@ -1,0 +1,30 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Web服务器父与子 Apache和Tomcat区别</title></head><body><h1>Web服务器父与子 Apache和Tomcat区别</h1><div><p>熟悉三国的朋友都知道曹操，曹操有二十五个儿子，其中最得曹操宠爱的是曹丕、曹植、曹彰三个，曹丕性格阴冷，擅长政治；曹植才华横溢，放浪不羁；曹彰武艺高强，战功卓著。曹操一直希望这三个儿子当中选取自己的继承人，最后与曹操性格最为相近的曹丕脱颖而出。但是我们永远都不会否认曹植的才华和曹彰的武功。</p>
+<p>Apache是世界使用排名第一的Web服务器软件。它可以运行在几乎所有广泛使用的计算机平台上，由于其跨平台和安全性被广泛使用，是最流行的Web服务器端软件之一。在Apache基金会里面Apache Server永远会被赋予最大的支持，毕竟大儿子最亲嘛，而Apache的开源服务器软件Tomcat同样值得关注，毕竟Tomcat是开源免费的产品，用户会给予最大的支持。但是经常在用Apache和Tomcat等这些服务器时，你总感觉还是不清楚他们之间有什么关系，在用Tomcat的时候总出现Apache，总感到迷惑，到底谁是主谁是次，因此特意在网上查询了一些这方面的资料，总结了一下。（51CTO编辑推荐：<a href="http://developer.51cto.com/art/201006/208551.htm" target="_blank"><span style="COLOR: #0000ff">Tomcat 7功能与应用指南</span></a>）</p>
+<p><span style="FONT-SIZE: larger"><strong>解析一： </strong></span></p>
+<p>Apache支持静态页，Tomcat支持动态的，比如Servlet等，</p>
+<p>一般使用Apache+Tomcat的话，Apache只是作为一个转发，对JSP的处理是由Tomcat来处理的。</p>
+<p>Apche可以支持PHPcgiperl,但是要使用Java的话，你需要Tomcat在Apache后台支撑，将Java请求由Apache转发给Tomcat处理。</p>
+<p>Apache是Web服务器，Tomcat是应用（Java）服务器，它只是一个Servlet(JSP也翻译成Servlet)容器，可以认为是Apache的扩展，但是可以独立于Apache运行。</p>
+<p>这两个有以下几点可以比较的：</p>
+<p>◆两者都是Apache组织开发的</p>
+<p>◆两者都有HTTP服务的功能</p>
+<p>◆两者都是免费的</p>
+<p>不同点：</p>
+<p>Apache是专门用了提供HTTP服务的，以及相关配置的（例如虚拟主机、URL转发等等）</p>
+<p>Tomcat是Apache组织在符合Java EE的JSP、Servlet标准下开发的一个JSP服务器.</p>
+<p><span><span>Runtime </span><span><span style="COLOR: #ff0000">r</span></span><span>=</span><span><span style="COLOR: #0000ff">Runtime</span></span><span>.getRuntime(); </span></span><span>Process </span><span><span style="COLOR: #ff0000">p</span></span><span>=</span><span><span style="COLOR: #0000ff">null</span></span><span>; </span><span>try </span><span>{ </span><span><span style="COLOR: #ff0000">p</span></span><span>=</span><span><span style="COLOR: #0000ff">r</span></span><span>.exec("notepad"); </span><span>} </span><span>catch(Exception ex) </span><span>{ </span><span>System.out.println("fffff"); </span><span>} </span><span></span></p>
+<p><span style="FONT-SIZE: larger"><strong>解析二： </strong></span></p>
+<p>Apache是一个Web服务器环境程序,启用他可以作为Web服务器使用,不过只支持静态网页 如(ASP,PHP,CGI,JSP)等动态网页的就不行。</p>
+<p>如果要在Apache环境下运行JSP的话就需要一个解释器来执行JSP网页,而这个JSP解释器就是Tomcat, 为什么还要JDK呢？因为JSP需要连接数据库的话 就要jdk来提供连接数据库的驱程，所以要运行JSP的Web服务器平台就需要Apache+Tomcat+JDK。</p>
+<p>整合的好处是：</p>
+<p>◆如果客户端请求的是静态页面，则只需要Apache服务器响应请求。</p>
+<p>◆如果客户端请求动态页面，则是Tomcat服务器响应请求。</p>
+<p>◆因为JSP是服务器端解释代码的，这样整合就可以减少Tomcat的服务开销。</p>
+<p>C是一个结构化语言，如谭老爷子所说：它的重点在于算法和数据结构。C程序的设计首要考虑的是如何通过一个过程，对输入（或环境条件）进行运算处理得到输出（或实现过程（事务）控制），而对于C++，首要考虑的是如何构造一个对象模型，让这个模型能够契合与之对应的问题域，这样就可以通过获取对象的状态信息得到输出或实现过程（事务）控制。</p>
+<p><span style="FONT-SIZE: larger"><strong>解析三： </strong></span></p>
+<p>Apache:侧重于HTTP Server</p>
+<p>Tomcat:侧重于Servlet引擎，如果以Standalone方式运行，功能上与Apache等效 ， 支持JSP，但对静态网页不太理想；</p>
+<p>Apache是Web服务器，Tomcat是应用（Java）服务器，它只是一个Servlet(JSP也翻译成Servlet)容器，可以认为是Apache的扩展，但是可以独立于Apache运行。</p>
+<p>换句话说，Apache是一辆卡车，上面可以装一些东西如Html等。但是不能装水，要装水必须要有容器（桶），而这个桶也可以不放在卡车上。</p>
+<p><span style="FONT-SIZE: larger"><strong>小结</strong></span></p>
+<p>总体来说，Tomcat也许永远不会成为Apache最重要的产品，但是谁也阻止不了Tomcat成为主流产品，Apache对于这个小儿子同样也会给相当大的关心。</p></div></body></html>

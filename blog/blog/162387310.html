@@ -1,0 +1,18 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java线程在向量中存储的问题？</title></head><body><h1>java线程在向量中存储的问题？</h1><div><p><font size="3" face="宋体">public static void SendSmsMsgEx2(int msgNum,final int threadNum){<br>
+&nbsp;&nbsp;  SendThread.SEND_MSG_NUMBER=msgNum;<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;  for(int i=0;i&lt;threadNum;i++){<br>
+&nbsp;&nbsp;&nbsp;  Thread t=new SendSmsMsgExThread2();<br>
+&nbsp;&nbsp;&nbsp;  vhSend.add(i,t);<br>
+&nbsp;&nbsp;&nbsp;  t.start();<br>
+&nbsp;&nbsp;  }</font></p>
+<p><font size="3" face="宋体">}</font></p>
+<p><font size="3" face="宋体"><strong>&nbsp;&nbsp;&nbsp;  多次运行上面的函数，原来的线程会结束吗，如果不会被结束，则会有多少个线程并发运行？</strong></font></p>
+<p><font size="3" face="宋体">vhSend.add(i,t);在此向量的指定位置插入指定的元素。将当前位于该位置的元素（如果有）及所有后续元素右移（将其索引加 1）。 </font></p>
+<p><font size="3" face="宋体">因此多次运行上面函数，则会不断有新的线程加入向量vhSend。</font></p>
+<p><font size="3" face="宋体">因此需要加入语句：</font></p>
+<p><font size="3" face="宋体"><strong>for(int i=0;i&lt;vhSend.size();i++){<br>
+&nbsp;&nbsp;&nbsp; vhSend.get(i).interrupt();<br>
+&nbsp;&nbsp; }中断各个线程</strong></font></p>
+<p><font size="3" face="宋体"><strong>vhSend.clear()清空向量。</strong></font></p>
+<p><font size="3" face="宋体">但是向量里原来的线程对象，在执行完毕后，其引用就为0，垃圾回收机制会在适当时机，自动被回收。</font></p></div></body></html>

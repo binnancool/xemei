@@ -1,0 +1,21 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>request.getParameterValues的应用，可以取得多同名checkbox的个值</title></head><body><h1>request.getParameterValues的应用，可以取得多同名checkbox的个值</h1><div><p><font size="4" face="宋体">request.getParameterValues(String&nbsp;&nbsp;  name)是获得如checkbox类（名字相同，但值有多个）的数据。</font></p>
+<p><br>
+<font size="4" face="宋体">request.getParameter（String&nbsp;&nbsp;  name）是获得相应名的数据，如果有重复的名，则返回第一个的值 . </font></p>
+<p><font size="4" face="宋体">如下例：</font></p>
+<p><font size="4" face="宋体">&lt;input type=&quot;checkbox&quot; name=&quot;langtype&quot; value=&quot;JSP&quot;&gt;JSP　&nbsp;&nbsp;&nbsp;  </font></p>
+<p><font size="4" face="宋体">&lt;input type=&quot;checkbox&quot; name=&quot;langtype&quot; value=&quot;PHP&quot;&gt;PHP　&nbsp;&nbsp;&nbsp;  </font></p>
+<p><font size="4" face="宋体">&lt;input type=&quot;checkbox&quot; name=&quot;langtype&quot; value=&quot;PERL&quot;&gt;PERL&nbsp;&nbsp;&nbsp;  <br>
+</font></p>
+<p><font size="4" face="宋体">String langtype[]=request.getParameterValues(&quot;langtype&quot;); //用getParameterValues的方法，将核取到的值取到langtype[]阵列内&nbsp;&nbsp;&nbsp;  <br>
+if (langtype!=null)&nbsp;&nbsp;&nbsp;  <br>
+//前端的使用者,如果没打勾的话&nbsp;&nbsp;&nbsp;  <br>
+//request.getParameterValues(&quot;langtype&quot;)会接收到null值&nbsp;&nbsp;&nbsp;  <br>
+{&nbsp;&nbsp;&nbsp;  <br>
+  int size=java.lang.reflect.Array.getLength(langtype);&nbsp;&nbsp;&nbsp;  <br>
+//取得这个阵列大小&nbsp;&nbsp;&nbsp;  <br>
+  for (int i=0;i&lt;size;i++)&nbsp;&nbsp;&nbsp;  <br>
+  {&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  out.println(langtype[i]+&quot;&lt;br&gt;&quot;);&nbsp;&nbsp;&nbsp;  <br>
+  }&nbsp;&nbsp;&nbsp;  <br>
+//利用一个for迴圈将阵列资料取出&nbsp;&nbsp;&nbsp;  <br>
+}&nbsp;&nbsp;&nbsp;  </font></p></div></body></html>

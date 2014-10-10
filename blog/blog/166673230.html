@@ -1,0 +1,303 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>jsp的web.xml配置说明</title></head><body><h1>jsp的web.xml配置说明</h1><div>Web.xml常用元素 <br>
+&lt;web-app&gt; <br>
+<span style="color: blue">&lt;display-name&gt;&lt;/display-name&gt;</span>定义了WEB应用的名字 <br>
+<span style="color: blue">&lt;description&gt;&lt;/description&gt;</span> 声明WEB应用的描述信息 <br>
+<br>
+<span style="color: blue">&lt;context-param&gt;&lt;/context-param&gt;</span> context-param元素声明应用范围内的初始化参数。 <br>
+<span style="color: blue">&lt;filter&gt;&lt;/filter&gt;</span> 过滤器元素将一个名字与一个实现javax.servlet.Filter接口的类相关联。 <br>
+<span style="color: blue">&lt;filter-mapping&gt;&lt;/filter-mapping&gt;</span> 一旦命名了一个过滤器，就要利用filter-mapping元素把它与一个或多个servlet或JSP页面相关联。 <br>
+<span style="color: blue">&lt;listener&gt;&lt;/listener&gt;</span>servlet API的版本2.3增加了对事件监听程序的支持，事件监听程序在建立、修改和删除会话或servlet环境时得到通知。 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Listener元素指出事件监听程序类。 <br>
+<span style="color: blue">&lt;servlet&gt;&lt;/servlet&gt;</span> 在向servlet或JSP页面制定初始化参数或定制URL时，必须首先命名servlet或JSP页面。Servlet元素就是用来完成此项任务的。 <br>
+&lt;<span style="color: blue">servlet-mapping&gt;&lt;/servlet-mapping&gt;</span> 服务器一般为servlet提供一个缺省的URL：http://host/webAppPrefix/servlet/ServletName。 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  但是，常常会更改这个URL，以便servlet可以访问初始化参数或更容易地处理相对URL。在更改缺省URL时，使用servlet-mapping元素。 <br>
+<br>
+<span style="color: blue">&lt;session-config&gt;&lt;/session-config&gt;</span> 如果某个会话在一定时间内未被访问，服务器可以抛弃它以节省内存。 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  可通过使用HttpSession的setMaxInactiveInterval方法明确设置单个会话对象的超时值，或者可利用session-config元素制定缺省超时值。 <br>
+<br>
+<span style="color: blue">&lt;mime-mapping&gt;&lt;/mime-mapping&gt;</span>如果Web应用具有想到特殊的文件，希望能保证给他们分配特定的MIME类型，则mime-mapping元素提供这种保证。 <br>
+<span style="color: blue">&lt;welcome-file-list&gt;&lt;/welcome-file-list&gt;</span> 指示服务器在收到引用一个目录名而不是文件名的URL时，使用哪个文件。 <br>
+<span style="color: blue">&lt;error-page&gt;&lt;/error-page&gt;</span> 在返回特定HTTP状态代码时，或者特定类型的异常被抛出时，能够制定将要显示的页面。 <br>
+<span style="color: blue">&lt;taglib&gt;&lt;/taglib&gt;</span> 对标记库描述符文件（Tag Libraryu Descriptor file）指定别名。此功能使你能够更改TLD文件的位置， <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  而不用编辑使用这些文件的JSP页面。 <br>
+<span style="color: blue">&lt;resource-env-ref&gt;&lt;/resource-env-ref&gt;</span>声明与资源相关的一个管理对象。 <br>
+<span style="color: blue">&lt;resource-ref&gt;&lt;/resource-ref&gt; </span>声明一个资源工厂使用的外部资源。 <br>
+<span style="color: blue">&lt;security-constraint&gt;&lt;/security-constraint&gt;</span> 制定应该保护的URL。它与login-config元素联合使用 <br>
+<span style="color: blue">&lt;login-config&gt;&lt;/login-config&gt;</span> 指定服务器应该怎样给试图访问受保护页面的用户授权。它与sercurity-constraint元素联合使用。 <br>
+<span style="color: blue">&lt;security-role&gt;&lt;/security-role&gt;</span>给出安全角色的一个列表，这些角色将出现在servlet元素内的security-role-ref元素 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  的role-name子元素中。分别地声明角色可使高级IDE处理安全信息更为容易。 <br>
+<span style="color: blue">&lt;env-entry&gt;&lt;/env-entry&gt;</span>声明Web应用的环境项。 <br>
+<span style="color: blue">&lt;ejb-ref&gt;&lt;/ejb-ref&gt;</span>声明一个EJB的主目录的引用。 <br>
+<span style="color: blue">&lt; ejb-local-ref&gt;&lt;/ ejb-local-ref&gt;</span>声明一个EJB的本地主目录的应用。 <br>
+&lt;/web-app&gt; <br>
+<br>
+<br>
+相应元素配置 <br>
+<br>
+<span style="color: orange">1、Web应用图标：指出IDE和GUI工具用来表示Web应用的大图标和小图标 </span><br>
+&lt;icon&gt; <br>
+&lt;small-icon&gt;/images/app_small.gif&lt;/small-icon&gt; <br>
+&lt;large-icon&gt;/images/app_large.gif&lt;/large-icon&gt; <br>
+&lt;/icon&gt; <br>
+<span style="color: orange">2、Web 应用名称：提供GUI工具可能会用来标记这个特定的Web应用的一个名称 </span><br>
+&lt;display-name&gt;Tomcat Example&lt;/display-name&gt; <br>
+<span style="color: orange">3、Web 应用描述： 给出于此相关的说明性文本 </span><br>
+&lt;disciption&gt;Tomcat Example servlets and JSP pages.&lt;/disciption&gt; <br>
+<span style="color: orange">4、上下文参数：声明应用范围内的初始化参数。</span> <br>
+  &lt;context-param&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;param-name&gt;ContextParameter&lt;/para-name&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;param-value&gt;test&lt;/param-value&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;description&gt;It is a test parameter.&lt;/description&gt; <br>
+  &lt;/context-param&gt; <br>
+  在servlet里面可以通过getServletContext().getInitParameter(&quot;context/param&quot;)得到 <br>
+<br>
+<span style="color: orange">5、过滤器配置：将一个名字与一个实现javaxs.servlet.Filter接口的类相关联。</span> <br>
+  &lt;filter&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;filter-name&gt;setCharacterEncoding&lt;/filter-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;filter-class&gt;com.myTest.setCharacterEncodingFilter&lt;/filter-class&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;init-param&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-name&gt;encoding&lt;/param-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-value&gt;GB2312&lt;/param-value&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/init-param&gt; <br>
+  &lt;/filter&gt; <br>
+  &lt;filter-mapping&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;filter-name&gt;setCharacterEncoding&lt;/filter-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;url-pattern&gt;/*&lt;/url-pattern&gt; <br>
+  &lt;/filter-mapping&gt; <br>
+<span style="color: orange">6、监听器配置</span> <br>
+  &lt;listener&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;listerner-class&gt;listener.SessionListener&lt;/listener-class&gt; <br>
+  &lt;/listener&gt; <br>
+<span style="color: orange">7、Servlet配置</span> <br>
+&nbsp;&nbsp;  基本配置 <br>
+&nbsp;&nbsp;  &lt;servlet&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-name&gt;snoop&lt;/servlet-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-class&gt;SnoopServlet&lt;/servlet-class&gt; <br>
+&nbsp;&nbsp;  &lt;/servlet&gt; <br>
+&nbsp;&nbsp;  &lt;servlet-mapping&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-name&gt;snoop&lt;/servlet-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;url-pattern&gt;/snoop&lt;/url-pattern&gt; <br>
+&nbsp;&nbsp;  &lt;/servlet-mapping&gt; <br>
+&nbsp;&nbsp;  高级配置 <br>
+&nbsp;&nbsp;  &lt;servlet&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-name&gt;snoop&lt;/servlet-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-class&gt;SnoopServlet&lt;/servlet-class&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;init-param&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-name&gt;foo&lt;/param-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-value&gt;bar&lt;/param-value&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/init-param&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;run-as&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;description&gt;Security role for anonymous access&lt;/description&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;role-name&gt;tomcat&lt;/role-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/run-as&gt; <br>
+&nbsp;&nbsp;  &lt;/servlet&gt; <br>
+&nbsp;&nbsp;  &lt;servlet-mapping&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-name&gt;snoop&lt;/servlet-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;url-pattern&gt;/snoop&lt;/url-pattern&gt; <br>
+&nbsp;&nbsp;  &lt;/servlet-mapping&gt; <br>
+&nbsp;&nbsp;  元素说明 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet&gt;&lt;/servlet&gt; 用来声明一个servlet的数据，主要有以下子元素： <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-name&gt;&lt;/servlet-name&gt; 指定servlet的名称 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-class&gt;&lt;/servlet-class&gt; 指定servlet的类名称 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;jsp-file&gt;&lt;/jsp-file&gt; 指定web站台中的某个JSP网页的完整路径 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;init-param&gt;&lt;/init-param&gt; 用来定义参数，可有多个init-param。在servlet类中通过getInitParamenter(String name)方法访问初始化参数 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;load-on-startup&gt;&lt;/load-on-startup&gt;指定当Web应用启动时，装载Servlet的次序。 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  当值为正数或零时：Servlet容器先加载数值小的servlet，再依次加载其他数值大的servlet. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  当值为负或未定义：Servlet容器将在Web客户首次访问这个servlet时加载它 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-mapping&gt;&lt;/servlet-mapping&gt; 用来定义servlet所对应的URL，包含两个子元素 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-name&gt;&lt;/servlet-name&gt; 指定servlet的名称 <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;url-pattern&gt;&lt;/url-pattern&gt; 指定servlet所对应的URL <br>
+<span style="color: orange">8、会话超时配置（单位为分钟）</span> <br>
+&nbsp;&nbsp;  &lt;session-config&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;session-timeout&gt;120&lt;/session-timeout&gt; <br>
+&nbsp;&nbsp;  &lt;/session-config&gt; <br>
+<span style="color: orange">9、MIME类型配置</span> <br>
+&nbsp;&nbsp;  &lt;mime-mapping&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;extension&gt;htm&lt;/extension&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;mime-type&gt;text/html&lt;/mime-type&gt; <br>
+&nbsp;&nbsp;  &lt;/mime-mapping&gt; <br>
+<span style="color: orange">10、指定欢迎文件页配置</span> <br>
+&nbsp;&nbsp;  &lt;welcome-file-list&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;welcome-file&gt;index.html&lt;/welcome-file&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;welcome-file&gt;index.htm&lt;/welcome-file&gt; <br>
+&nbsp;&nbsp;  &lt;/welcome-file-list&gt; <br>
+<span style="color: orange">11、配置错误页面</span> <br>
+  <span style="color: blue">一、 通过错误码来配置error-page</span> <br>
+&nbsp;&nbsp;  &lt;error-page&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;error-code&gt;404&lt;/error-code&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;location&gt;/NotFound.jsp&lt;/location&gt; <br>
+&nbsp;&nbsp;  &lt;/error-page&gt; <br>
+  上面配置了当系统发生404错误时，跳转到错误处理页面NotFound.jsp。 <br>
+<span style="color: blue">二、通过异常的类型配置error-page</span> <br>
+&nbsp;&nbsp;  &lt;error-page&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;exception-type&gt;java.lang.NullException&lt;/exception-type&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;location&gt;/error.jsp&lt;/location&gt; <br>
+&nbsp;&nbsp;  &lt;/error-page&gt; <br>
+  上面配置了当系统发生java.lang.NullException（即空指针异常）时，跳转到错误处理页面error.jsp <br>
+<span style="color: orange">12、TLD配置</span> <br>
+&nbsp;&nbsp;  &lt;taglib&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib-uri&gt;http://jakarta.apache.org/tomcat/debug-taglib&lt;/taglib-uri&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib-location&gt;/WEB-INF/jsp/debug-taglib.tld&lt;/taglib-location&gt; <br>
+&nbsp;&nbsp;  &lt;/taglib&gt; <br>
+&nbsp;&nbsp;  如果MyEclipse一直在报错,应该把&lt;taglib&gt; 放到 &lt;jsp-config&gt;中 <br>
+&nbsp;&nbsp;  &lt;jsp-config&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib-uri&gt;http://jakarta.apache.org/tomcat/debug-taglib&lt;/taglib-uri&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib-location&gt;/WEB-INF/pager-taglib.tld&lt;/taglib-location&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/taglib&gt; <br>
+&nbsp;&nbsp;  &lt;/jsp-config&gt; <br>
+<span style="color: orange">13、资源管理对象配置</span> <br>
+&nbsp;&nbsp;  &lt;resource-env-ref&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;resource-env-ref-name&gt;jms/StockQueue&lt;/resource-env-ref-name&gt; <br>
+&nbsp;&nbsp;  &lt;/resource-env-ref&gt; <br>
+<span style="color: orange">14、资源工厂配置</span> <br>
+&nbsp;&nbsp;  &lt;resource-ref&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;res-ref-name&gt;mail/Session&lt;/res-ref-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;res-type&gt;javax.mail.Session&lt;/res-type&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;res-auth&gt;Container&lt;/res-auth&gt; <br>
+&nbsp;&nbsp;  &lt;/resource-ref&gt; <br>
+&nbsp;&nbsp;  配置数据库连接池就可在此配置： <br>
+&nbsp;&nbsp;  &lt;resource-ref&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;description&gt;JNDI JDBC DataSource of shop&lt;/description&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;res-ref-name&gt;jdbc/sample_db&lt;/res-ref-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;res-type&gt;javax.sql.DataSource&lt;/res-type&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;res-auth&gt;Container&lt;/res-auth&gt; <br>
+&nbsp;&nbsp;  &lt;/resource-ref&gt; <br>
+<span style="color: orange">15、安全限制配置</span> <br>
+&nbsp;&nbsp;  &lt;security-constraint&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;display-name&gt;Example Security Constraint&lt;/display-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;web-resource-collection&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;web-resource-name&gt;Protected Area&lt;/web-resource-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;url-pattern&gt;/jsp/security/protected/*&lt;/url-pattern&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;http-method&gt;DELETE&lt;/http-method&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;http-method&gt;GET&lt;/http-method&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;http-method&gt;POST&lt;/http-method&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;http-method&gt;PUT&lt;/http-method&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/web-resource-collection&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;auth-constraint&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;role-name&gt;tomcat&lt;/role-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;role-name&gt;role1&lt;/role-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/auth-constraint&gt; <br>
+&nbsp;&nbsp;  &lt;/security-constraint&gt; <br>
+<span style="color: orange">16、登陆验证配置</span> <br>
+&nbsp;&nbsp;  &lt;login-config&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;auth-method&gt;FORM&lt;/auth-method&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;realm-name&gt;Example-Based Authentiation Area&lt;/realm-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;form-login-config&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;form-login-page&gt;/jsp/security/protected/login.jsp&lt;/form-login-page&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;form-error-page&gt;/jsp/security/protected/error.jsp&lt;/form-error-page&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/form-login-config&gt; <br>
+&nbsp;&nbsp;  &lt;/login-config&gt; <br>
+<span style="color: orange">17、安全角色：security-role元素给出安全角色的一个列表，这些角色将出现在servlet元素内的security-role-ref元素的role-name子元素中。 <br>
+&nbsp;&nbsp;&nbsp;  分别地声明角色可使高级IDE处理安全信息更为容易。</span> <br>
+  &lt;security-role&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;role-name&gt;tomcat&lt;/role-name&gt; <br>
+  &lt;/security-role&gt; <br>
+<span style="color: orange">18、Web环境参数：env-entry元素声明Web应用的环境项</span> <br>
+  &lt;env-entry&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;env-entry-name&gt;minExemptions&lt;/env-entry-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;env-entry-value&gt;1&lt;/env-entry-value&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;env-entry-type&gt;java.lang.Integer&lt;/env-entry-type&gt; <br>
+  &lt;/env-entry&gt; <br>
+<span style="color: orange">19、EJB 声明</span> <br>
+  &lt;ejb-ref&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;description&gt;Example EJB reference&lt;/decription&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;ejb-ref-name&gt;ejb/Account&lt;/ejb-ref-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;ejb-ref-type&gt;Entity&lt;/ejb-ref-type&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;home&gt;com.mycompany.mypackage.AccountHome&lt;/home&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;remote&gt;com.mycompany.mypackage.Account&lt;/remote&gt; <br>
+  &lt;/ejb-ref&gt; <br>
+<span style="color: orange">20、本地EJB声明</span> <br>
+  &lt;ejb-local-ref&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;description&gt;Example Loacal EJB reference&lt;/decription&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;ejb-ref-name&gt;ejb/ProcessOrder&lt;/ejb-ref-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;ejb-ref-type&gt;Session&lt;/ejb-ref-type&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;local-home&gt;com.mycompany.mypackage.ProcessOrderHome&lt;/local-home&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;local&gt;com.mycompany.mypackage.ProcessOrder&lt;/local&gt; <br>
+  &lt;/ejb-local-ref&gt; <br>
+<span style="color: orange">21、配置DWR</span> <br>
+  &lt;servlet&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-class&gt;uk.ltd.getahead.dwr.DWRServlet&lt;/servlet-class&gt; <br>
+  &lt;/servlet&gt; <br>
+  &lt;servlet-mapping&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-name&gt;dwr-invoker&lt;/servlet-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;url-pattern&gt;/dwr/*&lt;/url-pattern&gt; <br>
+  &lt;/servlet-mapping&gt; <br>
+<span style="color: orange">22、配置Struts</span> <br>
+&nbsp;&nbsp;&nbsp;  &lt;display-name&gt;Struts Blank Application&lt;/display-name&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;servlet&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-name&gt;action&lt;/servlet-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-class&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  org.apache.struts.action.ActionServlet <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/servlet-class&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;init-param&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-name&gt;detail&lt;/param-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-value&gt;2&lt;/param-value&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/init-param&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;init-param&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-name&gt;debug&lt;/param-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-value&gt;2&lt;/param-value&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/init-param&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;init-param&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-name&gt;config&lt;/param-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-value&gt;/WEB-INF/struts-config.xml&lt;/param-value&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/init-param&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;init-param&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-name&gt;application&lt;/param-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-value&gt;ApplicationResources&lt;/param-value&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/init-param&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;load-on-startup&gt;2&lt;/load-on-startup&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;/servlet&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;servlet-mapping&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;servlet-name&gt;action&lt;/servlet-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;url-pattern&gt;*.do&lt;/url-pattern&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;/servlet-mapping&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;welcome-file-list&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;/welcome-file-list&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;  &lt;!-- Struts Tag Library Descriptors --&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;taglib&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib-uri&gt;struts-bean&lt;/taglib-uri&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib-location&gt;/WEB-INF/tld/struts-bean.tld&lt;/taglib-location&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;/taglib&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;taglib&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib-uri&gt;struts-html&lt;/taglib-uri&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib-location&gt;/WEB-INF/tld/struts-html.tld&lt;/taglib-location&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;/taglib&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;taglib&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;taglib-uri&gt;struts-nested&lt;/taglib-uri&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;taglib-location&gt;/WEB-INF/tld/struts-nested.tld&lt;/taglib-location&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;/taglib&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;taglib&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib-uri&gt;struts-logic&lt;/taglib-uri&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib-location&gt;/WEB-INF/tld/struts-logic.tld&lt;/taglib-location&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;/taglib&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;taglib&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib-uri&gt;struts-tiles&lt;/taglib-uri&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;taglib-location&gt;/WEB-INF/tld/struts-tiles.tld&lt;/taglib-location&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;/taglib&gt; <br>
+<span style="color: orange">23、配置Spring（基本上都是在Struts中配置的）</span> <br>
+<br>
+&nbsp;&nbsp;  &lt;!-- 指定spring配置文件位置 --&gt; <br>
+&nbsp;&nbsp;  &lt;context-param&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-value&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!--加载多个spring配置文件 --&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  /WEB-INF/applicationContext.xml, /WEB-INF/action-servlet.xml <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/param-value&gt; <br>
+&nbsp;&nbsp;  &lt;/context-param&gt; <br>
+<br>
+&nbsp;&nbsp;  &lt;!-- 定义SPRING监听器，加载spring --&gt; <br>
+<br>
+  &lt;listener&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt; <br>
+  &lt;/listener&gt; <br>
+<br>
+  &lt;listener&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;listener-class&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  org.springframework.web.context.request.RequestContextListener <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/listener-class&gt; <br>
+  &lt;/listener&gt; <br></div></body></html>

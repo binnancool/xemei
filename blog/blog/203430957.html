@@ -1,0 +1,158 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Xfire根据WSDL文件创建客户端代码，以及简单的客户端代码</title></head><body><h1>Xfire根据WSDL文件创建客户端代码，以及简单的客户端代码</h1><div><p><strong>注意事项：引入的jar包版本，应该与创建服务器端代码，生成WSDL文件所引用的jar包为准。</strong></p>
+<p><strong><font size="4">一、包含的jar包（服务器端、客户端确保jar包版本相同，否则会出各种错误）</font></strong></p>
+<p><strong>1、Xfire的所有jar包：下载地址：<a href="http://xfire.codehaus.org/XFire+1.2.6+Release+Notes">http://xfire.codehaus.org/XFire+1.2.6+Release+Notes</a></strong></p>
+<p><strong>2、Xalan的jar包：下载地址：<a href="http://www.apache.org/dyn/closer.cgi/xml/xalan-j">http://www.apache.org/dyn/closer.cgi/xml/xalan-j</a></strong></p>
+<p><strong>3、图示</strong></p>
+<p align="center"><strong><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/16167dee1df67d00adafd596.jpg"></span></strong></p>
+<p><br>
+<strong><font size="4">二、简单客户端调用WebService服务（代码）</font></strong></p>
+<p><strong><span>package hr;</span></strong></p>
+<p><strong><span>import java.net.MalformedURLException;<br>
+import java.net.URL;</span></strong></p>
+<p><strong><span>import org.apache.ws.security.WSConstants;<br>
+import org.apache.ws.security.handler.WSHandlerConstants;<br>
+import org.codehaus.xfire.client.Client;<br>
+import org.codehaus.xfire.security.wss4j.WSS4JOutHandler;<br>
+import org.codehaus.xfire.util.dom.DOMOutHandler;<br>
+//简单客户端调用<br>
+public class getHRInfoBySimple<br>
+{<br>
+public static void main(String[] args) throws MalformedURLException,<br>
+&nbsp;&nbsp;&nbsp;  Exception<br>
+{<br>
+&nbsp;&nbsp;  Client client = new Client(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  new URL(&quot;<a href="http://localhost:8080/HRWebService/services/hrwebservice?wsdl">http://localhost:8080/HRWebService/services/hrwebservice?wsdl</a>&quot;));<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;  //WS-Security，用户名和密码验证<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  WSS4JOutHandler wsOut = new WSS4JOutHandler(); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  String actions =WSHandlerConstants.USERNAME_TOKEN; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.ACTION, actions);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PASSWORD_DIGEST);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.USER, &quot;dibin&quot;);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, PasswordHandler.class.getName());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(new DOMOutHandler());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(wsOut);<br>
+&nbsp;&nbsp;</span></strong></p>
+<p><strong><span>//调用服务端服务<br>
+&nbsp;&nbsp;  Object[] results = client.invoke(&quot;queryDepartmentInfo&quot;, new Object[] { &quot;&quot; });<br>
+&nbsp;&nbsp;  Object[] results2 = client.invoke(&quot;queryPersonnelInfo&quot;, new Object[] { &quot;&quot;,&quot;&quot;,&quot;&quot; });<br>
+&nbsp;&nbsp;  System.out.println((String) results[0]);<br>
+&nbsp;&nbsp;  System.out.println((String) results2[0]);<br>
+}<br>
+}<br>
+</span></strong></p>
+<p><strong><span><font size="4">三、根据WSDL文件创建客户端</font></span></strong></p>
+<p><strong><span>在eclipse中新建一个java工程，并将hrwebservice.wsdl存到这个工程的文件夹中。编<br>
+写一个build.xml文件，采用ant自动生成客户端代码（同时也生成了服务器端的代码骨架，<br>
+不过目前来说对我们无用，因为我们不创建服务器端代码）。</span></strong></p>
+<p><strong><span>1、bulid.xml文件</span></strong></p>
+<p><strong><span>&lt;?xml version=&quot;1.0&quot; encoding=&quot;gb2312&quot;?&gt;<br>
+&lt;project name=&quot;WebServiceClient&quot; default=&quot;create_code&quot; basedir=&quot;.&quot;&gt;<br>
+&lt;!-- =================================================================== --&gt;<br>
+&lt;!-- 设置属性 --&gt;<br>
+&lt;!-- =================================================================== --&gt;<br>
+&lt;property name=&quot;optimize&quot; value=&quot;false&quot; /&gt;<br>
+&lt;property name=&quot;debug&quot; value=&quot;on&quot; /&gt;<br>
+&lt;property name=&quot;deprecation&quot; value=&quot;false&quot; /&gt;<br>
+&lt;property name=&quot;build.lib&quot; value=&quot;${basedir}/lib&quot; /&gt;<br>
+&lt;property name=&quot;sources&quot; value=&quot;${basedir}/src&quot; /&gt;<br>
+&lt;property name=&quot;build.classes&quot; value=&quot;${basedir}/bin&quot; /&gt;<br>
+&lt;!-- =================================================================== --&gt;<br>
+&lt;!-- 设置类路径 --&gt;<br>
+&lt;!-- =================================================================== --&gt;<br>
+&lt;path id=&quot;classpath&quot;&gt;<br>
+&nbsp;&nbsp;  &lt;pathelement location=&quot;${build.classes}&quot; /&gt;<br>
+&nbsp;&nbsp;  &lt;fileset dir=&quot;${build.lib}&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;include name=&quot;*.jar&quot; /&gt;<br>
+&nbsp;&nbsp;  &lt;/fileset&gt;<br>
+&lt;/path&gt;<br>
+&lt;taskdef name=&quot;wsgen&quot; classname=&quot;org.codehaus.xfire.gen.WsGenTask&quot; classpathref=&quot;classpath&quot; /&gt;<br>
+&lt;!-- ================================================ --&gt;<br>
+&lt;!-- 帮助 --&gt;<br>
+&lt;!-- ================================================ --&gt;<br>
+&lt;target name=&quot;help&quot; description=&quot;显示帮助信息&quot;&gt;<br>
+&nbsp;&nbsp;  &lt;echo message=&quot;target 描述&quot; /&gt;<br>
+&nbsp;&nbsp;  &lt;echo message=&quot;-----------------------------------------------------------------&quot; /&gt;<br>
+&nbsp;&nbsp;  &lt;echo message=&quot;compile 编译 &quot; /&gt;<br>
+&nbsp;&nbsp;  &lt;echo message=&quot;create_code 创建代码&quot; /&gt;<br>
+&lt;/target&gt;<br>
+&lt;!-- =============================================== --&gt;<br>
+&lt;!-- 编译代码 --&gt;<br>
+&lt;!-- =============================================== --&gt;<br>
+&lt;target name=&quot;compile&quot; description=&quot;编译代码&quot;&gt;<br>
+&nbsp;&nbsp;  &lt;echo&gt;编译程序代码&lt;/echo&gt;<br>
+&nbsp;&nbsp;  &lt;javac srcdir=&quot;${sources}&quot; destdir=&quot;${build.classes}&quot; classpathref=&quot;classpath&quot; debug=&quot;${debug}&quot; optimize=&quot;${optimize}&quot; deprecation=&quot;${deprecation}&quot; /&gt;<br>
+&lt;/target&gt;<br>
+&lt;!-- =============================================== --&gt;<br>
+&lt;!-- 创建客户端代码 --&gt;<br>
+&lt;!-- =============================================== --&gt;<br>
+&lt;target name=&quot;create_code&quot; description=&quot;创建代码&quot;&gt;<br>
+&nbsp;&nbsp;  &lt;echo&gt;创建代码&lt;/echo&gt;<br>
+&nbsp;&nbsp;  &lt;wsgen outputDirectory=&quot;${sources}&quot; wsdl=&quot;${basedir}/src/hrwebservice.wsdl&quot; package=&quot;hr.antclient&quot; overwrite=&quot;true&quot; /&gt;<br>
+&lt;/target&gt;<br>
+&lt;/project&gt;</span></strong></p>
+<p><strong><span>2、执行ant后的工程，生成了hr.antclient以及hr.antclient.com包及java类，如下图所示：</span></strong></p>
+<p align="center"><strong><span><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/e47575fc3e1ba573d7887d6f.jpg"></span></span></strong></p>
+<p><strong><font size="3">3、客户端调用代码</font></strong></p>
+<p>package hr;</p>
+<p>import hr.antclient.hrwebservicePortType;</p>
+<p>import java.net.MalformedURLException;</p>
+<p>import org.codehaus.xfire.client.Client;<br>
+import org.codehaus.xfire.client.XFireProxyFactory;<br>
+import org.codehaus.xfire.security.wss4j.WSS4JOutHandler;<br>
+import org.apache.ws.security.WSConstants;<br>
+import org.apache.ws.security.handler.WSHandlerConstants;<br>
+import org.codehaus.xfire.service.Service;<br>
+import org.codehaus.xfire.service.binding.ObjectServiceFactory;<br>
+import org.codehaus.xfire.transport.http.CommonsHttpMessageSender;<br>
+import org.codehaus.xfire.util.dom.DOMOutHandler;</p>
+<p>public class getHRInfo<br>
+{<br>
+public static void main(String args[])<br>
+{ <br>
+&nbsp;&nbsp;  String serviceURL = &quot;<a href="http://localhost:8080/HRWebService/services/hrwebservice">http://localhost:8080/HRWebService/services/hrwebservice</a>&quot;;<br>
+&nbsp;&nbsp;  // 创建service对象<br>
+&nbsp;&nbsp;  Service serviceModel = new ObjectServiceFactory().create(<strong>hrwebservicePortType</strong>.class);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;  XFireProxyFactory serviceFactory = new XFireProxyFactory();</p>
+<p>&nbsp;&nbsp;  try<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  // 获取服务对象，其中hrwebservicePortType为服务器的接口类型代理<br>
+&nbsp;&nbsp;&nbsp;  <strong>hrwebservicePortType</strong> service = (<strong>hrwebservicePortType</strong>) serviceFactory.create(serviceModel, serviceURL);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;  // 忽略http连接的超时时间,0为不设置超时时间，》=1为超时毫秒数<br>
+&nbsp;&nbsp;&nbsp;  Client client = Client.getInstance(service);<br>
+&nbsp;&nbsp;&nbsp;  client.setProperty(CommonsHttpMessageSender.HTTP_TIMEOUT, &quot;0&quot;);<br>
+&nbsp;&nbsp;&nbsp;  //发送授权信息<br>
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(new ClientAuthenticationHandler(&quot;abcd&quot;,&quot;1234&quot;));</p>
+<p>&nbsp;&nbsp;&nbsp;<br>
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //WS-Security，用户名和密码验证<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  WSS4JOutHandler wsOut = new WSS4JOutHandler(); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String actions =WSHandlerConstants.USERNAME_TOKEN; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.ACTION, actions);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PASSWORD_DIGEST);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.USER, &quot;dibin&quot;);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, PasswordHandler.class.getName());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(new DOMOutHandler());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(wsOut);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  // 调用服务<br>
+&nbsp;&nbsp;&nbsp;  String hello = service.queryDepartmentInfo();<br>
+&nbsp;&nbsp;&nbsp;  String hello2 = service.queryPersonnelInfo(&quot;&quot;, &quot;&quot;, &quot;&quot;);<br>
+&nbsp;&nbsp;&nbsp;  System.out.println(hello);<br>
+&nbsp;&nbsp;&nbsp;  System.out.println(hello2);</p>
+<p>//&nbsp;&nbsp;&nbsp;  hello = service.startSLEEChannel(&quot;10.130.24.55&quot;, &quot;inbound2.usml&quot;,&quot;456&quot;);<br>
+//&nbsp;&nbsp;&nbsp;  System.out.println(&quot;启动SLEE通道返回值：：&quot; + hello);<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  catch (MalformedURLException e)<br>
+&nbsp;&nbsp;  { <br>
+&nbsp;&nbsp;&nbsp;  System.out.println(&quot;错误！！！&quot;);<br>
+&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;  }<br>
+}<br>
+}</p></div></body></html>

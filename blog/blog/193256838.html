@@ -1,0 +1,13 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Hibernate自动生成表遇到的问题Caused by: java.sql.SQLException: ORA-01747:</title></head><body><h1>Hibernate自动生成表遇到的问题Caused by: java.sql.SQLException: ORA-01747:</h1><div><p>问题：<strong>Caused by: java.sql.SQLException: ORA-01747: invalid user.table.column, table.co<br>
+lumn, or column specification</strong></p>
+<p>原因：*。hbm.xml文件中的column名称与Oracle的关键字冲突。</p>
+<p> &lt;property name=&quot;time&quot; type=&quot;string&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;column name=<strong>&quot;TIME</strong>&quot; length=&quot;19&quot; not-null=&quot;true&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;comment&gt;&lt;/comment&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/column&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/property&gt;</p>
+<p>修改为： &lt;property name=&quot;time&quot; type=&quot;string&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;column name=&quot;<strong>ALERT_TIME</strong>&quot; length=&quot;19&quot; not-null=&quot;true&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;comment&gt;&lt;/comment&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/column&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/property&gt;</p></div></body></html>

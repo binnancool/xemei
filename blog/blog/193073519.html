@@ -1,0 +1,219 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>javascript表单验证实践总结（正则表达式的应用）</title></head><body><h1>javascript表单验证实践总结（正则表达式的应用）</h1><div><p><strong>注：多行文字时，使用回车换行符号&ldquo;\r\n&rdquo;拆分，如果只用换行符号&quot;\n&quot;，则拆分所得字符串中包含&ldquo;\r&rdquo;回车符号，比较是否为空字符串时需特别注意。</strong></p>
+<p><strong>var file=document.getElementById(&quot;excel_file&quot;).value.split(&quot;\r\n&quot;); //按回车换行符拆分</strong></p>
+<p> </p>
+<p>/* <br>
+用途：检查输入字符串是否为空或者全部都是空格 <br>
+输入：str <br>
+返回： 如果全是空返回true,否则返回false <br>
+*/ <br>
+function isNull( str ){ <br>
+ if ( str == &quot;&quot; ) return true; <br>
+ var regu = &quot;^[ ]+$&quot;; <br>
+ var re = new RegExp(regu); <br>
+ return re.test(str); <br>
+}</p>
+<p>/* <br>
+ 用途：校验ip地址的格式 <br>
+ 输入：strIP：ip地址 <br>
+ 返回：如果通过验证返回true,否则返回false； <br>
+*/ <br>
+function isIP(strIP) <br>
+{  <br>
+ if (isNull(strIP))<br>
+ {<br>
+&nbsp;&nbsp; return false;<br>
+ } <br>
+ var re=/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g; //匹配IP地址的正则表达式 <br>
+ if(re.test(strIP)) <br>
+ { <br>
+&nbsp;&nbsp; if( RegExp.$1 &lt;256 &amp;&amp; RegExp.$2&lt;256 &amp;&amp; RegExp.$3&lt;256 &amp;&amp; RegExp.$4&lt;256) return true; <br>
+ } <br>
+ return false; <br>
+}</p>
+<p>/*<br>
+ * 用途：校验port值是否在0~65535<br>
+ * 输入：strPort：端口号<br>
+ * 返回：如果通过验证返回true,否则返回false<br>
+ */<br>
+function isPort(strPort)<br>
+{<br>
+ if(isNull(strPort)) return false;<br>
+ var re=/^[0-9]+$/g;  //1或多个数字<br>
+ if(re.test(strPort))<br>
+ {<br>
+&nbsp;&nbsp; var intPort=parseInt(strPort);<br>
+&nbsp;&nbsp; if(intPort&gt;=0 &amp;&amp; intPort&lt;=65535)<br>
+&nbsp;&nbsp;&nbsp; return true;<br>
+ }<br>
+ return false;<br>
+}</p>
+<p><br>
+/*<br>
+ * 用途：校验是否为正整数<br>
+ * 输入：strNum<br>
+ * 返回：如果通过验证返回true,否则返回false<br>
+ */<br>
+function isNumber(strNum)<br>
+{<br>
+ if(isNull(strNum)) return false;<br>
+ var re=/^[0-9]+$/g;  //1或多个数字<br>
+ if(re.test(strNum))<br>
+ {<br>
+&nbsp;&nbsp; return true;<br>
+ }<br>
+ return false;<br>
+}</p>
+<p>/*<br>
+ * 用途：校验是否为字母和数字组成的字符串<br>
+ * 输入：str<br>
+ * 返回：如果通过验证返回true,否则返回false<br>
+ */<br>
+function isStringAndNumber(str)<br>
+{<br>
+ if(isNull(str)) return false;<br>
+ var re=/^[A-Za-z0-9\_\-]+$/g;<br>
+ if(re.test(str))<br>
+ {<br>
+&nbsp;&nbsp; return true;<br>
+ }<br>
+ return false;<br>
+}</p>
+<p>/*<br>
+ * 用途：校验是否为usml文件<br>
+ * 输入：strUSML<br>
+ * 返回：如果通过验证返回true,否则返回false<br>
+ */<br>
+function isUSML(strUSML)<br>
+{<br>
+ if(isNull(strUSML)) return false;<br>
+ var re=/^[A-Za-z0-9\_]+\.usml$/g;<br>
+ if(re.test(strUSML))<br>
+ { <br>
+&nbsp;&nbsp; return true;<br>
+ }<br>
+ return false;<br>
+}</p>
+<p>/*<br>
+ * 用途：校验是否为Windows路径<br>
+ * 输入：strPath<br>
+ * 返回：如果通过验证返回true,否则返回false<br>
+ */<br>
+function isWindowsPath(strPath)<br>
+{<br>
+ if(isNull(strPath)) return false;<br>
+ var re=/^[A-Za-z]{1}\:([\\]{1}[A-Za-z0-9]+)*\\?$/g;<br>
+ if(re.test(strPath))<br>
+ { <br>
+&nbsp;&nbsp; return true;<br>
+ }<br>
+ return false;<br>
+}</p>
+<p><br>
+/*<br>
+ * 用途：校验是否为Linux路径<br>
+ * 输入：strPath<br>
+ * 返回：如果通过验证返回true,否则返回false<br>
+ */<br>
+function isLinuxPath(strPath)<br>
+{<br>
+ if(isNull(strPath)) return false;<br>
+ var re=/^([\.]{0,2}){1}([\/]{1}([A-Za-z0-9]+|[\.]{2}))*\/?$/g;<br>
+ if(re.test(strPath))<br>
+ { <br>
+&nbsp;&nbsp; return true;<br>
+ }<br>
+ return false;<br>
+}</p>
+<p>/*<br>
+ * 用途：校验是否为GLS连接字符串<br>
+ * 输入：strGLS<br>
+ * 返回：如果通过验证返回true,否则返回false<br>
+ */<br>
+function isGLSSring(strGLS)<br>
+{<br>
+ if(isNull(strGLS)) return false;<br>
+ var re=/^GLSServer\:tcp[ ]+(\-h)[ ]+(\d+)\.(\d+)\.(\d+)\.(\d+)[ ]+(\-p)[ ]+([0-9]+){1}$/g;<br>
+ if(re.test(strGLS))<br>
+ { <br>
+&nbsp;&nbsp; if( RegExp.$2 &lt;256 &amp;&amp; RegExp.$3&lt;256 &amp;&amp; RegExp.$4&lt;256 &amp;&amp; RegExp.$5&lt;256 &amp;&amp; RegExp.$7&lt;=65535 &amp;&amp; RegExp.$7&gt;=0) <br>
+&nbsp;&nbsp;&nbsp; return true;<br>
+ }<br>
+ return false;<br>
+}</p>
+<p>/*<br>
+ * 用途：校验是否为0~254的数字<br>
+ * 输入：strClient<br>
+ * 返回：如果通过验证返回true,否则返回false<br>
+ */<br>
+function isClientX(strClient)<br>
+{<br>
+ if(isNull(strClient)) return false;<br>
+ var re=/^(\d+)$/g;<br>
+ if(re.test(strClient))<br>
+ { <br>
+&nbsp;&nbsp; if( RegExp.$1 &lt;= 254 &amp;&amp; RegExp.$1 &gt;= 0) <br>
+&nbsp;&nbsp;&nbsp; return true;<br>
+ }<br>
+ return false;<br>
+}</p>
+<p>/*<br>
+ * 用途：校验是否为主叫、被叫、原始主叫、原始被叫或范围<br>
+ * 输入：strTelNumber<br>
+ * 返回：如果通过验证返回true,否则返回false<br>
+ */<br>
+function isTelNumber(strTelNumber)<br>
+{<br>
+ if(isNull(strTelNumber)) return false;<br>
+ var re=/^([0-9]+|(([0-9]+)[\-]([0-9]+)){1}){1}([\,]([0-9]+)|(([0-9]+)[\-]([0-9]+)){1})*$/g;<br>
+ if(re.test(strTelNumber))<br>
+ { <br>
+&nbsp;&nbsp; return true;<br>
+&nbsp;&nbsp;<br>
+ }<br>
+ return false;<br>
+}</p>
+<p>/*<br>
+ * 用途：校验是否为数字（包括负整数、正整数）<br>
+ * 输入：strNum<br>
+ * 返回：如果通过验证返回true,否则返回false<br>
+ */<br>
+function isAllNumber(strNum)<br>
+{<br>
+ if(isNull(strNum)) return false;<br>
+ var re=/^(\-){0,1}[0-9]+$/g;  //1或多个数字<br>
+ if(re.test(strNum))<br>
+ {<br>
+&nbsp;&nbsp; return true;<br>
+ }<br>
+ return false;<br>
+}</p>
+<p>/*<br>
+ * 用途：校验是否为tac码，只有一个数字或字母<br>
+ * 输入：str<br>
+ * 返回：如果通过验证返回true,否则返回false<br>
+ */<br>
+function isTac(str)<br>
+{<br>
+ if(isNull(str)) return false;<br>
+ var re=/^[A-Za-z0-9]{1}$/g;<br>
+ if(re.test(str))<br>
+ {<br>
+&nbsp;&nbsp; return true;<br>
+ }<br>
+ return false;<br>
+}</p>
+<p>/*<br>
+ * 用途：校验是否为以逗号分开的数字<br>
+ * 输入：strNumber<br>
+ * 返回：如果通过验证返回true,否则返回false<br>
+ */<br>
+function isNumberIsSeparateByComma(strNumber)<br>
+{<br>
+ if(isNull(strNumber)) return false;<br>
+ var re=/^([0-9]+){1}(\,[0-9]+)*$/g;<br>
+ if(re.test(strNumber))<br>
+ {<br>
+&nbsp;&nbsp; return true;<br>
+ }<br>
+ return false;<br>
+}</p></div></body></html>

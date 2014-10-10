@@ -1,0 +1,66 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Xfire服务器端提供的接口返回自定义对象，使用Xfire在客户端访问实例</title></head><body><h1>Xfire服务器端提供的接口返回自定义对象，使用Xfire在客户端访问实例</h1><div><p><strong><font size="4">xfire默认的绑定方式是：aegis。而生成的客户端是用的JAXB。</font></strong></p>
+<p><strong>客户端代码：</strong></p>
+<p>package hr;</p>
+<p>import hr.antclient.hrwebservicePortType;</p>
+<p>import java.net.MalformedURLException;</p>
+<p>import org.codehaus.xfire.aegis.AegisBindingProvider;<br>
+import org.codehaus.xfire.client.Client;<br>
+import org.codehaus.xfire.client.XFireProxyFactory;<br>
+import org.codehaus.xfire.jaxb2.JaxbTypeRegistry;<br>
+import org.codehaus.xfire.security.wss4j.WSS4JOutHandler;<br>
+import org.apache.ws.security.WSConstants;<br>
+import org.apache.ws.security.handler.WSHandlerConstants;<br>
+import org.codehaus.xfire.service.Service;<br>
+import org.codehaus.xfire.service.binding.ObjectServiceFactory;<br>
+import org.codehaus.xfire.transport.http.CommonsHttpMessageSender;<br>
+import org.codehaus.xfire.util.dom.DOMOutHandler;</p>
+<p>import com.channelsoft.hr.webservice.impl.MyObject;<br>
+import com.channelsoft.hr.webservice.impl.ObjectFactory;</p>
+<p>public class getHRInfo<br>
+{<br>
+ public static void main(String args[])<br>
+ { <br>
+&nbsp;&nbsp; String serviceURL = &quot;<a href="http://127.0.0.1/WebServiceObject/services/hrwebservice">http://127.0.0.1/WebServiceObject/services/hrwebservice</a>&quot;;<br>
+&nbsp;&nbsp; // 创建service对象<br>
+&nbsp;&nbsp; Service serviceModel = new ObjectServiceFactory(<strong><font size="4">new AegisBindingProvider(new JaxbTypeRegistry())</font></strong>).create(hrwebservicePortType.class);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp; XFireProxyFactory serviceFactory = new XFireProxyFactory();</p>
+<p>&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;  // 获取服务对象<br>
+&nbsp;&nbsp;&nbsp; hrwebservicePortType service = (hrwebservicePortType) serviceFactory.create(serviceModel, serviceURL);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; // 忽略http连接的超时时间,0为不设置超时时间，》=1为超时毫秒数<br>
+&nbsp;&nbsp;&nbsp; Client client = Client.getInstance(service);<br>
+&nbsp;&nbsp;&nbsp; client.setProperty(CommonsHttpMessageSender.HTTP_TIMEOUT, &quot;0&quot;);<br>
+&nbsp;&nbsp;&nbsp; //发送授权信息<br>
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(new ClientAuthenticationHandler(&quot;abcd&quot;,&quot;1234&quot;));</p>
+<p>&nbsp;&nbsp;&nbsp;<br>
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //WS-Security<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  WSS4JOutHandler wsOut = new WSS4JOutHandler(); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String actions =WSHandlerConstants.USERNAME_TOKEN;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.ACTION, actions);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PASSWORD_DIGEST);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.USER, &quot;client&quot;);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, PasswordHandler.class.getName());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(new DOMOutHandler());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(wsOut);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  MyObject my = new ObjectFactory().createMyObject();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp; // 调用服务<br>
+&nbsp;&nbsp;&nbsp; my = service.queryDepartmentInfo();<br>
+&nbsp;&nbsp;&nbsp; System.out.println(my.getA().getValue());<br>
+&nbsp;&nbsp;&nbsp; System.out.println(my.getB().getValue());<br>
+&nbsp;&nbsp;&nbsp; my = service.queryPersonnelInfo(&quot;&quot;, &quot;&quot;, &quot;&quot;);<br>
+&nbsp;&nbsp;&nbsp; System.out.println(my.getA().getValue());<br>
+&nbsp;&nbsp;&nbsp; System.out.println(my.getB().getValue());<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (MalformedURLException e)<br>
+&nbsp;&nbsp; { <br>
+&nbsp;&nbsp;&nbsp; System.out.println(&quot;错误！！！&quot;);<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp; }<br>
+ }<br>
+}</p></div></body></html>

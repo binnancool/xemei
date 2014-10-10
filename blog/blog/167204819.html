@@ -1,0 +1,1087 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>JSP内置对象：request, reponse, out, session, application, config, pagecontext, page, exception</title></head><body><h1>JSP内置对象：request, reponse, out, session, application, config, pagecontext, page, exception</h1><div><p><font size="3" face="宋体">jsp九种内置对象：</font></p>
+<p><font face="宋体"><font size="3"><strong>request, reponse, out, session, application, config, pagecontext, page, exception.</strong> <br>
+<br>
+<br>
+</font><font size="3"><strong>一.request对象：该对象封装了用户提交的信息，通过调用该对象相应的方法可以获取封装的信息，即使用该对象可以获取用户提交信息。 <br>
+</strong><br>
+1.Request对象可以使用getParameter(string s)方法获取该表单通过text提交的信息。如： <br>
+<br>
+Request.getParameter(&ldquo;boy&rdquo;) <br>
+<br>
+例：request1.jsp： <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+<br>
+&lt;HTML&gt; <br>
+&lt;BODY bgcolor=green&gt;&lt;FONT size=1&gt; <br>
+&nbsp;&nbsp;  &lt;FORM action=&quot;tree.jsp&quot; method=post name=form&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT type=&quot;text&quot; name=&quot;boy&quot;&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT TYPE=&quot;submit&quot; value=&quot;Enter&quot; name=&quot;submit&quot;&gt; <br>
+&nbsp;&nbsp;  &lt;/FORM&gt; <br>
+&lt;/FONT&gt; <br>
+&lt;/BODY&gt; <br>
+&lt;/HTML&gt; <br>
+<br>
+<br>
+<br>
+tree.jsp： <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+&lt;HTML&gt; <br>
+&lt;BODY bgcolor=green&gt;&lt;FONT size=1&gt;&nbsp;&nbsp;  <br>
+&lt;P&gt;获取文本框提交的信息： <br>
+&nbsp;&nbsp;  &lt;%String textContent=request.getParameter(&quot;boy&quot;); <br>
+&nbsp;&nbsp;  %&gt; <br>
+&lt;BR&gt; <br>
+&nbsp;&nbsp;  &lt;%=textContent%&gt; <br>
+&lt;P&gt; 获取按钮的名字： <br>
+&nbsp;&nbsp;  &lt;%String buttonName=request.getParameter(&quot;submit&quot;); <br>
+&nbsp;&nbsp;  %&gt; <br>
+&lt;BR&gt; <br>
+&nbsp;&nbsp;  &lt;%=buttonName%&gt; <br>
+&lt;/FONT&gt; <br>
+&lt;/BODY&gt; <br>
+&lt;/HTML&gt; <br>
+<br>
+<br>
+使用request对象获取信息要格外小心，要避免使用空对象，否则会出现NullPointerException异常，所以我们可以作以下处理. <br>
+<br>
+request3.jsp <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+&lt;HTML&gt; <br>
+&lt;BODY bgcolor=cyan&gt;&lt;FONT size=5&gt; <br>
+&nbsp;&nbsp;  &lt;FORM action=&quot;&quot; method=post name=form&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT type=&quot;text&quot; name=&quot;girl&quot;&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT TYPE=&quot;submit&quot; value=&quot;Enter&quot; name=&quot;submit&quot;&gt; <br>
+&nbsp;&nbsp;  &lt;/FORM&gt; <br>
+&nbsp;&nbsp;  &lt;%String textContent=request.getParameter(&quot;girl&quot;); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  double number=0,r=0; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  if(textContent==null) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {textContent=&quot;&quot;; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  try{ number=Double.parseDouble(textContent); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  if(number&gt;=0) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {r=Math.sqrt(number) ; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.print(&quot;&lt;BR&gt;&quot;+String.valueOf(number)+&quot;的平方根：&quot;); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.print(&quot;&lt;BR&gt;&quot;+String.valueOf(r)); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  else <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {out.print(&quot;&lt;BR&gt;&quot;+&quot;请输入一个正数&quot;); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  catch(NumberFormatException e) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {out.print(&quot;&lt;BR&gt;&quot;+&quot;请输入数字字符&quot;); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+&nbsp;&nbsp;&nbsp;  %&gt; <br>
+&lt;/FONT&gt; <br>
+&lt;/BODY&gt; <br>
+&lt;/HTML&gt; <br>
+<br>
+2.处理汉字信息：当request对象获取客户提交的汉字字符时，会出现乱马问题，必须进行特殊处理。首先，将获取的字符串用ISO-8859-1进行编码，并将编码存放到一个字节数组中，然后再将这个属组转化为字符窜对象即刻。 <br>
+<br>
+如:&nbsp;&nbsp;  String textContent=request.getParameter(&quot;boy&quot;); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  byte b[]=textContent.getBytes(&quot;ISO-8859-1&quot;); <br>
+<br>
+textContent=new String(b); <br>
+<br>
+例：tree2.jsp <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+&lt;MHML&gt; <br>
+&lt;BODY&gt;&nbsp;&nbsp;  <br>
+&lt;P&gt;获取文本框提交的信息： <br>
+&nbsp;&nbsp;  &lt;%String textContent=request.getParameter(&quot;boy&quot;); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  byte b[]=textContent.getBytes(&quot;ISO-8859-1&quot;); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  textContent=new String(b); <br>
+&nbsp;&nbsp;  %&gt; <br>
+&lt;BR&gt; <br>
+&nbsp;&nbsp;  &lt;%=textContent%&gt; <br>
+&lt;P&gt; 获取按钮的名字： <br>
+&nbsp;&nbsp;  &lt;%String buttonName=request.getParameter(&quot;submit&quot;); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  byte c[]=buttonName.getBytes(&quot;ISO-8859-1&quot;); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  buttonName=new String(c); <br>
+&nbsp;&nbsp;  %&gt; <br>
+&lt;BR&gt; <br>
+&nbsp;&nbsp;  &lt;%=buttonName%&gt; <br>
+&lt;/BODY&gt; <br>
+&lt;/HTML&gt; <br>
+<br>
+<br>
+3.常用方法举例： <br>
+<br>
+getProtocol(), getServletPath(), getContentLength(), getMethod(), getRemoteAddr(), getRemoteHost(), getServerName(), getParameterName() <br>
+<br>
+例： <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+<br>
+&lt;%@ page import=&quot;java.util.*&quot; %&gt; <br>
+<br>
+&lt;MHML&gt; <br>
+<br>
+&lt;BODY bgcolor=cyan&gt; <br>
+<br>
+&lt;Font size=5&gt;&nbsp;&nbsp;  <br>
+<br>
+&lt;BR&gt;客户使用的协议是: <br>
+<br>
+&nbsp;&nbsp;  &lt;% String protocol=request.getProtocol(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(protocol); <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;获取接受客户提交信息的页面： <br>
+<br>
+&nbsp;&nbsp;  &lt;% String path=request.getServletPath(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(path); <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;接受客户提交信息的长度： <br>
+<br>
+&nbsp;&nbsp;  &lt;% int length=request.getContentLength(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(length); <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;客户提交信息的方式： <br>
+<br>
+&nbsp;&nbsp;  &lt;% String method=request.getMethod(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(method); <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;获取HTTP头文件中User-Agent的值：： <br>
+<br>
+&nbsp;&nbsp;  &lt;% String header1=request.getHeader(&quot;User-Agent&quot;); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(header1); <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;获取HTTP头文件中accept的值： <br>
+<br>
+&nbsp;&nbsp;  &lt;% String header2=request.getHeader(&quot;accept&quot;); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(header2); <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;获取HTTP头文件中Host的值： <br>
+<br>
+&nbsp;&nbsp;  &lt;% String header3=request.getHeader(&quot;Host&quot;); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(header3); <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;获取HTTP头文件中accept-encoding的值： <br>
+<br>
+&nbsp;&nbsp;  &lt;% String header4=request.getHeader(&quot;accept-encoding&quot;); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(header4); <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;获取客户的IP地址： <br>
+<br>
+&nbsp;&nbsp;  &lt;% String IP=request.getRemoteAddr(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(IP); <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;获取客户机的名称： <br>
+<br>
+&nbsp;&nbsp;  &lt;% String clientName=request.getRemoteHost(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(clientName); <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;获取服务器的名称： <br>
+<br>
+&nbsp;&nbsp;  &lt;% String serverName=request.getServerName(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(serverName); <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;获取服务器的端口号： <br>
+<br>
+&nbsp;&nbsp;  &lt;% int serverPort=request.getServerPort(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(serverPort); <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;获取客户端提交的所有参数的名字： <br>
+<br>
+&nbsp;&nbsp;  &lt;% Enumeration enum=request.getParameterNames(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  while(enum.hasMoreElements()) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {String s=(String)enum.nextElement(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(s); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;获取头名字的一个枚举： <br>
+<br>
+&nbsp;&nbsp;  &lt;% Enumeration enum_headed=request.getHeaderNames(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  while(enum_headed.hasMoreElements()) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {String s=(String)enum_headed.nextElement(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(s); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt;获取头文件中指定头名字的全部值的一个枚举： <br>
+<br>
+&nbsp;&nbsp;  &lt;% Enumeration enum_headedValues=request.getHeaders(&quot;cookie&quot;); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  while(enum_headedValues.hasMoreElements()) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {String s=(String)enum_headedValues.nextElement(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(s); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;BR&gt; <br>
+<br>
+<br>
+<br>
+&lt;/Font&gt; <br>
+<br>
+&lt;/BODY&gt; <br>
+<br>
+&lt;/HTML&gt; <br>
+<br>
+<br>
+<br>
+4．获取HTML表单提交的数据 <br>
+<br>
+单选框radio <br>
+<br>
+例： <br>
+<br>
+radio.jsp： <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+<br>
+&lt;BODY bgcolor=cyan&gt;&lt;Font size=1 &gt; <br>
+<br>
+&lt;P&gt;诗人李白是中国历史上哪个朝代的人： <br>
+<br>
+&nbsp;&nbsp;  &lt;FORM action=&quot;answer.jsp&quot; method=post name=form&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT type=&quot;radio&quot; name=&quot;R&quot; value=&quot;a&quot;&gt;宋朝 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT type=&quot;radio&quot; name=&quot;R&quot; value=&quot;b&quot;&gt;唐朝 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT type=&quot;radio&quot; name=&quot;R&quot; value=&quot;c&quot;&gt;明朝 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT type=&quot;radio&quot; name=&quot;R&quot; value=&quot;d&quot; checked=&quot;ok&quot;&gt;元朝 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;BR&gt; <br>
+<br>
+&lt;P&gt;小说红楼梦的作者是： <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;BR&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT type=&quot;radio&quot; name=&quot;P&quot; value=&quot;a&quot;&gt;曹雪芹 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT type=&quot;radio&quot; name=&quot;P&quot; value=&quot;b&quot;&gt;罗贯中 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT type=&quot;radio&quot; name=&quot;P&quot; value=&quot;c&quot;&gt;李白 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT type=&quot;radio&quot; name=&quot;P&quot; value=&quot;d&quot;&gt;司马迁 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;BR&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT TYPE=&quot;submit&quot; value=&quot;提交答案&quot; name=&quot;submit&quot;&gt; <br>
+<br>
+&nbsp;&nbsp;  &lt;/FORM&gt; <br>
+<br>
+&lt;/FONT&gt; <br>
+<br>
+&lt;/BODY&gt; <br>
+<br>
+&lt;/HTML&gt; <br>
+<br>
+<br>
+<br>
+answer.jsp： <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+<br>
+&lt;BODY bgcolor=cyan&gt;&lt;Font size=1 &gt; <br>
+<br>
+&lt;% int n=0; <br>
+<br>
+&nbsp;&nbsp;&nbsp;  String s1=request.getParameter(&quot;R&quot;); <br>
+<br>
+&nbsp;&nbsp;&nbsp;  String s2=request.getParameter(&quot;P&quot;); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  if(s1==null) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {s1=&quot;&quot;;} <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  if(s2==null) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {s2=&quot;&quot;;} <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  if(s1.equals(&quot;b&quot;)) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  { n++;} <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  if(s2.equals(&quot;a&quot;)) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  { n++;} <br>
+<br>
+%&gt; <br>
+<br>
+&lt;P&gt;您得了&lt;%=n%&gt;分 <br>
+<br>
+&lt;/FONT&gt; <br>
+<br>
+&lt;/BODY&gt; <br>
+<br>
+&lt;/HTML&gt; <br>
+<br>
+列表框&lt;select&gt;&lt;Option&gt; <br>
+<br>
+例： <br>
+<br>
+select.jsp： <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+<br>
+&lt;BODY bgcolor=cyan&gt;&lt;Font size=1 &gt; <br>
+<br>
+&lt;P&gt;选择计算和的方式 <br>
+<br>
+&nbsp;&nbsp;  &lt;FORM action=&quot;sum.jsp&quot; method=post name=form&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Select name=&quot;sum&quot; size=2&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Option Selected value=&quot;1&quot;&gt;计算1到n的连续和 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Option value=&quot;2&quot;&gt;计算1到n的平方和 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Option value=&quot;3&quot;&gt;计算1到n的立方和 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/Select&gt; <br>
+<br>
+&lt;P&gt;选择n的值：&lt;BR&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Select name=&quot;n&quot; &gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Option value=&quot;10&quot;&gt;n=10 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Option value=&quot;20&quot;&gt;n=20 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Option value=&quot;30&quot;&gt;n=30 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Option value=&quot;40&quot;&gt;n=40 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Option value=&quot;50&quot;&gt;n=50 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Option value=&quot;100&quot;&gt;n=100 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/Select&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;BR&gt;&lt;BR&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT TYPE=&quot;submit&quot; value=&quot;提交你的选择&quot; name=&quot;submit&quot;&gt; <br>
+<br>
+&nbsp;&nbsp;  &lt;/FORM&gt; <br>
+<br>
+&lt;/FONT&gt; <br>
+<br>
+&lt;/BODY&gt; <br>
+<br>
+&lt;/HTML&gt; <br>
+<br>
+<br>
+<br>
+sum.jsp： <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+<br>
+&lt;BODY bgcolor=cyan&gt;&lt;Font size=1 &gt; <br>
+<br>
+&lt;% long sum=0; <br>
+<br>
+&nbsp;&nbsp;&nbsp;  String s1=request.getParameter(&quot;sum&quot;); <br>
+<br>
+&nbsp;&nbsp;&nbsp;  String s2=request.getParameter(&quot;n&quot;); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  if(s1==null) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {s1=&quot;&quot;;} <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  if(s2==null) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {s2=&quot;0&quot;;} <br>
+<br>
+&nbsp;&nbsp;&nbsp;  if(s1.equals(&quot;1&quot;)) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {int n=Integer.parseInt(s2); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  for(int i=1;i&lt;=n;i++) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {sum=sum+i; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  else if(s1.equals(&quot;2&quot;)) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {int n=Integer.parseInt(s2); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  for(int i=1;i&lt;=n;i++) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {sum=sum+i*i; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  else if(s1.equals(&quot;3&quot;)) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {int n=Integer.parseInt(s2); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  for(int i=1;i&lt;=n;i++) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {sum=sum+i*i*i; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+%&gt; <br>
+<br>
+&lt;P&gt;您的求和结果是&lt;%=sum%&gt; <br>
+<br>
+&lt;/FONT&gt; <br>
+<br>
+&lt;/BODY&gt; <br>
+<br>
+&lt;/HTML&gt; <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<strong>二.Response对象：</strong>对客户的请求做出动态的响应，向客户端发送数据。 <br>
+<br>
+1.动态响应contenType属性 <br>
+<br>
+当一个用户访问一个jsp页面时，如果该页面用page指令设置页面的contentType属性是text/html，那么jsp引擎将按照这种属性值作出反映。如果要动态改变这个属性值来响应客户，就需要使用response对象的setContentType(String s)方法来改变contentType的属性值。 <br>
+<br>
+格式：response.setContentType(String s) <br>
+<br>
+参数s可取text/html,, application/x-msexcel, application/msword等。 <br>
+<br>
+例如：response1.jsp <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+&lt;BODY bgcolor=cyan&gt;&lt;Font size=1 &gt; <br>
+<br>
+&lt;P&gt;我正在学习response对象的 <br>
+<br>
+&lt;BR&gt;setContentType方法 <br>
+<br>
+&lt;P&gt;将当前页面保存为word文档吗？ <br>
+<br>
+&lt;FORM action=&quot;&quot; method=&quot;get&quot; name=form&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  &lt;INPUT TYPE=&quot;submit&quot; value=&quot;yes&quot; name=&quot;submit&quot;&gt; <br>
+<br>
+&nbsp;&nbsp;  &lt;/FORM&gt; <br>
+<br>
+&lt;% String str=request.getParameter(&quot;submit&quot;); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  if(str==null) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {str=&quot;&quot;; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  if(str.equals(&quot;yes&quot;)) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {response.setContentType(&quot;application/msword;charset=GB2312&quot;); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+%&gt; <br>
+<br>
+&lt;/FONT&gt; <br>
+<br>
+&lt;/BODY&gt; <br>
+<br>
+&lt;/HTML&gt; <br>
+<br>
+2．Response重定向：在某些情况下，当响应客户时，需要将客户重新引导至另一个页面，可以使用response的sendRedirect(URL)方法实现客户的重定向。 <br>
+<br>
+例如：response2.jsp： <br>
+<br>
+<br>
+<br>
+&lt;html&gt; <br>
+<br>
+&lt;head&gt;&lt;title&gt;Where to go&lt;/title&gt;&lt;/head&gt; <br>
+<br>
+&lt;body&gt; <br>
+<br>
+&lt;% <br>
+<br>
+String address = request.getParameter(&quot;where&quot;); <br>
+<br>
+if(address!=null){ <br>
+<br>
+if(address.equals(&quot;ChinaWebber&quot;)) <br>
+<br>
+&nbsp;&nbsp;  response.sendRedirect(&quot;http://www.ChinaWebber.com&quot;); <br>
+<br>
+else if(address.equals(&quot;Yahoo&quot;)) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  response.sendRedirect(&quot;http://www.yahoo.com&quot;); <br>
+<br>
+&nbsp;&nbsp;  else if(address.equals(&quot;Sun&quot;)) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  response.sendRedirect(&quot;http://www.sun.com&quot;); <br>
+<br>
+} <br>
+<br>
+%&gt; <br>
+<br>
+&lt;b&gt;Please select:&lt;/b&gt;&lt;br&gt; <br>
+<br>
+&lt;form action=&quot;goto.jsp&quot; method=&quot;GET&quot;&gt; <br>
+<br>
+&lt;select name=&quot;where&quot;&gt; <br>
+<br>
+&nbsp;&nbsp;  &lt;option value=&quot;ChinaWebber&quot; selected&gt;go to ChinaWebber <br>
+<br>
+&nbsp;&nbsp;  &lt;option value=&quot;Sun&quot; &gt; go to Sun <br>
+<br>
+&nbsp;&nbsp;  &lt;option value=&quot;Microsoft&quot; &gt; go to Microsoft <br>
+<br>
+&lt;/select&gt; <br>
+<br>
+&lt;input type=&quot;submit&quot; value=&quot;go&quot;&gt; <br>
+<br>
+&lt;/form&gt; <br>
+<br>
+<br>
+<br>
+<strong>三．Session对象</strong> <br>
+<br>
+1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  什么是Session: <br>
+<br>
+Session对象是一个jsp内置对象，它在第一个jsp页面被装载时自动创建，完成会话期管理。 <br>
+<br>
+从一个客户打开浏览器并连接到服务器开始，到客户关闭浏览器离开这个服务器结束，被称为一个会话。当一个客户访问一个服务器时，可能会在这个服务器的几个页面之间反复连接，反复刷新一个页面，服务器应当通过某种办法知道这是同一个客户，这就需要session对象。 <br>
+<br>
+2．&nbsp;&nbsp;&nbsp;  session对象的Id:当一个客户首次访问服务器上的一个jsp页面时，jsp引擎产生一个session对象，同时分配一个String类型的Id号，jsp引擎同时将这个Id号发送到客户端，存放在Cookie中，这样session对象和客户之间就建立了一一对应的关系。当客户再访问连接该服务器的其他页面时，不再分配给客户新的session对象，直到客户关闭浏览器后，服务器端该客户的session对象才取消，并且和客户的会话对应关系消失。当客户重新打开浏览器再连接到该服务器时，服务器为该客户再创建一个新的session对象。 <br>
+<br>
+3． session对象常用方法： <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  i.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  public String getId():获取session对象编号。 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ii.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  public void setAttribute(String key,Object obj):将参数Object指定的对象obj添加到session对象中，并为添加的对象指定一个索引关键字。 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  iii.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  public Object getAttribute(String key):获取session对象中含有关键字的对象。 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  iv.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  public Boolean isNew():判断是否是一个新的客户。 <br>
+<br>
+例如：session1.jsp <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+&lt;BODY bgcolor=cyan&gt;&lt;FONT Size=5&gt; <br>
+<br>
+&lt;BODY&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;  &lt;%String s=session.getId(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;P&gt;您的session对象的ID是： <br>
+<br>
+&lt;BR&gt; <br>
+<br>
+&lt;%=s%&gt; <br>
+<br>
+&lt;BODY&gt; <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+<br>
+<br>
+例如：session2.jsp <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+&lt;BODY&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;  &lt;%! int number=0;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  synchronized void countPeople() <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  { <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  number++; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+&nbsp;&nbsp;  %&gt; <br>
+<br>
+&nbsp;&nbsp;  &lt;% <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  if(session.isNew()) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  { <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  countPeople(); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String str=String.valueOf(number); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  session.setAttribute(&quot;count&quot;,str); <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+&nbsp;&nbsp;&nbsp;  %&gt; <br>
+<br>
+&lt;P&gt;您是第&lt;%=(String)session.getAttribute(&quot;count&quot;)%&gt;个访问本站的人。 <br>
+<br>
+&lt;BODY&gt; <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+<br>
+<br>
+<strong>四．aplication对象</strong> <br>
+<br>
+1．什么是application: <br>
+<br>
+服务器启动后就产生了这个application对象，当客户再所访问的网站的各个页面之间浏览时，这个application对象都是同一个，直到服务器关闭。但是与session不同的是，所有客户的application对象都是同一个，即所有客户共享这个内置的application对象。 <br>
+<br>
+<br>
+<br>
+2．Application对象常用方法: <br>
+<br>
+(1)&nbsp;&nbsp;&nbsp;  public void setAttribute(String key,Object obj): 将参数Object指定的对象obj添加到application对象中，并为添加的对象指定一个索引关键字。 <br>
+<br>
+(2)&nbsp;&nbsp;&nbsp;  public Object getAttribute(String key): 获取application对象中含有关键字的对象。 <br>
+<br>
+例：application.jsp <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+&lt;HEAD&gt; <br>
+<br>
+&lt;TITLE&gt;application变量的使用&lt;/TITLE&gt; <br>
+<br>
+&lt;/HEAD&gt; <br>
+<br>
+&lt;BODY&gt; <br>
+<br>
+&lt;CENTER&gt; <br>
+<br>
+&lt;FONT SIZE = 5 COLOR = blue&gt;application变量的使用&lt;/FONT&gt; <br>
+<br>
+&lt;/CENTER&gt; <br>
+<br>
+&lt;HR&gt; <br>
+<br>
+&lt;P&gt;&lt;/P&gt; <br>
+<br>
+<br>
+<br>
+&lt;% <br>
+<br>
+Object obj = null; <br>
+<br>
+String strNum = (String)application.getAttribute(&quot;Num&quot;); <br>
+<br>
+int Num = 0; <br>
+<br>
+<br>
+<br>
+//检查是否Num变量是否可取得 <br>
+<br>
+if(strNum != null) <br>
+<br>
+Num = Integer.parseInt(strNum) + 1; //将取得的值增加1 <br>
+<br>
+<br>
+<br>
+application.setAttribute(&quot;Num&quot;, String.valueOf(Num)); //起始Num变量值 <br>
+<br>
+<br>
+<br>
+%&gt; <br>
+<br>
+application对象中的&lt;Font color = blue&gt;Num&lt;/Font&gt;变量值为 <br>
+<br>
+&lt;Font color = red&gt;&lt;%= Num %&gt;&lt;/Font&gt;&lt;BR&gt; <br>
+<br>
+<br>
+<br>
+&lt;/BODY&gt; <br>
+<br>
+&lt;/HTML&gt; <br>
+<br>
+</font><font size="3"><strong>五．Out对象 <br>
+</strong><br>
+Out对象是一个输出流，用来向客户端输出数据。Out对象用于各种数据的输出。 <br>
+<br>
+常用方法： <br>
+<br>
+（1）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.print():输出各种类型数据。 <br>
+<br>
+（2）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.newLine():输出一个换行符。 <br>
+<br>
+（3）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.close():关闭流。 <br>
+<br>
+例：out.jsp <br>
+<br>
+&lt;%@ page contentType=&quot;text/html;charset=GB2312&quot; %&gt; <br>
+<br>
+&lt;%@ page import=&quot;java.util.Date&quot;%&gt; <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+&lt;HEAD&gt; <br>
+<br>
+&lt;% <br>
+<br>
+Date Now = new Date(); <br>
+<br>
+String hours=String.valueOf(Now.getHours()); <br>
+<br>
+String mins=String.valueOf(Now.getMinutes()); <br>
+<br>
+String secs=String.valueOf(Now.getSeconds()); <br>
+<br>
+%&gt; <br>
+<br>
+现在是 <br>
+<br>
+&lt;%out.print(String.valueOf(Now.getHours()));%&gt; <br>
+<br>
+小时 <br>
+<br>
+&lt;%out.print(String.valueOf(Now.getMinutes()));%&gt; <br>
+<br>
+分 <br>
+<br>
+&lt;%out.print(String.valueOf(Now.getSeconds()));%&gt; <br>
+<br>
+秒 <br>
+<br>
+&lt;/FONT&gt; <br>
+<br>
+&lt;/BODY&gt; <br>
+<br>
+&lt;/HTML&gt; <br>
+<br>
+<strong>六．Cookie</strong> <br>
+<br>
+1.什么是Cookie. <br>
+<br>
+Cookie是Web服务器保存在用户硬盘上的一段文本。Cookie允许一个Web站点在用户的电脑上保存信息并且随后再取回它。 <br>
+<br>
+举例来说，一个Web站点可能会为每一个访问者产生一个唯一的ID，然后以Cookie文件的形式保存在每个用户的机器上。 <br>
+如果您使用IE浏览器访问Web，您会看到所有保存在您的硬盘上的Cookie。它们最常存放的地方是：c:\windows\cookies(在Win 2000中则是C:\Documents and Settings\您的用户名\Cookies ) <br>
+<br>
+cookie是以&ldquo;关键字key=值value&ldquo;的格式来保存纪录的. <br>
+<br>
+2．创建一个Cookie对象，调用Cookie对象的构造函数可以创建Cookie。Cookie对象的构造函数有两个字符串参数：Cookie名字和Cookie值。 <br>
+<br>
+Cookie c=new Cookie(&ldquo;username&rdquo;,&rdquo;john&rdquo;); <br>
+<br>
+3． jsp中如果要将封装好的Cookie对象传送到客户端，使用response的addCookie()方法。 <br>
+<br>
+格式：response.addCookie(c) <br>
+<br>
+4．读取保存到客户端的Cookie,使用request对象的getCookies()方法，执行时将所有客户端传来的Cookie对象以数组的形式排列，如果要取出符合需要的Cookie对象，就需要循环比较数组内每个对象的关键字。 <br>
+<br>
+例：Cookie[] c=request.getCookies(); <br>
+<br>
+if(c!=null) <br>
+<br>
+for(int I=0;I&lt;c.length;I++) <br>
+<br>
+if(&ldquo;username&rdquo;.equals(c[I].getName())) <br>
+<br>
+out.println(c[I].getValue()); <br>
+<br>
+5．设置Cookie对象有效时间：setMaxAge()。 <br>
+<br>
+c.setMaxAge(3600); <br>
+<br>
+6．Cookie应用 <br>
+　　1.网站能够精确地知道有多少人浏览过。 <br>
+<br>
+由于代理服务器、缓存等的使用，唯一能帮助网站精确统计来访人数的方法就是为每个访问者建立一个唯一的ID。使用Cookie，网站可以完成以下工作： <br>
+<br>
+　　●测定多少人访问过； <br>
+<br>
+　　●测定访问者有多少是新用户（即第一次来访），多少是老用户； <br>
+<br>
+　　●测定一个用户多久访问一次网站。 <br>
+<br>
+　　网站使用数据库达到上述目标。当一个用户第一次访问时，网站在数据库中建立一个新的ID，并把ID通过Cookie传送给用户。用户再次来访时，网站把该用户ID对应的计数器加1，得到用户的来访次数。 <br>
+<br>
+例：Cookie.jsp <br>
+<br>
+&lt;%@ page contentType=&quot;text/html; charset=GB2312&quot; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  import=&quot;java.util.Date&quot; %&gt; <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+&lt;HEAD&gt; <br>
+<br>
+&lt;TITLE&gt;Cookie的存取&lt;/TITLE&gt; <br>
+<br>
+&lt;/HEAD&gt; <br>
+<br>
+&lt;BODY&gt; <br>
+<br>
+&lt;CENTER&gt; <br>
+<br>
+&lt;FONT SIZE = 5 COLOR = blue&gt;Cookie的存取&lt;/FONT&gt; <br>
+<br>
+&lt;/CENTER&gt; <br>
+<br>
+&lt;HR&gt; <br>
+<br>
+&lt;P&gt;&lt;/P&gt; <br>
+<br>
+&lt;% <br>
+<br>
+//建立Cookie变数 <br>
+<br>
+Cookie IntVal = new Cookie(&quot;IntVal&quot;, &quot;100&quot;); <br>
+<br>
+Cookie temp = null; <br>
+<br>
+<br>
+<br>
+response.addCookie(IntVal); //将Cookie变数加入Cookie中 <br>
+<br>
+<br>
+<br>
+Cookie[] cookies = request.getCookies(); <br>
+<br>
+//取得Cookie资料 <br>
+<br>
+<br>
+<br>
+int cookielen = cookies.length; <br>
+<br>
+//取得Cookie变数阵列的长度 <br>
+<br>
+<br>
+<br>
+if(cookielen != 0) //判断是否成功取得Cookie资料 <br>
+<br>
+{&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  for (int i = 0; i &lt; cookielen; i++) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  temp = cookies[i]; //取得cookies阵列中的Cookie变数 <br>
+<br>
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  if (temp.getName().equals(&quot;IntVal&quot;)) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  { //判断是否取得名为DateVal的Cookie资料 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  %&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Cookie中&lt;Font color = blue&gt;IntVal&lt;/Font&gt;变量的值为 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Font color = red&gt;&lt;%= IntVal.getValue()%&gt;&lt;/Font&gt;&lt;BR&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;% <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+<br>
+} <br>
+<br>
+<br>
+<br>
+else <br>
+<br>
+{ <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  %&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  不存在Cookie&lt;BR&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;% <br>
+<br>
+} <br>
+<br>
+%&gt; <br>
+<br>
+&lt;/BODY&gt; <br>
+<br>
+&lt;/HTML&gt; <br>
+<br>
+<br>
+<br>
+例：CookieDate.jsp <br>
+<br>
+&lt;%@ page contentType=&quot;text/html; charset=GB2312&quot; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  import=&quot;java.util.Date&quot;%&gt; <br>
+<br>
+&lt;HTML&gt; <br>
+<br>
+&lt;HEAD&gt; <br>
+<br>
+&lt;TITLE&gt;自Cookie存取日期/时间数据&lt;/TITLE&gt; <br>
+<br>
+&lt;/HEAD&gt; <br>
+<br>
+&lt;BODY&gt; <br>
+<br>
+&lt;CENTER&gt; <br>
+<br>
+&lt;FONT SIZE = 5 COLOR = blue&gt;自Cookie存取日期/时间数据&lt;/FONT&gt; <br>
+<br>
+&lt;/CENTER&gt; <br>
+<br>
+&lt;HR&gt; <br>
+<br>
+&lt;P&gt;&lt;/P&gt; <br>
+<br>
+&lt;% <br>
+<br>
+Date Now = new Date(); //取得目前的系统时间 <br>
+<br>
+<br>
+<br>
+Cookie DateVal = new Cookie(&quot;DateVal&quot;, String.valueOf(Now.getTime())); <br>
+<br>
+//欲将储存至Cookie时间/日期值转换为毫秒数 <br>
+<br>
+<br>
+<br>
+response.addCookie(DateVal); //将Cookie变数加入Cookie中 <br>
+<br>
+<br>
+<br>
+Cookie temp = null; <br>
+<br>
+DateVal = null; //重设Cookie变数 <br>
+<br>
+<br>
+<br>
+Cookie[] cookies = request.getCookies(); <br>
+<br>
+//取得Cookie资料 <br>
+<br>
+<br>
+<br>
+int cookielen = cookies.length; <br>
+<br>
+//取得Cookie变数阵列的长度 <br>
+<br>
+<br>
+<br>
+if(cookielen != 0) //判断是否成功取得Cookie资料 <br>
+<br>
+{&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  for (int i = 0; i &lt; cookielen; i++) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  temp = cookies[i]; //取得cookies阵列中的Cookie变数 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  if (temp.getName().equals(&quot;DateVal&quot;)) <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  { //判断是否取得名为DateVal的Cookie资料 <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  %&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Cookie中&lt;Font color = blue&gt;DateVal&lt;/Font&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  变量的值为&lt;Font color = red&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;%= new Date(Long.parseLong(temp.getValue())) %&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/Font&gt;&lt;BR&gt; <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;% <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  } <br>
+<br>
+} <br>
+<br>
+else //若无法取得Cookie资料则执行下面的叙述 <br>
+<br>
+{ <br>
+<br>
+%&gt; <br>
+<br>
+无法取得Cookie&lt;BR&gt; <br>
+<br>
+&lt;% <br>
+<br>
+} <br>
+<br>
+%&gt; <br>
+<br>
+&lt;/BODY&gt; <br>
+<br>
+</font></font></p></div></body></html>

@@ -1,0 +1,67 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>yum命令介绍</title></head><body><h1>yum命令介绍</h1><div><p>&nbsp;&nbsp;&nbsp;  总所周知，Redhat和Fedora的软件安装命令是rpm，但是用rpm安装软件最大的麻烦就是需要手动寻找安装该软件所需要的一系列依赖关系，超级麻烦不说，要是软件不用了需要卸载的话由于卸载掉了某个依赖关系而导致其他的软件不能用是非常恼人的。令人高兴的是，Fedora终于推出了类似于ubuntu中的apt的命令yum，令Fedora的软件安装变得简单容易。<br>
+<strong>yum有一下特点：<br>
+*可以同时配置多个资源库(Repository)<br>
+*简洁的配置文件(/etc/yum.conf)<br>
+*自动解决增加或删除rpm包时遇到的倚赖性问题<br>
+*使用方便<br>
+*保持与RPM数据库的一致性<br>
+</strong>&nbsp;&nbsp;&nbsp;  yum，是Yellow dog Updater Modified的简称，起初是由yellow dog这一发行版的开发者TerraSoft研发，用python写成，那时还叫做yup(yellow dog<br>
+updater)，后经杜克大学的<a href="mailto:Linux@Duke">Linux@Duke</a>开发团队进行改进，遂有此名。yum的宗旨是自动化地升级，安装/移除rpm包，收集rpm包的相关信息，检查依赖性并自动提示用户解决。yum的关键之处是要有可靠的repository，顾名思义，这是软件的仓库，它可以是http或ftp站点，也可以是本地软件池，但必须包含rpm的header，header包括了rpm包的各种信息，包括描述，功能，提供的文件，依赖性等.正是收集了这些 header并加以分析，才能自动化地完成余下的任务。</p>
+<p><br>
+<strong>yum安装:&nbsp;&nbsp;  #rpm -ivh yum-2.0.4-2.noarch.rpm</strong><br>
+&nbsp;&nbsp;&nbsp;</p>
+<p>1.列出所有可更新的软件清单<br>
+命令：yum check-update<br>
+2.安装所有更新软件<br>
+命令：yum update<br>
+3.仅安装指定的软件<br>
+命令：yum install<br>
+4.仅更新指定的软件<br>
+命令：yum update<br>
+5.列出所有可安裝的软件清单<br>
+命令：yum list<br>
+3.使用yum安装和卸载软件，有个前提是yum安装的软件包都是rpm格式的。<br>
+<strong>安装的命令是，yum install xxx</strong>，yum会查询数据库，有无这一软件包，如果有，则检查其依赖冲突关系，如果没有依赖冲突，那么最好，下载安装;如果有，则会给出提示，询问是否要同时安装依赖，或删除冲突的包，你可以自己作出判断<br>
+<strong>删除的命令是，yum remove xxx</strong>，同安装一样，yum也会查询数据库，给出解决依赖关系的提示。<br>
+1.用YUM安装软件包<br>
+命令：yum install<br>
+2.用YUM删除软件包<br>
+命令：yum remove</p>
+<p>4.用yum查询想安装的软件<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+1.使用YUM查找软件包<br>
+命令：yum search <br>
+2.列出所有可安装的软件包<br>
+命令：yum list<br>
+3.列出所有可更新的软件包<br>
+命令：yum list updates<br>
+4.列出所有已安装的软件包<br>
+命令：yum list installed<br>
+5.列出所有已安装但不在 Yum Repository 內的软件包<br>
+命令：yum list extras<br>
+6.列出所指定的软件包<br>
+命令：yum list<br>
+7.使用YUM获取软件包信息<br>
+命令：yum info <br>
+8.列出所有软件包的信息<br>
+命令：yum info<br>
+9.列出所有可更新的软件包信息<br>
+命令：yum info updates<br>
+10.列出所有已安裝的软件包信息<br>
+命令：yum info installed<br>
+11.列出所有已安裝但不在 Yum Repository 內的软件包信息<br>
+命令：yum info extras<br>
+12.列出软件包提供哪些文件<br>
+命令：yum provides</p>
+<p>5.清除YUM缓存<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  yum 会把下载的软件包和header存储在cache中，而不会自动删除。如果我们觉得它们占用了磁盘空间，可以使用yum clean指令进行清除，更精确的用法是yum clean headers清除header，yum clean packages清除下载的rpm包，yum clean all 清除所有</p>
+<p><br>
+1.清除缓存目录(/var/cache/yum)下的软件包<br>
+命令：yum clean packages<br>
+2.清除缓存目录(/var/cache/yum)下的 headers<br>
+命令：yum clean headers<br>
+3.清除缓存目录(/var/cache/yum)下旧的 headers<br>
+命令：yum clean oldheaders<br>
+4.清除缓存目录(/var/cache/yum)下的软件包及旧的headers<br>
+命令：yum clean, yum clean all (= yum clean packages; yum clean oldheaders)<br>
+以上所有命令参数的使用都可以用man来查看.</p></div></body></html>

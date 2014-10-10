@@ -1,0 +1,16 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>LINUX NTP 时间服务器与客户端配置</title></head><body><h1>LINUX NTP 时间服务器与客户端配置</h1><div><p><span class="tcnt"><span style="FONT-FAMILY: 微软雅黑; FONT-SIZE: 24px"></p>
+<p><strong>服务器的IP为:192.168.10.1</strong></p>
+<p>安装服务<br>rpm -ivh ntp-4.1.2-4.EL3.1.i386.rpm （安装包在RedHat as4 cd2中）</p>
+<p>配置<br>1<br>vi /etc/ntp.conf </p>
+<p>注释一行 <br>#restrict default ignore<br>OR<br>#restrict default nomodify notrap noquery</p>
+<p>加入两行 <br>restrict 192.168.10.0 mask 255.255.255.0 notrust nomodify notrap #如果不能正常更新，需要把notrust去掉</p>
+<p>server cn.pool.ntp.org</p>
+<p>2<br>vi /etc/ntp/step-tickers </p>
+<p>加入一行 <br>cn.pool.ntp.org </p>
+<p>启动服务<br>这样每次ntpd启动时，会自动连接该国际标准时间服务器； <br>service ntpd start </p>
+<p>查看服务是否正常工作<br>netstat -an |grep 123 </p>
+<p>确保该端口以udp方式开放 </p>
+<p><br><strong>客户端IP：192.168.10.2</strong></p>
+<p>ntpdate 192.168.10.2 <br>应该显示同步成功 </p>
+<p>crond -e </p>
+<p>加入 <br>0-59/10 * * * * /usr/sbin/ntpdate 192.168.10.1 <br>表示每隔10分钟同步一次时间。</p></span></span></div></body></html>

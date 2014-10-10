@@ -1,0 +1,114 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux添加用户、删除用户、修改密码</title></head><body><h1>Linux添加用户、删除用户、修改密码</h1><div><p><br>
+前面介绍过，Linux系统是一个多用户操作系统，系统中每一个用户的使用权限都需要由系统管理员来设定。这一节将介绍一些系统管理员对用户和用户组进行管理的命令。<br>
+1  创建新用户</p>
+<p>useradd命令（也可以使用adduser）用来创建新的用户帐号，其命令格式如下： <br>
+useradd命令常用选项</p>
+<p><br>
+-d设置新用户的登陆目录</p>
+<p>-e设置新用户的停止日期，日期格式为MM/DD/YY</p>
+<p>-f<br>
+帐户过期几日后永久停权。当值为0时帐号则立刻被停权。而当值为-1时则关闭此功能。预设值为-1</p>
+<p>-g使新用户加入群组</p>
+<p>-G使新用户加入一个新组。每个群组使用逗号&ldquo;，&rdquo;隔开，不可以夹杂空白字</p>
+<p>-s指定新用户的登陆Shell</p>
+<p>-u设定新用户的ID值</p>
+<p>&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  成功创建一个新用户以后，在/etc/passwd文件中就会增加一行该用户的信息，其格式如下：<br>
+〔用户名〕：〔密码〕：〔UID〕：〔GID〕：〔身份描述〕：〔主目录〕：〔登陆Shell〕<br>
+其中个字段被冒号&ldquo;：&rdquo;分成7各部分。<br>
+由于小于500的UID和GID一般都是系统自己保留，不用做普通用户和组的标志，所以新增加的用户和组一般都是UID和GID大于500的。<br>
+例如使用如下命令：<br>
+〔<a href="mailto:root@localhost">root@localhost</a> root〕# useradd user1<br>
+将会创建一个名为userl的用户，关于用户管理命令已经介绍过，在此也不做更多的介绍了。<br>
+执行useradd命令的结果如图11-13所示。</p>
+<p>2  设置和修改用户口令passwd</p>
+<p><br>
+passwd命令用来设置和修改用户命令，只有超级用户和用户自己可以修改密码，其他的普通用户没有修改其他用户密码的权利。其命令如下：<br>
+# passwd〔用户名〕<br>
+为避免输入密码是被人注意到有多少位，Linux并不采用类似Windows的密码回显〔显示为*号〕，所以，输入的这些字符是看不见的。例如，为新建的userl用户设置密码可使用如下命令：<br>
+〔<a href="mailto:root@localhost">root@localhost</a> root〕# passwd user1<br>
+根据系统的提示信息输入两次密码，系统会显示：<br>
+passwd ：:all authentication tokens updated successfully<br>
+表示修改密码成功了。新建用户的工作只有在该用户设置了口令后才算完成，否则无法使用该用户名登陆。</p>
+<p>3  修改用户信息usermod</p>
+<p><br>
+usermod命令用来修改用户信息，其命令格式如下：<br>
+# usermod〔选项〕〔用户名〕</p>
+<p>usermod命令常用选项</p>
+<p><br>
+-d更新使用者新的登陆目录</p>
+<p>-e设置新用户的停止日期，日期格式为MM/DD/YY</p>
+<p>-f帐户过期几日后永久停权。当值为0时帐号则立刻被停权。而当值为-1时则关闭此功能。预设值为-1</p>
+<p>-g更新使用者新用户加入群组</p>
+<p>-G定义使用者为一堆groups的成员。每个群组使用&ldquo;？？&rdquo;隔开，不可以夹杂空白字</p>
+<p>-l变更用户登陆时的名称，同时使用者目录名也会跟着更动成新的名称</p>
+<p>-s指定新用户Shell</p>
+<p>-u用户ID值，必须为唯一的ID值。用户目录树下所用的文档目录其userID会自动变更，放在拥护目录外的文档则要自行手动更动</p>
+<p>例如，下面的命令修改用户信息：<br>
+〔<a href="mailto:root@localhost">root@localhost</a> root〕# usermod &ndash;d/home/user2 &ndash;s/bin/bash user2<br>
+将用户名user2的主目录路径设置在/home/user1,登陆的Shell设置为/usr/bin/gcc。<br>
+一般情况下usermod命令会参照命令指令的部分修改用户帐号信息。但usermod不允许改变正在线上的使用者帐号名称，因此，当用usermod来改变用户帐号信息时，必须确认这名没在电脑上执行任何程序。</p>
+<p>４新建组群groupadd</p>
+<p><br>
+groupadd命令用来建立新的用户组，其命令格式如下：<br>
+# groupadd〔选项〕〔用户名称〕<br>
+常用选项有：<br>
+-g：GID值。除非使用-o参数不然该值必须是唯一，不可相同，数值不可为负。<br>
+GID值预设为最小不得小于500而逐次增加。0&mdash;499传统上是保留系统帐号使用。<br>
+-f：新增的一个已经存在的群组帐号，系统会出现错误讯息然后结束groupadd.<br>
+如果是这样的情况，不会新增这个群组（如果是这个情况，系统不会在新增一次）。也可同时加上-g选项，当你加上一个 GID时，此时GID就不用是唯一值，可不加-o参数,建好的群组会显示建立后的结果（adding a group as neither &ndash;g or &ndash;o options were specified）,这是Red Hat Linux额外增设的选项。</p>
+<p>5  删除用户userdel</p>
+<p><br>
+userdel命令用来删除已经存在的用户及相关的文档，其命令格式如下：<br>
+# userdel 〔选项〕用户名<br>
+userdel命令的常用选项：<br>
+-r将用户目录下的文档一并删除。在其他位置上的文档也将一一找出并删除。<br>
+Userdel不允许移除正在线上的用户帐号，因此，如果想删除这类用户帐号，必须先杀掉用户在系统上运行的程序才能进行帐号删除。</p>
+<p><br>
+6  删除群组groupdel</p>
+<p>groupdel命令用来删除已经存在的用户组，其命令格式如下：</p>
+<p># groupdel组名</p>
+<p>同userdel类似，如果有任何一个组内的用户在上线，就不能移除该用户组，因此，如果组内有用户在线的话，最好先移出该用户，然后在删除该用户。</p>
+<p><br>
+7  用户间切换su</p>
+<p>&nbsp;&nbsp;&nbsp;  su 命令常用于不同用户间切换。其命令格式如下：</p>
+<p>&nbsp;&nbsp;&nbsp;  # su〔用户名〕</p>
+<p>su命令的常见用法是变成跟用户或超级用户，如果发出不带用户名的su命令，则系统提示输入根口令，输入之后则可换为根用户。如果登陆为根用户，则可以用su命令成为系统上任何用户而不需要口令。</p>
+<p>  例如，如果登陆为user1，要切换为user2，只要用如下命令：</p>
+<p># su user2</p>
+<p>然后系统提示输入user2口令，输入正确的口令之后就可以切换到user2。完成之后就可以用exit命令返回到user1。</p>
+<p><br>
+8  查看当前在线用户who</p>
+<p>who命令主要用于查看当前在线上的用户情况。这个命令非常有用。如果用户想和其他用户建立即使通讯，比如使用talk命令，那么首先要确定的就是该用户确实在线上，不然talk进程就无法建立起来。</p>
+<p>又如，系统管理员希望监视每个登陆的用户此时此刻的所作所为，也要使用who命令。Who命令的常用命令格式和常用选项如下：</p>
+<p># who〔选项〕</p>
+<p>命令who常用命令选项如表4-21所示。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  表 4-21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  命令who常用命令选项</p>
+<p>常用选项<br>
+意&nbsp;&nbsp;  义</p>
+<p>-a<br>
+显示所有用户的所有信息</p>
+<p>-m<br>
+显示运行该程序的用户名，和&ldquo;who am I&rdquo;的作用一样</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;  -q<br>
+只显示用户的登陆帐号和登陆用户的数量，该选项优先级高于其他任何选项</p>
+<p>-u<br>
+在登陆用户后面显示该用户最后一次对系统进行操作距今的时间</p>
+<p>-H<br>
+显示列标题</p>
+<p>所有的选项是可选的，例如，使用命令：</p>
+<p>〔<a href="mailto:root@localhose">root@localhose</a> root〕# who-aH</p>
+<p>who输出常用标题含义</p>
+<p>USER<br>
+用户登陆</p>
+<p>LINE<br>
+用户登陆使用终端</p>
+<p>TIME<br>
+用户登陆时间</p>
+<p>LDIE<br>
+用户空闲时间，即至进行操作的时间</p>
+<p>PID<br>
+用户登陆shell的进程ID</p>
+<p>&nbsp;&nbsp;&nbsp;  也可以单独使用who命令，这时将显示登陆用户另、使用终端设备以及登陆到系统的时间三项内容。</p>
+<p><br>
+本文来自CSDN博客，转载请标明出处：<a href="http://blog.csdn.net/qigaopan/archive/2009/04/17/4087864.aspx">http://blog.csdn.net/qigaopan/archive/2009/04/17/4087864.aspx</a></p></div></body></html>

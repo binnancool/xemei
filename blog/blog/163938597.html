@@ -1,0 +1,103 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>WSH(Windows Scripting Host)</title></head><body><h1>WSH(Windows Scripting Host)</h1><div><h1>WSH</h1>
+<div >　　
+<div style="float: right; visibility: visible" class="text_pic"><a href="http://imgsrc.baidu.com/baike/pic/item/034965f45a51ddcaf2d385b1.jpg" target="_blank"><img class="editorImg" src="http://imgsrc.baidu.com/baike/abpic/item/034965f45a51ddcaf2d385b1.jpg"></a></div>
+WSH--这个在词典中都很难找寻的名词，对许多朋友来讲也许还比较陌生。但正是WSH ，使 Windows 操作系统具备了更为强大的功能。它让我们在使用系统时拥有了许多的便利，但同时，也让我们的电脑遭遇了不少的麻烦。下面，就让我们一步步走进 WSH 的神秘世界，共同评判它的是非功过。<br>
+<div class="spctrl"> </div>
+　　一、WSH 是什么？<br>
+<div class="spctrl"> </div>
+　　WSH 是&ldquo;Windows Scripting Host&rdquo;的缩略形式，其通用的中文译名为&ldquo;Windows 脚本宿主&rdquo;。对于这个较为抽象的名词，我们可以先作这样一个笼统的理解：它是内嵌于 Windows 操作系统中的脚本语言工作环境。<br>
+<div class="spctrl"> </div>
+　　Windows Scripting Host 这个概念最早出现于 Windows 98 操作系统。大家一定还记得 MS-Dos 下的批处理命令，它曾有效地简化了我们的工作、带给我们方便，这一点就有点类似于如今大行其道的脚本语言。但就算我们把批处理命令看成是一种脚本语言，那它也是 98 版之前的 Windows 操作系统所唯一支持的&ldquo;脚本语言&rdquo;。而此后随着各种真正的脚本语言不断出现，批处理命令显然就很是力不从心了。面临这一危机，微软在研发 Windows 98 时，为了实现多类脚本文件在 Windows 界面或 Dos 命令提示符下的直接运行，就在系统内植入了一个基于 32 位 Windows 平台、并独立于语言的脚本运行环境，并将其命名为&ldquo;Windows Scripting Host&rdquo;。WSH 架构于 ActiveX 之上，通过充当 ActiveX 的脚本引擎控制器，WSH 为 Windows 用户充分利用威力强大的脚本指令语言扫清了障碍。<br>
+<div class="spctrl"> </div>
+　　再具体一点描述：你自己编写了一个脚本文件，如后缀为 .vbs 或 .js 的文件，然后在 Windows 下双击并执行它，这时，系统就会自动调用一个适当的程序来对它进行解释并执行，而这个程序，就是 Windows Scripting Host，程序执行文件名为 Wscript.exe （若是在命令行下，则为 Cscript.exe）。<br>
+<div class="spctrl"> </div>
+　　WSH 诞生后，在 Windows 系列产品中很快得到了推广。除 Windows 98 外，微软在 Internet Information Server 4.0、Windows Me、Windows 2000 Server，以及 Windows 2000 Professional 等产品中都嵌入了 WSH。现在，早期的 Windows 95 也可单独安装相应版本的 WSH。（附：各种版本 WSH 的安装程序可以从 http://msdn.microsoft.com/scripting 站点下载）。<br>
+<div class="spctrl"> </div>
+　　二、WSH 有什么用？<br>
+<div class="spctrl"> </div>
+　　WSH 的设计，在很大程度上考虑到了&ldquo;非交互性脚本（noninteractive scripting）&rdquo;的需要。在这一指导思想下产生的 WSH，给脚本带来非常强大的功能，例如：我们可以利用它完成映射网络驱动器、检索及修改环境变量、处理注册表项等工作；管理员还可以使用 WSH 的支持功能来创建简单的登陆脚本，甚至可以编写脚本来管理活动目录。<br>
+<div class="spctrl"> </div>
+　　而事实上，上述功能的实现，均与 WSH 内置的多个对象密切相关，这些内置对象肩负着直接处理脚本指令的重任。因此，我们也可以通过了解 WSH 的内置对象来探寻 WSH 可以实现的功能。<br>
+<div class="spctrl"> </div>
+　　图 1 是 WSH 的内置对象构成情况。<br>
+<div class="spctrl"> </div>
+　　从图中我们可以看出，WSH 共有 14 个内置对象，它们各自有着明确分工。具体而言，位于最底部的 Wscript ，主要作用是提取命令行变量，确定脚本文件名，确定 WSH 执行文件名（wscript.exe 还是 cscript.exe），确认 host 版本信息，创建、关连及分离 COM 对象，写入事件，按程序结束一个脚本文件的运行，向默认的输出设备（如对话框、命令行）输出信息等；WshArguments 的作用是获取全部的命令行变量； WshNamed 负责获取指定的命令行参数集；WshUnnamed 负责获取未经指定的命令行参数集；WshNetwork 的主要作用是开放或关闭网络共享，连接或断开网络打印机，映射或取消网络中的共享，获取当前登陆用户的信息；WshController 可以创建一个远程脚本对象；WshRemote 可以实现网络中对计算机系统的远程管理，也可按计划对其它程序/脚本进行处理；WshRemote Error 的作用在于：当一个远程脚本（WshRemote 对象）因脚本错误而终止时，获取可用的错误信息；WshShell 主要负责程序的本地运行，处理注册表项、创建快捷方式、获取系统文件夹信息，处理环境变量；WshShortcut 主要用于按计划创建快捷方式；WshSpecialfolders 用于获取任意一个 Windows 特殊文件夹的信息；WshURLShortcut 用于按程序要求创建进入互联网资源的快捷方式；WshEnvironment 用于获取任意的环境变量（如 WINDIR, PATH, 或 PROMPT）；WshScriptExec 用于确定一个脚本文件的运行状态及错误信息。<br>
+<div class="spctrl"> </div>
+　　在这些内置对象的帮助下，我们就可以利用 WSH 充分发挥 VBScript 及 JScript 等脚本的强大威力，极大地提高我们的工作效率。<br>
+<div class="spctrl"> </div>
+　　三、WSH 是怎样工作的？<br>
+<div class="spctrl"> </div>
+　　WSH的工作流程，实际上就是脚本文件被解析并执行的过程。我们知道，现在脚本经常会被植入网页，其中包括 HTML 页面（客户机端）和 ASP 页面（服务器端）。对于植入 HTML 页面的脚本，其所需的解析引擎会由 IE 这样的网页浏览器载入；对于植入 ASP 页面的脚本，其所需的解析引擎会由 IIS（Internet Information Services）提供。<br>
+<div class="spctrl"> </div>
+　　而对于出现在 HTML 和 ASP 页面之外的脚本（它们常以独立的文件形式存在），就需要经由 WSH 来处理了。在这里要插一句&ldquo;废话&rdquo;：WSH 的正常工作的前提，是你必须安装了微软 3.0 或更高版本的 IE，因为 WSH 在工作时会调用 IE 中的 VBScript 和 JScript 解析引擎。<br>
+<div class="spctrl"> </div>
+　　现在，就让我们来看看脚本文件经由 WSH 执行的过程。为了更加直观，笔者根据有关资料绘制了一幅工作流程图（图2），从图中大家能对 WSH 在脚本文件运行中所起到的作用有个理性认识。对于这个流程图，还需要补充两点：1、图中第(2、3)步，WSH 根据脚本文件后缀名，到系统注册表中查询所需的脚本引擎时，VBScript 和 JScript 两种语言的解析引擎是 Windows 系统中原有的，而其它脚本语言的解析引擎，如 PERL、TCL等，需要用户另行定义；2、第(5)步执行脚本命令时，一些脚本指令会使用到 WSH 内置对象所提供的服务（参见本文第二部分），例如处理注册表项。这时，脚本指令就会向 WSH 提出请求，并由 WSH 完成所需任务。也正是在这一步，WSH 的功用得到了淋漓尽致的发挥。<br>
+<div class="spctrl"> </div>
+　　四、WSH 怎么用？<br>
+<div class="spctrl"> </div>
+　　谈到这个问题，就不太好讲了。正如前面所述，WSH 实际上是一个脚本语言的运行环境，它之所以具备强大的功能，是在于充分挖掘了脚本语言的潜力。因此，如果抛开脚本语言而空谈 WSH ，那实际上就没有了意义。而如果再展开来讲述脚本语言，显然就离开了今天的主题。<br>
+<div class="spctrl"> </div>
+　　在这种情况下，只好采取一种折衷的方法：给大家推荐几个脚本文件利用 WSH 执行任务的实例，希望大家能通过这些例子对 WSH 的使用有一个初步的了解。<br>
+<div class="spctrl"> </div>
+　　脚本文件的编写十分方便，你可以选用任意一个文字编辑软件进行编写，写完后，你只需将它保存为 WSH 所支持的文件名就行了（如 ..js 文件、.vbs 文件）。最常用的编辑器当然就是我们的记事本（Notepad）了，下面的实例都是以它作为工具编写的。<br>
+<div class="spctrl"> </div>
+　　准备好了吗？让我们先来看一个最简单的例子吧。打开记事本，在上面写下：<br>
+<div class="spctrl"> </div>
+　　WScript.Echo(&quot;走近 WSH&quot;)<br>
+<div class="spctrl"> </div>
+　　好了，将它保存为以 ..vbs 或 .js 为后缀名（可千万不要弄成了 ..txt）的文件并退出记事本。双击执行这个文件，看看结果吧，是不是很有意思？<br>
+<div class="spctrl"> </div>
+　　有了第一印象后，我们继续往下看。<br>
+<div class="spctrl"> </div>
+　　这一次，我们要利用 WSH 完成一次创建十个文件夹的工作。代码如下：<br>
+<div class="spctrl"> </div>
+　　dim objdir<br>
+<div class="spctrl"> </div>
+　　set objdir=wscript.createobject(&quot;scripting.filesystemobject&quot;)<br>
+<div class="spctrl"> </div>
+　　for k=1 to 10<br>
+<div class="spctrl"> </div>
+　　anewfolder=&quot;c:\chapter&quot; &amp; k<br>
+<div class="spctrl"> </div>
+　　objdir.createfolder(anewfolder)<br>
+<div class="spctrl"> </div>
+　　next<br>
+<div class="spctrl"> </div>
+　　同样，将它存为 .vbs 文件并退出。运行后，我们会发现，C 盘根目录下一次性多出了十个新文件夹。<br>
+<div class="spctrl"> </div>
+　　最后，再举一个在服务器上的运用。下面的代码将帮助你重新启动指定的 IIS 服务：<br>
+<div class="spctrl"> </div>
+　　' define a constant for stopped services<br>
+<div class="spctrl"> </div>
+　　Const ADS_SERVICE_STOPPED = 1<br>
+<div class="spctrl"> </div>
+　　' get an ADSI object for a computer<br>
+<div class="spctrl"> </div>
+　　Set objComputer = GetObject(&quot;WinNT://MYCOMPUTER,computer&quot;)<br>
+<div class="spctrl"> </div>
+　　' get an object for a service<br>
+<div class="spctrl"> </div>
+　　Set objService = objComputer.GetObject(&quot;Service&quot;,&quot;MYSERVICE&quot;)<br>
+<div class="spctrl"> </div>
+　　' check to see if the service is stopped<br>
+<div class="spctrl"> </div>
+　　If (objService.Status = ADS_SERVICE_STOPPED) Then<br>
+<div class="spctrl"> </div>
+　　' if the service is stopped, then start it<br>
+<div class="spctrl"> </div>
+　　objService.Start<br>
+<div class="spctrl"> </div>
+　　End If<br>
+<div class="spctrl"> </div>
+　　将它以 startsvc.vbs 为名保存在 C: 盘根目录。并通过如下命令执行：CSCRIPT C:\STARTSVC.VBS 。运行后，经你指定的 IIS 服务项将被重新开启。<br>
+<div class="spctrl"> </div>
+　　已经举了三个例子，其实，在 Windows 的 samples 目录下，有个 WSH 文件夹，那里面有不少很具代表性的 .vbs 和 .js 脚本文件。大家有空可以打开来看看，相信会受益匪浅的。<br>
+<div class="spctrl"> </div>
+　　此外，利用 WSH ，我们还可以自己编写脚本文件来提高网络管理方面的效率。但由于受条件限制，本人在这方面的使用心得并不多，因此也就不好多说了^_^。不过，网上这方面现成的代码倒是很多，大家有兴趣可以去研究一下。<br>
+<div class="spctrl"> </div>
+　　五、WSH 有不足吗？<br>
+<div class="spctrl"> </div>
+　　答案当然是肯定的。任何事物都有两面性，WSH 也不例外。应该说，WSH 的优点在于它使我们可以充分利用脚本来实现计算机工作的自动化；但不可否认，也正是它的这一特点，使我们的系统又有了新的安全隐患。许多计算机病毒制造者正在热衷于用脚本语言来编制病毒，并利用 WSH 的支持功能，让这些隐藏着病毒的脚本在网络中广为传播。去年曾名燥一时的 I Love You 便是一个典型代表。因此，大家对于来历不明、尤其是邮件附件里的一些脚本文件还是应该保持戒备。至于相应的防范措施，笔者在别的文章中已有论述，在此就不再罗嗦了。<br>
+<div class="spctrl"> </div>
+　　以上文字，希望能对大家认识 WSH 有所帮助。在运用过程中，大家若有什么心得或发现，别望了一起分享哦。<br>
+看不清图片请到这里看原文http://www.cnii.com.cn/20040423/ca240413.htm</div></div></body></html>

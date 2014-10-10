@@ -1,0 +1,247 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>chmod命令</title></head><body><h1>chmod命令</h1><div><p>1、查看文件的类型及详细信息</p>
+<p>在终端运行ls -l命令，有如下显示：</p>
+<p>文件属性 文件数 拥有者 所属组 文件大小 建档月份 日 年或时间 文件名
+<table class="FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="0" width="500">
+    <tbody>
+        <tr>
+            <td>文件属性</td>
+            <td>文件数</td>
+            <td>拥有者</td>
+            <td>所属组</td>
+            <td>文件大小</td>
+            <td>建档月份 日 年或时间</td>
+            <td>文件名</td>
+        </tr>
+    </tbody>
+</table>
+<table class="FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="0" width="500">
+    <tbody>
+        <tr>
+            <td>lrwxrwxrwx</td>
+            <td>1</td>
+            <td>root</td>
+            <td>root</td>
+            <td>11</td>
+            <td>jul 2 10:18</td>
+            <td>init.d-&gt;rc.d/init.d</td>
+        </tr>
+        <tr>
+            <td>drwxr-xr-x</td>
+            <td>3</td>
+            <td>root</td>
+            <td>root</td>
+            <td>4096</td>
+            <td>jul 2 10:21</td>
+            <td>PEMCIA</td>
+        </tr>
+        <tr>
+            <td>drwxr-xr-x</td>
+            <td>2</td>
+            <td>root</td>
+            <td>root</td>
+            <td>4096</td>
+            <td>jul 2 10:42</td>
+            <td>vsftpd</td>
+        </tr>
+        <tr>
+            <td>-rw-r--r--</td>
+            <td>1</td>
+            <td>root</td>
+            <td>root</td>
+            <td>26940</td>
+            <td>Feb 25 2003</td>
+            <td>php.ini</td>
+        </tr>
+    </tbody>
+</table>
+lrwxrwxrwx 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  root 11&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  jul&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  2&nbsp;&nbsp;  10:18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  init.d-&gt;rc.d/init.d <br>
+drwxr-xr-x&nbsp;&nbsp;  3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  root 4096&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  jul&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  2&nbsp;&nbsp;  10:21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  PEMCIA <br>
+drwxr-xr-x&nbsp;&nbsp;  2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  root &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  root 4096&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  jul&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  2&nbsp;&nbsp;  10:42&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  vsftpd <br>
+-rw-r--r--&nbsp;&nbsp;&nbsp;  1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  root 26940 &nbsp;&nbsp;&nbsp;  Feb&nbsp;&nbsp;  25 2003&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  php.ini</p>
+<p>（1）文件属性：共10个字符表示，第一个字符l、d、-分别表示链接文件、目录、普通文件；第2-4个字符，表示文件拥有者对该文件的权限；第5-7个字符，表示与拥有者属于同一组的用户对该文件的权限；第8-10个字符，表示其它用户对该文件的权限。其中r、w、x、-分别代表可读、可写、可执行、无此权限。</p>
+<p>(2)第2列表示文件个数，对于文件值为1,若为目录，则表示该目录下的文件数。<br>
+(3)第3列表示该文件或目录的拥有者。<br>
+(4)第4列表示该文件所属的组。<br>
+(5)第5列表示文件的大小。默认用B为单位，空目录一般为1024B<br>
+(6)第6列表示文件创建的日期和时间。对于目录和链接文件，显示的是&quot;月 日 时间&quot;，对于普通文件，显示的是&ldquo;月 日 年&rdquo;<br>
+(7)第7列表示文件名，根据文件类型的不同，将显示成不同的颜色。</p>
+<p>2、chmod用于改变文件或目录的访问权限。用户用它控制文件或目录的访问权限。该命令有两种用法。一种是包含字母和操作符表达式的文字设定法；另一种是包含数字的数字设定法。</p>
+<p>语法：chmod [who] [+ | - | =] [mode] 文件名命令中各选项的含义为：</p>
+<p>操作对象who可是下述字母中的任一个或者它们的组合：　　</p>
+<p>u 表示&ldquo;用户（user）&rdquo;，即文件或目录的所有者。　　</p>
+<p>g 表示&ldquo;同组（group）用户&rdquo;，即与文件属主有相同组ID的所有用户。　　</p>
+<p>o 表示&ldquo;其他（others）用户&rdquo;。　　</p>
+<p>a 表示&ldquo;所有（all）用户&rdquo;。它是系统默认值。操作符号可以是：　　</p>
+<p>+ 添加某个权限。　　</p>
+<p>- 取消某个权限。　　</p>
+<p>= 赋予给定权限并取消其他所有权限（如果有的话）。</p>
+<p>设置 mode 所表示的权限可用下述字母的任意组合：　　r 可读。　　w 可写。 　x 可执行。　　</p>
+<p>X 只有目标文件对某些用户是可执行的或该目标文件是目录时才追加x 属性。　</p>
+<p>s 在文件执行时把进程的属主或组ID置为该文件的文件属主。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>方式&ldquo;u＋s&rdquo;设置文件的用户ID位，&ldquo;g＋s&rdquo;设置组ID位。　　</p>
+<p>t 保存程序的文本到交换设备上。　　</p>
+<p>u 与文件属主拥有一样的权限。　　</p>
+<p>g 与和文件属主同组的用户拥有一样的权限。　　</p>
+<p>o 与其他用户拥有一样的权限。</p>
+<p>文件名：以空格分开的要改变权限的文件列表，支持通配符。<br>
+<table class="FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="0" width="500">
+    <tbody>
+        <tr>
+            <td>lrwxrwxrwx</td>
+            <td>1</td>
+            <td>root</td>
+            <td>root</td>
+            <td>11</td>
+            <td>jul 2 10:18</td>
+            <td>init.d-&gt;rc.d/init.d</td>
+        </tr>
+        <tr>
+            <td>drwxr-xr-x</td>
+            <td>3</td>
+            <td>root</td>
+            <td>root</td>
+            <td>4096</td>
+            <td>jul 2 10:21</td>
+            <td>PEMCIA</td>
+        </tr>
+        <tr>
+            <td>drwxr-xr-x</td>
+            <td>2</td>
+            <td>root</td>
+            <td>root</td>
+            <td>4096</td>
+            <td>jul 2 10:42</td>
+            <td>vsftpd</td>
+        </tr>
+        <tr>
+            <td>-rw-r--r--</td>
+            <td>1</td>
+            <td>root</td>
+            <td>root</td>
+            <td>26940</td>
+            <td>Feb 25 2003</td>
+            <td>php.ini</td>
+        </tr>
+    </tbody>
+</table>
+<table class="FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="0" width="500">
+    <tbody>
+        <tr>
+            <td>lrwxrwxrwx</td>
+            <td>1</td>
+            <td>root</td>
+            <td>root</td>
+            <td>11</td>
+            <td>jul 2 10:18</td>
+            <td>init.d-&gt;rc.d/init.d</td>
+        </tr>
+        <tr>
+            <td>drwxr-xr-x</td>
+            <td>3</td>
+            <td>root</td>
+            <td>root</td>
+            <td>4096</td>
+            <td>jul 2 10:21</td>
+            <td>PEMCIA</td>
+        </tr>
+        <tr>
+            <td>drwxr-xr-x</td>
+            <td>2</td>
+            <td>root</td>
+            <td>root</td>
+            <td>4096</td>
+            <td>jul 2 10:42</td>
+            <td>vsftpd</td>
+        </tr>
+        <tr>
+            <td>-rw-r--r--</td>
+            <td>1</td>
+            <td>root</td>
+            <td>root</td>
+            <td>26940</td>
+            <td>Feb 25 2003</td>
+            <td>php.ini</td>
+        </tr>
+    </tbody>
+</table>
+<table class="FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="0" width="500">
+    <tbody>
+        <tr>
+            <td>lrwxrwxrwx</td>
+            <td>1</td>
+            <td>root</td>
+            <td>root</td>
+            <td>11</td>
+            <td>jul 2 10:18</td>
+            <td>init.d-&gt;rc.d/init.d</td>
+        </tr>
+        <tr>
+            <td>drwxr-xr-x</td>
+            <td>3</td>
+            <td>root</td>
+            <td>root</td>
+            <td>4096</td>
+            <td>jul 2 10:21</td>
+            <td>PEMCIA</td>
+        </tr>
+        <tr>
+            <td>drwxr-xr-x</td>
+            <td>2</td>
+            <td>root</td>
+            <td>root</td>
+            <td>4096</td>
+            <td>jul 2 10:42</td>
+            <td>vsftpd</td>
+        </tr>
+        <tr>
+            <td>-rw-r--r--</td>
+            <td>1</td>
+            <td>root</td>
+            <td>root</td>
+            <td>26940</td>
+            <td>Feb 25 2003</td>
+            <td>php.ini</td>
+        </tr>
+    </tbody>
+</table>
+<table class="FCK__ShowTableBorders" border="0" cellspacing="0" cellpadding="0" width="500">
+    <tbody>
+        <tr>
+            <td>lrwxrwxrwx</td>
+            <td>1</td>
+            <td>root</td>
+            <td>root</td>
+            <td>11</td>
+            <td>jul 2 10:18</td>
+            <td>init.d-&gt;rc.d/init.d</td>
+        </tr>
+        <tr>
+            <td>drwxr-xr-x</td>
+            <td>3</td>
+            <td>root</td>
+            <td>root</td>
+            <td>4096</td>
+            <td>jul 2 10:21</td>
+            <td>PEMCIA</td>
+        </tr>
+        <tr>
+            <td>drwxr-xr-x</td>
+            <td>2</td>
+            <td>root</td>
+            <td>root</td>
+            <td>4096</td>
+            <td>jul 2 10:42</td>
+            <td>vsftpd</td>
+        </tr>
+        <tr>
+            <td>-rw-r--r--</td>
+            <td>1</td>
+            <td>root</td>
+            <td>root</td>
+            <td>26940</td>
+            <td>Feb 25 2003</td>
+            <td>php.ini</td>
+        </tr>
+    </tbody>
+</table>
+</p></div></body></html>

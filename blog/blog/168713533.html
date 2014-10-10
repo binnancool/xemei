@@ -1,0 +1,26 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>VMware NAT 端口映射配置</title></head><body><h1>VMware NAT 端口映射配置</h1><div><p>在虚拟机VMware上安装了Linux，为了使主机能够访问虚拟机上Linux中运行的web服务，需要VMware NAT 端口映射配置。具体如下：</p>
+<p><span style="font-weight: bold">一.对于Linux Host</span><br>
+<br>
+修改文件 /etc/vmware/vmnet8/nat/nat.conf<br>
+添加</p>
+<p style="text-indent: 2em">[incomingtcp]</p>
+<p style="text-indent: 2em"> </p>
+<p style="text-indent: 2em">8889 = 192.168.0.128:22</p>
+<p style="text-indent: 2em"> </p>
+<p>保存退出。<br>
+重启服务 /usr/lib/vmware/net-services.sh restart <br>
+<br>
+在Host上测试：<br>
+&nbsp;&nbsp;&nbsp;  ssh -p 8889 root@localhost<br>
+<br>
+<br>
+<span style="font-weight: bold">二.对于Windows Host</span></p>
+<p style="text-indent: 2em">1、在虚拟机里配置好IIS和动态域名解析软件</p>
+<p style="text-indent: 2em">2、将虚拟机网卡设置为NAT模式，并手动设置虚拟机的IP地址（否则无法进行虚拟端口映射）</p>
+<p style="text-indent: 2em">3、在主机中打开开始菜单，VMware，Virtual Network Editor</p>
+<p style="text-indent: 2em">4、打开Virtual Network Editor程序，切换到NAT选项卡，单击Edit...按钮</p>
+<p style="text-indent: 2em">5、打开NAT Settings对话框，单击Port Forwarding...按钮</p>
+<p style="text-indent: 2em">6、打开Port Forwarding对话框，在Incoming TCP ports中，单击Add...按钮</p>
+<p style="text-indent: 2em">7、打开Map Incoming Port对话框，Host&nbsp;&nbsp; port:输入80（HTTP访问需要使用80端口，如果是HTTPS访问，请使用443端口）， Virtual Machine IP Address:输入虚拟机IP地址，Port:和Host&nbsp;&nbsp; port:输入相同的内容，Description:描述随意输入，这个是给你看的，没有实际用途。</p>
+<p style="text-indent: 2em">8、一路OK，保存设置并退出Virtual Network Editor程序。</p>
+<p style="text-indent: 2em">9、如果你的主机处于内网中，请在路由器上设置端口映射，如果主机直接连接互联网，可以忽略此步骤。</p></div></body></html>

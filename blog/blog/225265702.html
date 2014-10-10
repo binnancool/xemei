@@ -1,0 +1,12 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>修改Tomcat6服务的窗口显示名称</title></head><body><h1>修改Tomcat6服务的窗口显示名称</h1><div><p><strong><font color="#ff0000" size="3">1、运行tomcat6的/bin/startup.bat,显示如下窗口：</font></strong></p>
+<p><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/94a25dc54b876d968326acdb.jpg"><br>
+</span></p>
+<p><span><strong><font color="#ff0000" size="3">2、使用鼠标点击，窗口的某一位置，则窗口变为：选定 Tomcat。</font></strong></span></p>
+<p><span><strong><font color="#ff0000" size="3">只有按Ctrl+C，才可以解除选定。处于&rdquo;选定&ldquo;状态，Tomcat处于暂停状态，无法响应Web页面的请求。</font></strong></span></p>
+<p><span><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/8878cf30f39f9d26eac4afa3.jpg"><br>
+</span></span></p>
+<p><span><span><strong><font color="#ff0000" size="3">3、修改Tomcat的窗口名称</font></strong></span></span></p>
+<p><span><span>打开/bin/catalina.bat文件，修改：if &quot;%TITLE%&quot; == &quot;&quot; set TITLE=单点登录，则重新运作startup.bat，显示如下图：</span></span></p>
+<p><span><span><strong>使用鼠标点击窗口某处，不能使其处于选定状态。</strong></span></span></p>
+<p><span><span><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/a28e53dc6ff9bed077c63880.jpg"><br>
+</span></span></span></p></div></body></html>

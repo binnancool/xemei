@@ -1,0 +1,114 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>基于SMB协议的共享文件读写</title></head><body><h1>基于SMB协议的共享文件读写</h1><div><p><strong><font size="4">一、SMB协议</font></strong></p>
+<p>SMB协议是基于TCP－NETBIOS下的，一般端口使用为139，445。</p>
+<p>服务器信息块（SMB）协议是一种<a href="http://baike.baidu.com/view/1937.htm" target="_blank">IBM</a>协议，用于在计算机间共享文件、打印机、串口等。SMB 协议可以用在因特网的<a href="http://baike.baidu.com/view/7729.htm" target="_blank">TCP/IP</a>协议之上，也可以用在其它网络协议如<a href="http://baike.baidu.com/view/32700.htm" target="_blank">IPX</a>和<a href="http://baike.baidu.com/view/32801.htm" target="_blank">NetBEUI</a> 之上。</p>
+<div class="spctrl"> </div>
+<p>　　SMB 一种客户机/服务器、请求/响应协议。通过 SMB 协议，客户端应用程序可以在各种网络环境下读、写服务器上的文件，以及对服务器程序提出服务请求。此外通过 SMB 协议，应用程序可以访问远程服务器端的文件、以及打印机、邮件槽（mailslot）、<a href="http://baike.baidu.com/view/1197718.htm" target="_blank">命名管道</a>（named pipe）等资源。</p>
+<div class="spctrl"> </div>
+<p>　　在 TCP/IP 环境下，客户机通过 NetBIOS over TCP/IP（或 NetBEUI/TCP 或 SPX/IPX）连接服务器。一旦连接成功，客户机可发送 SMB 命令到服务器上，从而客户机能够访问共享目录、打开文件、读写文件，以及一切在文件系统上能做的所有事情。</p>
+<div class="spctrl"> </div>
+<p>　　从 Windows 95 开始，Microsoft Windows 操作系统（operating system）都包括了客户机和服务器 SMB 协议支持。Microsoft 为 Internet 提供了 SMB 的<a href="http://baike.baidu.com/view/9664.htm" target="_blank">开源</a>版本，即通用 Internet 文件系统 （<a href="http://baike.baidu.com/view/1034390.htm" target="_blank">CIFS</a>）。与现有 Internet 应用程序如文件传输协议（<a href="http://baike.baidu.com/view/369.htm" target="_blank">FTP</a>）相比， CIFS 灵活性更大。对于 UNIX 系统，可使用一种称为 Samba 的共享软件。</p>
+<p><strong><font size="4">二、CIFS(Common Internet File System) 协议</font></strong></p>
+<p>CIFS 是一个新提出的协议，它使程序可以访问远程Internet计算机上的文件并要求此计算机的服务。CIFS 使用客户/服务器模式。客户程序请求远在服务器上的服务器程序为它提供服务。服务器获得请求并返回响应。<strong>CIFS是公共的或开放的SMB协议版本，并由Microsoft使用。SMB协议现在是局域网上用于服务器文件访问和打印的协议。</strong>象SMB协议一样，CIFS在高层运行，而不象TCP/IP协议那样运行在底层。CIFS可以看做是应用程序协议如文件传输协议和超文本传输协议的一个实现。</p>
+<p><strong><font size="4">三、NETBios协议</font></strong></p>
+<p>Netbios (网络基本输入/输出系统）最初由 IBM，Sytek 作为API开发，使用户软件能使用局域网的资源。自从诞生，Netbios成为许多其他网络应用程序的基础。严格意义上，Netbios 是接入网络服务的接口标准。</p>
+<div class="spctrl"> </div>
+<p>　　Netbios 原来是作为THE网络控制器为 IBM 局域网设计的，是通过特定硬件用来和网络操作系统 连接的软件层。Netbios经扩展，允许程序使用Netbios接口来操作IBM令牌环结构。Netbios 已被公认为工业标准，通常参照 Netbios-compatible LANs。</p>
+<div class="spctrl"> </div>
+<p>　　它提供给网络程序一套方法，相互通讯及传输数据。基本上，Netbios 允许程序和网络会话。它的目的是把程序和任何类型的硬件属性分开。它也使软件开发员可以免除以下负担：开发网络错误修复，低层信息寻址和路由。使用Netbios接口，可以为软件开发员做许多工作。</p>
+<div class="spctrl"> </div>
+<p>　　Netbios使程序和局域网操作能力之间的接口标准化。有它们可以将程序细化到为OSI模型的哪一层所写，使程序能移植到其他网络上。在Netbios局域网环境下，计算机通过名字被系统知道。网络中每台计算机都有通过不同方法编的永久性名称。这些名称将在下面做进一步讨论。</p>
+<div class="spctrl"> </div>
+<p>　　通过使用Netbios的数据报或广播方式，在Netbios局域网上的pc机建立会话彼此联络。会话允许更多的信息被传送，探测错误，和纠正。通信是在一对一的基础上的。数据报或广播方式允许一台计算机和多台其他的计算机同时通信，但信息大小受限。使用数据报或广播方式没有探测错误和纠正。然而，数据报通信可以不必建立一个会话。</p>
+<div class="spctrl"> </div>
+<p>　　在这种环境下所有的通信以一种称为&ldquo;网络控制块&ldquo;的格式提交给NetBIOS。内存中这些块的分配依赖于用户程序。这些&ldquo;网络控制块&ldquo;分配到域中，分别为输入/输出保留。</p>
+<div class="spctrl"> </div>
+<p>　　在当今的环境中，NetBIOS是使用很普遍的协议。以太网，令牌环，IBM PC网都支持NetBIOS。在它原始版本中，它仅作为程序和网络适配器的接口。从那以后，传输类功能加入NetBIOS，使它功能日益增多。</p>
+<div class="spctrl"> </div>
+<p>　　在NetBIOS里，面向连接(tcp)和无连接(udp)通信均支持。它支持广播和复播，支持三个分开的服务：命名,会话，数据报。</p>
+<p><strong><font size="4">四、使用SMB协议访问局域网中的共享文件</font></strong></p>
+<p><strong><font size="3">1、使用jcifs的jar包：jcifs-1.3.14.jar,下载地址：</font></strong><a href="http://jcifs.samba.org/"><strong><font size="3">http://jcifs.samba.org/</font></strong></a></p>
+<p><strong><font size="3">2、本机地址：10.130.14.37,局域网中的地址：10.130.14.111，其共享文件：share（设置读取、修改、完全控制的权限）</font></strong></p>
+<p><strong><font size="3">3、java代码</font></strong></p>
+<p>package my.test;</p>
+<p>import java.io.IOException;</p>
+<p>import jcifs.smb.SmbAuthException;<br>
+import jcifs.smb.SmbException;<br>
+import jcifs.smb.SmbFileInputStream;<br>
+import jcifs.smb.SmbFile;<br>
+import jcifs.smb.SmbFileOutputStream;</p>
+<p>public class ReadShareFile<br>
+{<br>
+ <strong>/**<br>
+  * jcifs的开发方法类似java的文件操作功能，它的资源url定位：smb://{user}:{password}@{host}/{path}，<br>
+  * smb为协议名，user和password分别为共享文件机子的登陆名和密码，@后面是要访问的资源的主机名或IP地址。最后是资源的共享文件夹名称和共享资源名。<br>
+  * 例如smb://administrator:122122@192.168.0.22/test/response.txt。<br>
+  * <br>
+  * 在JAVA程序中，使用如下方式获得一个远程共享文件(设置共享文件的权限&mdash;&mdash;读取、修改、完全控制)的句柄：SmbFile file = newSmbFile(&quot;smb://guest:1234@192.168.3.56/share/a.txt&quot;);<br>
+  * 这里的句柄不仅限于远程的共享文件，还可能是共享文件夹。<br>
+  * isFile()方法和isDirectory()用来判断这个句柄对应的资源的真实属性。如果是共享文件夹<br>
+  * ，通过调用它的list()方法将获得其中资源的列表。<br>
+  * List方法支持过滤器机制，有两种过滤器可供使用，一种是SmbFileFilter,另一种是SmbFilenameFilter<br>
+  * ，这两个在jcifs中作为接口出现，你可以根据自己的需要派生出个性化的过滤器，实现接口中的accept方法，以满足不同业务的需求。<br>
+  * 　　<br>
+  * SmbFileInputStream是smb文件的输入流，它的功能是以流的方式打开一个SmbFile：SmbFileInputStream<br>
+  * in = new SmbFileInputStream(file);SmbFileInputStream提供read方法，你可以从这个流中读出远程文件全部的内容。<br>
+</strong>  * <br>
+  * @param args<br>
+  * @throws IOException <br>
+  */<br>
+ @SuppressWarnings(&quot;static-access&quot;)<br>
+ public static void main(String[] args)<br>
+ {<br>
+&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp; //局域网共享文件，读文件<br>
+&nbsp;&nbsp;<strong> SmbFile smbFile = new SmbFile(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;smb://administrator:dibindb@10.130.14.111/share/aa.txt&quot;);<br>
+</strong>&nbsp;&nbsp;&nbsp; // 通过 smbFile.isDirectory();isFile()可以判断smbFile是文件还是文件夹<br>
+&nbsp;&nbsp;&nbsp; int length = smbFile.getContentLength();// 得到文件的大小<br>
+&nbsp;&nbsp;&nbsp; byte buffer[] = new byte[length];<br>
+&nbsp;&nbsp;&nbsp; SmbFileInputStream in = new SmbFileInputStream(smbFile); // 建立smb文件输入流<br>
+&nbsp;&nbsp;&nbsp; while ((in.read(buffer)) != -1)<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp; System.out.write(buffer);<br>
+&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(&quot;\n&quot;+buffer.length);</p>
+<p>&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; in.close();<br>
+&nbsp;&nbsp;<strong> smbFile.delete();<br>
+</strong>&nbsp;&nbsp;<br>
+&nbsp;&nbsp; //局域网共享文件，写文件<br>
+&nbsp;&nbsp;&nbsp; SmbFile smbFileOut = new SmbFile(&quot;smb://administrator:dibindb@10.130.14.101/share/bb.txt&quot;);<br>
+&nbsp;&nbsp;&nbsp; if(!smbFileOut.exists())<br>
+&nbsp;&nbsp;&nbsp;&nbsp; smbFileOut.createNewFile();<br>
+&nbsp;&nbsp;&nbsp; SmbFileOutputStream out = new SmbFileOutputStream(smbFileOut);<br>
+&nbsp;&nbsp;&nbsp; out.write(&quot;abcdefw&quot;.getBytes());<br>
+&nbsp;&nbsp;&nbsp; out.close();<br>
+&nbsp;&nbsp;&nbsp; smbFileOut.delete();<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (SmbAuthException e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; SmbException smb = new SmbException(1,false);<br>
+&nbsp;&nbsp;&nbsp; System.out.println(e.getNtStatus()==smb.NT_STATUS_ACCESS_DENIED);<br>
+&nbsp;&nbsp;&nbsp; for(int i=0;i&lt;smb.NT_STATUS_CODES.length;i++)<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;&nbsp; System.out.println(smb.NT_STATUS_CODES[i]);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (IOException e)<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp; }<br>
+ }<br>
+}<br>
+<strong><font size="3">4、相关错误</font></strong></p>
+<p><strong>（1）share只有读取权限</strong></p>
+<p><strong>jcifs.smb.SmbAuthException: Access is denied.<br>
+</strong> at jcifs.smb.SmbTransport.checkStatus(SmbTransport.java:528)<br>
+ at jcifs.smb.SmbTransport.send(SmbTransport.java:645)<br>
+ at jcifs.smb.SmbSession.send(SmbSession.java:244)<br>
+ at jcifs.smb.SmbTree.send(SmbTree.java:119)<br>
+ at jcifs.smb.SmbFile.send(SmbFile.java:770)<br>
+ at jcifs.smb.SmbFile.delete(SmbFile.java:2410)<br>
+ at jcifs.smb.SmbFile.delete(SmbFile.java:2354)<br>
+ at my.test.ReadShareFile.main(ReadShareFile.java:50)</p></div></body></html>

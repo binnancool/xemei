@@ -1,0 +1,62 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>eclipse 启动参数介绍（如添加插件时，如果不显示，则使用eclipse -clean启动）</title></head><body><h1>eclipse 启动参数介绍（如添加插件时，如果不显示，则使用eclipse -clean启动）</h1><div><div class="postTitle"> </div>
+其实，Eclipse是一个可以进行非常灵活配置的系统，除了以缺省的方式启动以外，还可以指定各种参数来定制启动方式。在参考了一些资料之后，我总结了一些比较常用的启动时Command Arguments，如果有不正确的地方希望大家予以指出。<br>
+<br>
+-arch [processor architecture]<br>
+描述：指定所使用的处理器的类别<br>
+举例：eclipse -arch x86或eclipse -arch sparc<br>
+<br>
+-application [id]<br>
+描述：指定要运行的应用，id为扩展org.eclipse.core.applications扩展点的插件id加扩展id<br>
+举例：例如有个插件id为edu.sdu.app，扩展id为myapp，则eclipse -application edu.sdu.app.myapp，就会执行你的扩展应用<br>
+<br>
+-clean<br>
+描述：清空插件缓存内容<br>
+举例：eclipse -clean，有时插件显示不出来是因为Eclipse将插件进行了缓存以加速启动过程，若指定此参数则会清空缓存，从头加载<br>
+<br>
+-configuration [cofigfile location]<br>
+描述：指定配置文件的位置，在启动时使用此目录下的配置文件config.ini来启动<br>
+举例：eclipse -configuration d:/eclipse/configuration<br>
+<br>
+-data [workspace location]<br>
+描述：指定启动时的Workspace位置<br>
+举例：例如Workspace位置设在D:/myworkspace，则eclipse -data D:/myworkspace<br>
+<br>
+-debug [option file]<br>
+描述：以Debug状态启动Eclipse，所有的Debug开关在.options文件中指定<br>
+举例：eclipse -debug d:/eclipse/.options<br>
+<br>
+-dev [classpath entry]<br>
+描述：以开发状态启动Eclipse，这会添加所有指定的路径作为每个插件的Classpath<br>
+举例：例如eclipse -dev bin，会将产生在bin目录下的所有类加载到类路径中，这在开发插件时非常有用<br>
+<br>
+-nosplash<br>
+描述：指定启动时不显示闪屏<br>
+举例：eclipse -nosplash<br>
+<br>
+-vm [jre path]<br>
+描述：指定启动时所使用的Java虚拟机<br>
+举例：例如要使用自己的Java虚拟机，则eclipse -vmD:/j2sdk1.4.2_04/jre/bin/java.exe，这样还有一个好处，就是可以开启一个Console，能够显示控制台信息，当然若使用eclipse -vm D:/j2sdk1.4.2_04/jre/bin/javaw.exe则不会再显示控制台<br>
+<br>
+-vmargs [Java VM arguments]<br>
+描述：指定启动时要使用的Java虚拟机参数<br>
+举例：例如要指定使用的内存容量，则eclipse -vmargs &quot;-Xms256m -Xmx1024m&quot;<br>
+注：此参数一定要放在所有参数变量的最后面<br>
+<br>
+<div class="postText">
+<p>如果你觉得你的Eclipse在启动的时候很慢（比如说超过20秒钟），也许你要调整一下你的Eclipse启动参数了，以下是一些``小贴士'':</p>
+<p>1. 检查启动Eclipse的JVM设置。 在Help\About Eclipse SDK\Configuration Detail里面，你可以看到启动Eclipse的JVM。 这个JVM和你在Eclipse中设置的Installed JDK是两回事情。如果启动Eclipse的JVM还是JDK 1.4的话，那最好改为JDK 5，因为JDK 5的性能比1.4更好。</p>
+<p><code><font face="NSimsun">C:\eclipse\eclipse.exe -vm &quot;C:\Program Files\Java\jdk1.5.0_08\ bin\javaw.exe&quot;</font></code></p>
+<p>2. 检查Eclipse所使用的heap的大小。 在C:\eclipse目录下有一个配置文件eclipse.ini，其中配置了Eclipse启动的默认heap大小</p>
+<p><code><font face="NSimsun">-vmargs<br>
+-Xms40M<br>
+-Xmx256M</font></code></p>
+<p>所以你可以把默认值改为:</p>
+<p><code><font face="NSimsun">-vmargs<br>
+-Xms256M<br>
+-Xmx512M</font></code></p>
+<p>当然，也可以这样做，把堆的大小改为256 - 512。</p>
+<p><code><font face="NSimsun">C:\eclipse\eclipse.exe -vm &quot;C:\Program Files\Java\jdk1.5.0_08\ bin\javaw.exe&quot; -vmargs -Xms256M -Xmx512M</font></code></p>
+<p>3. 其他的启动参数。 如果你有一个双核的CPU，也许可以尝试这个参数:</p>
+<p><code><font face="NSimsun">-XX:+UseParallelGC</font></code></p>
+<p>让GC可以更快的执行。（只是JDK 5里对GC新增加的参数）</p>
+</div></div></body></html>

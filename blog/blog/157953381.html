@@ -1,0 +1,70 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>jar命令</title></head><body><h1>jar命令</h1><div><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  jar 是随 JDK 安装的，在 JDK安装目录下的 bin 目录中，视窗系统下文件名为 jar.exe，Linux 下文件名为 jar。他的运行需要用到 JDK 安装目录下lib 目录中的 tools.jar 文件。</p>
+<p>　　jar 命令的用法如下： <br>
+　　<strong>jar {ctxu}[vfm0M] [jar-文件] [manifest-文件] [-C 目录] 文件名 ... <br>
+</strong>　　其中 {ctxu} 是 jar 命令的子命令，每次 jar 命令只能包含 ctxu 中的一个，他们分别表示： <br>
+　　　<strong>-c</strong>　创建新的 JAR 文件包 <br>
+　　　<strong>-t</strong>　列出 JAR 文件包的内容列表 <br>
+　　　<strong>-x　</strong>展开 JAR 文件包的指定文件或所有文件 <br>
+　　　<strong>-u</strong>　更新已存在的 JAR 文件包 (添加文件到 JAR 文件包中) <br>
+　　　　　[vfm0M] 中的选项能任选，也能不选，他们是 jar 命令的选项参数 <br>
+　　　<strong>-v</strong>　生成周详报告并打印到标准输出 <br>
+　　　<strong>-f</strong>　指定 JAR 文件名，通常这个参数是必须的 <br>
+　　　<strong>-m</strong>　指定需要包含的 MANIFEST 清单文件 <br>
+　　　<strong>-0</strong>　只存储，不压缩，这样产生的 JAR 文件包会比不用该参数产生的体积大，但速度更快 <br>
+　　　<strong>-M　</strong>不产生所有项的清单（MANIFEST〕文件，此参数会忽略 -m 参数 <br>
+　　<strong>　[jar-文件]</strong>  即需要生成、查看、更新或解开的 JAR 文件包，他是 -f 参数的附属参数 <br>
+　　　<strong>[manifest-文件]</strong> 即 MANIFEST 清单文件，他是 -m 参数的附属参数 <br>
+　　　<strong>[-C 目录]</strong> 表示转到指定目录下去执行这个 jar 命令的操作。他相当于先使用 cd 命令转该目录下再执行不带 -C 参数的 jar 命令，他只能在创建和更新 JAR 文件包的时候可用。　　 <br>
+　　 <strong>文件名 ...</strong> 指定一个文件/目录列表，这些文件/目录就是要添加到 JAR 文件包中的文件/目录。如果指定了目录，那么 jar 命令打包的时候会自动把该目录中的所有文件和子目录打入包中。 <br>
+　　下面举一些例子来说明 jar 命令的用法： <br>
+　　1) jar cf test.jar test <br>
+　　该命令没有执行过程的显示，执行结果是在当前目录生成了 test.jar 文件。如果当前目录已存在 test.jar，那么该文件将被覆盖。 <br>
+　　2) jar cvf test.jar test <br>
+　　该命令和上例中的结果相同，不过由于 v 参数的作用，显示出了打包过程，如下： <br>
+　　标明清单(manifest) <br>
+　　增加：test/(读入= 0) (写出= 0)(存储了 0%) <br>
+　　增加：test/Test.class(读入= 7) (写出= 6)(压缩了 14%) <br>
+　　3) jar cvfM test.jar test <br>
+　　该命令和 2) 结果类似，但在生成的 test.jar 中没有包含 META-INF/MANIFEST 文件，打包过程的信息也略有差别： <br>
+　　增加：test/(读入= 0) (写出= 0)(存储了 0%) <br>
+　　增加：test/Test.class(读入= 7) (写出= 6)(压缩了 14%) <br>
+　　4) jar cvfm test.jar manifest.mf test <br>
+　　运行结果和 2) 相似，显示信息也相同，只是生成 JAR 包中的 META-INF/MANIFEST 内容不同，是包含了 manifest.mf 的内容 <br>
+　　5) jar tf test.jar <br>
+　　在 test.jar 已存在的情况下，能查看 test.jar 中的内容，如对于 2) 和 3) 生成的 test.jar 分别应该此命令，结果如下； <br>
+　　对于 2) <br>
+　　META-INF/ <br>
+　　META-INF/MANIFEST.MF <br>
+　　test/ <br>
+　　test/Test.class <br>
+　　对于 3) <br>
+　　test/ <br>
+　　test/Test.class <br>
+　　6) jar tvf test.jar <br>
+　　除显示 5) 中显示的内容外，还包括包内文件的周详信息，如： <br>
+　　0 Wed Jun 19 15:39:06 GMT 2002 META-INF/ <br>
+　　86 Wed Jun 19 15:39:06 GMT 2002 META-INF/MANIFEST.MF <br>
+　　0 Wed Jun 19 15:33:04 GMT 2002 test/ <br>
+　　7 Wed Jun 19 15:33:04 GMT 2002 test/Test.class <br>
+　　7) jar xf test.jar <br>
+　　解开 test.jar 到当前目录，不显示所有信息，对于 2) 生成的 test.jar，解开后的目录结构如下： <br>
+　　== <br>
+　　|-- META-INF <br>
+　　|　 `-- MANIFEST <br>
+　　`-- test <br>
+　　　　`--Test.class <br>
+　　jar xvf test.jar <br>
+　　运行结果和 7) 相同，对于解压过程有周详信息显示，如： <br>
+　　创建：META-INF/ <br>
+　　展开：META-INF/MANIFEST.MF <br>
+　　创建：test/ <br>
+　　展开：test/Test.class <br>
+　　9) jar uf test.jar manifest.mf <br>
+　<br>
+　在 test.jar 中添加了文件 manifest.mf，此使用 jar tf 来查看 test.jar 能发现 test.jar<br>
+中比原来多了一个 manifest。这里顺便提一下，如果使用 -m 参数并指定 manifest.mf 文件，那么 manifest.mf<br>
+是作为清单文件 MANIFEST 来使用的，他的内容会被添加到 MANIFEST 中；不过，如果作为一般文件添加到 JAR<br>
+文件包中，他跟一般文件无异。 <br>
+　　10) jar uvf test.jar manifest.mf <br>
+　　和 9) 结果相同，同时有周详信息显示，如： <br>
+　　增加：manifest.mf(读入= 17) (写出= 19)(压缩了 -11%)</p></div></body></html>

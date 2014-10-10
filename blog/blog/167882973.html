@@ -1,0 +1,68 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>javascript中的trim方法实现</title></head><body><h1>javascript中的trim方法实现</h1><div>在javascript中的string对象没有trim方法，所以trim功能需要自己实现： <br>
+代码如下： <br>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Java代码</div>
+</div>
+<ol class="dp-j">
+    <li><span><span>﹤scriptlanguage=&rdquo;javascript&rdquo;﹥ &nbsp;&nbsp;</span></span></li>
+    <li><span class="comment"><font color="#008200">/** </font></span> </li>
+    <li><span><span class="comment"><font color="#008200">*删除左右两端的空格 </font></span> </span></li>
+    <li><span><span class="comment"><font color="#008200">*/</font></span><span>&nbsp;&nbsp;</span></span></li>
+    <li><span>String.prototype.trim=function(){&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">return</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">this</font></strong></span><span>.replace(/(^\s*)|(\s*$)/g, </span><span class="string"><font color="#0000ff">''</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>}&nbsp;&nbsp;  &nbsp;&nbsp;</span></li>
+    <li><span class="comment"><font color="#008200">/** </font></span> </li>
+    <li><span><span class="comment"><font color="#008200">*删除左边的空格 </font></span> </span></li>
+    <li><span><span class="comment"><font color="#008200">*/</font></span><span>&nbsp;&nbsp;</span></span></li>
+    <li><span>String.prototype.ltrim=function() &nbsp;&nbsp;</span></li>
+    <li><span>{ &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">return</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">this</font></strong></span><span>.replace(/(^s*)/g,</span><span class="string"><font color="#0000ff">''</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>} &nbsp;&nbsp;</span></li>
+    <li><span class="comment"><font color="#008200">/** </font></span> </li>
+    <li><span><span class="comment"><font color="#008200">*删除右边的空格 </font></span> </span></li>
+    <li><span><span class="comment"><font color="#008200">*/</font></span><span>&nbsp;&nbsp;</span></span></li>
+    <li><span>String.prototype.rtrim=function() &nbsp;&nbsp;</span></li>
+    <li><span>{ &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">return</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">this</font></strong></span><span>.replace(/(s*$)/g,</span><span class="string"><font color="#0000ff">''</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>} &nbsp;&nbsp;</span></li>
+    <li><span>﹤/script﹥&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<pre style="display: none" class="java" name="code">﹤scriptlanguage=&rdquo;javascript&rdquo;﹥
+/**
+*删除左右两端的空格
+*/
+String.prototype.trim=function(){   
+   return this.replace(/(^\s*)|(\s*$)/g, '');
+}  
+/**
+*删除左边的空格
+*/
+String.prototype.ltrim=function()
+{
+  return this.replace(/(^s*)/g,'');
+}
+/**
+*删除右边的空格
+*/
+String.prototype.rtrim=function()
+{
+  return this.replace(/(s*$)/g,'');
+}
+﹤/script﹥</pre>
+<br>
+<br>
+使用如下 <br>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Java代码</div>
+</div>
+<ol class="dp-j">
+    <li><span><span>﹤scripttype=&rdquo;text/javascript&rdquo;﹥ &nbsp;&nbsp;</span></span></li>
+    <li><span>&nbsp;&nbsp; alert(document.getElementById(&rsquo;abc&rsquo;).value.trim()); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp; alert(document.getElementById(&rsquo;abc&rsquo;).value.ltrim()); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp; alert(document.getElementById(&rsquo;abc&rsquo;).value.rtrim()); &nbsp;&nbsp;</span></li>
+    <li><span>﹤/script﹥&nbsp;&nbsp;</span></li>
+</ol>
+</div></div></body></html>

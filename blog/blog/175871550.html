@@ -1,0 +1,46 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>修改Linux的默认编码</title></head><body><h1>修改Linux的默认编码</h1><div><p><strong>Windows的默认编码为GBK，Linux的默认编码为UTF-8。在Windows下编辑的中文，在Linux下显示为乱码。为了解决此问题，修改Linux的默认编码为GBK。方法如下：</strong></p>
+<p><strong>方法1：</strong></p>
+<p><strong>vi&nbsp;&nbsp;  /etc/sysconfig/i18n</strong></p>
+<p><strong>LANG=&quot;zh_CN.GBK&quot;<br>
+SUPPORTED=&quot;zh_CN.UTF-8:zh_CN:zh&quot;<br>
+SYSFONT=&quot;latarcyrheb-sun16&quot;</strong></p>
+<p><strong>方法2：<br>
+vi  /etc/profile </strong></p>
+<p><strong>export LC_ALL=&quot;zh_CN.GBK&quot;<br>
+export LANG=&quot;zh_CN.GBK&quot; </strong></p>
+<p> </p>
+<p><br>
+<strong>运行locale指令</strong>得到当前系统编码设置的详细资料。</p>
+<p>一、locale的五脏六腑</p>
+<p>1、 语言符号及其分类(LC_CTYPE)<br>
+2、 数字(LC_NUMERIC)<br>
+3、 比较和排序习惯(LC_COLLATE)<br>
+4、 时间显示格式(LC_TIME)<br>
+5、 货币单位(LC_MONETARY)<br>
+6、 信息主要是提示信息,错误信息, 状态信息, 标题, 标签, 按钮和菜单等(LC_MESSAGES)<br>
+7、 姓名书写方式(LC_NAME)<br>
+8、 地址书写方式(LC_ADDRESS)<br>
+9、 电话号码书写方式(LC_TELEPHONE)<br>
+10、度量衡表达方式(LC_MEASUREMENT)<br>
+11、默认纸张尺寸大小(LC_PAPER)<br>
+12、对locale自身包含信息的概述(LC_IDENTIFICATION)。</p>
+<p>二、理解locale的设置</p>
+<p>设定locale就是设定12大类的locale分类属性，即 12个LC_*。除了这12个变量可以设定以外，为了简便起见，还有两个变量：LC_ALL和LANG。</p>
+<p>它们之间有一个优先级的关系：LC_ALL &gt; LC_* &gt; LANG</p>
+<p>可以这么说，LC_ALL是最上级设定或者强制设定，而LANG是默认设定值。</p>
+<p>三 具体设定locale的方法（zh_CN.UTF-8、zh_CN.GBK）</p>
+<p>freebsd的设置：</p>
+<p>1.GDM登录改为终端登录后startx启动图形桌面</p>
+<p>2.在~/.cshrc中增加如下语句,（根据自己使用的shell进行相应设置）</p>
+<p>setenv LANG zh_CN.GBK<br>
+setenv LC_ALL zh_CN.GBK<br>
+setenv LC_CTYPE zh_CN.GBK</p>
+<p>3.修改/etc/fstab的默认值：</p>
+<p>linux 设置：</p>
+<p>1.修改/etc/sysconfig/i18n文件，LANG=&quot;zh_CN.UTF-8&quot;或LANG=&quot;zh_CN.GBK&quot;</p>
+<p>普通用户修改~/.profile</p>
+<p>...<br>
+export LANG zh_CN.GBK<br>
+...</p>
+<p>2.修改/etc/fstab的默认值<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></div></body></html>

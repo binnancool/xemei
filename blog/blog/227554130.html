@@ -1,0 +1,60 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Java Servlet任务触发器，Tomcat启动时自动触发，执行任务</title></head><body><h1>Java Servlet任务触发器，Tomcat启动时自动触发，执行任务</h1><div><p> </p>
+<p><strong><font color="#741b47" size="5">进程停止，由此进程启动的线程也会停止；</font></strong></p>
+<p><strong><font color="#ff0000" size="5">一、触发器类</font></strong></p>
+<p><font size="3">package my.test</font></p>
+<p><font size="3">import java.util.Timer;</font></p>
+<p><font size="3">import javax.servlet.ServletContextEvent;<br>
+import javax.servlet.ServletContextListener;</font></p>
+<p><font size="3">/**<br>
+* 任务触发器,Tomcat启动时<br>
+* <br>
+* @author Administrator<br>
+* <br>
+*/<br>
+</font><strong><font size="3">public class TaskTrigger implements ServletContextListener<br>
+{<br>
+private Timer timer = null;<br>
+private TaskThread task = null;</font></strong></p>
+<p><strong><font size="3">public void contextInitialized(ServletContextEvent event)<br>
+{<br>
+&nbsp;&nbsp;</font><font size="3"><font color="#ff0000">//初始化监听器，在tomcat启动的时候监听器启动<br>
+</font>&nbsp;&nbsp;  timer = new Timer(true);<br>
+&nbsp;&nbsp;  task = TaskThread.GetTaskThread(event.getServletContext());<br>
+&nbsp;&nbsp;  timer.schedule(task, 1000);//延迟1s后执行，当然也可以定时循环执行，请自己查看Timer类的说明<br>
+&nbsp;&nbsp;  log.info(&quot;启动任务进程************&quot;);<br>
+}</font></strong></p>
+<p><strong><font size="3">public void contextDestroyed(ServletContextEvent event) <br>
+{<br>
+&nbsp;&nbsp;  //关闭监听器<br>
+&nbsp;&nbsp;  timer.cancel();<br>
+&nbsp;&nbsp;  log.info(&quot;关闭任务进程************&quot;);<br>
+}<br>
+}<br>
+</font></strong></p>
+<p><strong><font color="#ff0000" size="5">二、任务类，必须继承java.util.TimerTask类</font></strong></p>
+<p><strong><font size="3">package my.test</font></strong></p>
+<p><strong><font size="3">public class TaskThread </font><font size="3"><font color="#ff0000">extends TimerTask<br>
+</font>{<br>
+public static TaskThread taskThread = null;<br>
+@SuppressWarnings(&quot;unused&quot;)<br>
+private ServletContext context = null; </font></strong></p>
+<p><strong><font color="#ff0000" size="3">public TaskThread(ServletContext context)<br>
+{<br>
+&nbsp;&nbsp;  this.context = context;<br>
+}</font></strong></p>
+<p><strong><font size="3">public static TaskThread GetTaskThread(ServletContext context)<br>
+{<br>
+&nbsp;&nbsp;  if(taskThread ==null)<br>
+&nbsp;&nbsp;&nbsp;  taskThread = new TaskThread(context);<br>
+&nbsp;&nbsp;  return taskThread ;<br>
+}<br>
+<br>
+public void run() <br>
+{<br>
+// 在此添加要执行的任务</font></strong></p>
+<p><strong><font size="3">}<br>
+}</font></strong></p>
+<p><strong><font color="#ff0000" size="5">三、在web.xml中添加</font></strong></p>
+<p><strong><font size="3">&lt;listener&gt;<br>
+&lt;listener-class&gt;<font color="#ff0000">my.test.TaskTrigger</font>&lt;/listener-class&gt;<br>
+&lt;/listener&gt;</font></strong></p></div></body></html>

@@ -1,0 +1,169 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Web Service实践——Xfire的ws-security数字签名和报文加密安全验证（三）</title></head><body><h1>Web Service实践——Xfire的ws-security数字签名和报文加密安全验证（三）</h1><div><p><font size="4"><strong>报文加密与数字签名同时进行</strong></font></p>
+<p><font size="4"><strong>一、服务器端</strong></font></p>
+<p><font size="3"><strong>1、<span >通过</span><span >insecurity.properties</span><span >属性文件指定访问</span><span >serverStore.jks</span><span >的信息，包括访问密码和密钥库文件的位置</span></strong></font></p>
+<p><font size="3"><span >org.apache.ws.security.crypto.provider=org.apache.ws.security.components.crypto.Merlin<br>
+org.apache.ws.security.crypto.merlin.keystore.type=jks<br>
+org.apache.ws.security.crypto.merlin.keystore.password=storepass<br>
+org.apache.ws.security.crypto.merlin.file=META-INF/xfire/serverStore.jks</span></font></p>
+<p><span ><font size="3"><strong>2、service.xml</strong></font></span></p>
+<p><font size="3"><span >&lt;beans xmlns=&quot;<a href="http://xfire.codehaus.org/config/1.0">http://xfire.codehaus.org/config/1.0</a>&quot;&gt;<br>
+&lt;service&gt;<br>
+ &lt;name&gt;hrwebservice&lt;/name&gt;<br>
+ &lt;namespace&gt;com.channelsoft.hr&lt;/namespace&gt;<br>
+ &lt;serviceClass&gt;com.channelsoft.hr.webservice.DepartmentAndPersonInfo&lt;/serviceClass&gt;<br>
+ &lt;implementationClass&gt;com.channelsoft.hr.webservice.impl.DepartmentAndPersonInfoImpl&lt;/implementationClass&gt;<br>
+ &lt;inHandlers&gt; <br>
+&nbsp;&nbsp;&nbsp;   &lt;!-- &lt;handler handlerClass =&quot;com.channelsoft.hr.webservice.validate.AuthenticationHandler&quot; &gt;&lt;/handler &gt;  --&gt;<br>
+&nbsp;&nbsp;&nbsp;   &lt;handler handlerClass=&quot;org.codehaus.xfire.util.dom.DOMInHandler&quot; /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;bean<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  class=&quot;org.codehaus.xfire.security.wss4j.WSS4JInHandler&quot; xmlns=&quot;&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;property name=&quot;properties&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;props&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;prop key=&quot;action&quot;&gt;Encrypt Signature&lt;/prop&gt; &lt;!-- 组合动作用空格分隔(报文加密和数字签名);在XFire中，动作的执行顺序和动作的编写顺序一致，如&ldquo;Encrypt Signature&rdquo;表示先解密再验证数字签名（对于InHandler） --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;prop key=&quot;signaturePropFile&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!-- 验证签名须使用client数字证书，属性文件需要提供访问密钥库client数字证书的配置 --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  META-INF/xfire/insecurity.properties<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/prop&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;prop key=&quot;decryptionPropFile&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!-- 解密须使用server的私钥，属性文件必须提供访问密钥库中私钥的相关配置 --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  META-INF/xfire/insecurity.properties<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/prop&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;prop key=&quot;passwordCallbackClass&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!-- 密码回调实现类 --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  com.channelsoft.hr.wssecurity.PasswordHandler<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/prop&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/props&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/property&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/bean&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;/inHandlers&gt;<br>
+&lt;/service&gt;<br>
+&lt;/beans&gt;</span></font></p>
+<p><font size="3"><span ><br>
+<font size="4"><strong>3、PasswordHandler类继承自javax.security.auth.callback.CallbackHandler</strong></font></span></font></p>
+<p><font size="3"><span >package com.channelsoft.hr.wssecurity;</span></font></p>
+<p><font size="3"><span >import java.io.IOException;<br>
+import java.util.HashMap;<br>
+import java.util.Map;</span></font></p>
+<p><font size="3"><span >import javax.security.auth.callback.Callback;<br>
+import javax.security.auth.callback.CallbackHandler;<br>
+import javax.security.auth.callback.UnsupportedCallbackException;</span></font></p>
+<p><font size="3"><span >import org.apache.ws.security.WSPasswordCallback;</span></font></p>
+<p><font size="3"><span >public class PasswordHandler implements CallbackHandler {<br>
+&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+ private Map passwords = new HashMap();</span></font></p>
+<p><font size="3"><span >&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+ public PasswordHandler() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  passwords.put(&quot;server&quot;, &quot;serverpass&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  passwords.put(&quot;client&quot;, &quot;clientpass&quot;);<br>
+&nbsp;&nbsp;&nbsp;  }</span></font></p>
+<p><font size="3"><span >&nbsp;&nbsp;&nbsp;  public void handle(Callback[] callbacks) throws IOException,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  UnsupportedCallbackException {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;Handling Password!&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String id = pc.getIdentifer();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;id:&quot;+id+&quot; ,password:&quot;+(String) passwords.get(id));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  pc.setPassword((String) passwords.get(id));<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+}</span></font></p>
+<p><span ><strong><font size="4">二、客户端</font></strong></span></p>
+<p><span ><font size="4"><font size="3"><strong>1、<span style=" mso-bidi-font-size: 10.5pt; mso-bidi- mso-font-kerning: 0pt">outsecurity.properties</span><span style=" mso-bidi-font-size: 10.5pt; mso-bidi- mso-font-kerning: 0pt">定义了访问<span>clientStore.jks</span>的必要信息，包括密钥库访问密码、密钥库文件位置：<span></span></span></strong></font></font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style=" mso-bidi-font-size: 10.5pt; mso-bidi- mso-font-kerning: 0pt"><font size="3">org.apache.ws.security.crypto.provider=org.apache.ws.security.components.crypto.Merlin</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span style=" mso-bidi-font-size: 10.5pt; mso-bidi- mso-font-kerning: 0pt"><font size="3">org.apache.ws.security.crypto.merlin.keystore.type=jks</font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><font size="3"><span>org.apache.ws.security.crypto.merlin.keystore.password=storepass<strong>①密钥库访问密码</strong></span><span style=" mso-bidi-font-size: 10.5pt; mso-bidi- mso-font-kerning: 0pt"></span></font></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><span><font size="3">org.apache.ws.security.crypto.merlin.file=META-INF/xfire/clientStore.jks<strong>②密钥库文件位置</strong></font></span></p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"> </p>
+<p style="text-align: left; line-height: 12pt; margin: 0cm 0cm 0pt; mso-pagination: widow-orphan" class="MsoNormal" align="left"><strong>2、PasswordHandler类继承自javax.security.auth.callback.CallbackHandler</strong></p>
+<p><font size="3"><span >package com.channelsoft.hr.wssecurity;</span></font></p>
+<p><font size="3"><span >import java.io.IOException;<br>
+import java.util.HashMap;<br>
+import java.util.Map;</span></font></p>
+<p><font size="3"><span >import javax.security.auth.callback.Callback;<br>
+import javax.security.auth.callback.CallbackHandler;<br>
+import javax.security.auth.callback.UnsupportedCallbackException;</span></font></p>
+<p><font size="3"><span >import org.apache.ws.security.WSPasswordCallback;</span></font></p>
+<p><font size="3"><span >public class PasswordHandler implements CallbackHandler {<br>
+&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+ private Map passwords = new HashMap();</span></font></p>
+<p><font size="3"><span >&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+ public PasswordHandler() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  passwords.put(&quot;server&quot;, &quot;serverpass&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  passwords.put(&quot;client&quot;, &quot;clientpass&quot;);<br>
+&nbsp;&nbsp;&nbsp;  }</span></font></p>
+<p><font size="3"><span >&nbsp;&nbsp;&nbsp;  public void handle(Callback[] callbacks) throws IOException,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  UnsupportedCallbackException {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;Handling Password!&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String id = pc.getIdentifer();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;id:&quot;+id+&quot; ,password:&quot;+(String) passwords.get(id));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  pc.setPassword((String) passwords.get(id));<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+}</span></font></p>
+<p><strong>3、客户端访问类</strong></p>
+<p>package hr;</p>
+<p>import java.net.MalformedURLException;</p>
+<p>import org.codehaus.xfire.client.Client;<br>
+import org.codehaus.xfire.client.XFireProxyFactory;<br>
+import org.codehaus.xfire.security.wss4j.WSS4JOutHandler;<br>
+import org.apache.ws.security.WSConstants;<br>
+import org.apache.ws.security.handler.WSHandlerConstants;<br>
+import org.codehaus.xfire.service.Service;<br>
+import org.codehaus.xfire.service.binding.ObjectServiceFactory;<br>
+import org.codehaus.xfire.transport.http.CommonsHttpMessageSender;<br>
+import org.codehaus.xfire.util.dom.DOMOutHandler;</p>
+<p>import com.channelsoft.hr.webservice.DepartmentAndPersonInfo;</p>
+<p>public class getHRInfoByEncryptAndSignature<br>
+{<br>
+ public static void main(String args[])<br>
+ { <br>
+&nbsp;&nbsp; String serviceURL = &quot;<a href="http://localhost:8080/HRWebService/services/hrwebservice">http://localhost:8080/HRWebService/services/hrwebservice</a>&quot;;<br>
+&nbsp;&nbsp; // 创建service对象<br>
+&nbsp;&nbsp; Service serviceModel = new ObjectServiceFactory().create(DepartmentAndPersonInfo.class);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp; XFireProxyFactory serviceFactory = new XFireProxyFactory();</p>
+<p>&nbsp;&nbsp; try<br>
+&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp;  // 获取服务对象<br>
+&nbsp;&nbsp;&nbsp; DepartmentAndPersonInfo service = (DepartmentAndPersonInfo) serviceFactory.create(serviceModel, serviceURL);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp; // 忽略http连接的超时时间,0为不设置超时时间，》=1为超时毫秒数<br>
+&nbsp;&nbsp;&nbsp; Client client = Client.getInstance(service);<br>
+&nbsp;&nbsp;&nbsp; client.setProperty(CommonsHttpMessageSender.HTTP_TIMEOUT, &quot;0&quot;);<br>
+&nbsp;&nbsp;&nbsp; //发送授权信息<br>
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(new ClientAuthenticationHandler(&quot;abcd&quot;,&quot;1234&quot;));</p>
+<p><br>
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //WS-Security<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  WSS4JOutHandler wsOut = new WSS4JOutHandler(); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String actions =WSHandlerConstants.ENCRYPT + &quot; &quot; + WSHandlerConstants.SIGNATURE;  //组合动作用空格分隔&nbsp;&nbsp;&nbsp;&nbsp;   <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.ACTION, actions);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //加密属性设置:使用server数字证书进行加密<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.ENCRYPTION_USER, &quot;server&quot;);  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.ENC_PROP_FILE, &quot;META-INF/xfire/outsecurity.properties&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //签名属性设置：使用client私钥进行签名<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.USER, &quot;client&quot;); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.SIG_PROP_FILE, &quot;META-INF/xfire/outsecurity.properties&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PASSWORD_DIGEST);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, PasswordHandler.class.getName());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.SIG_KEY_ID, &quot;IssuerSerial&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(new DOMOutHandler());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(wsOut);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp; // 调用服务<br>
+&nbsp;&nbsp;&nbsp; String hello = service.queryDepartmentInfo();<br>
+&nbsp;&nbsp;&nbsp; String hello2 = service.queryPersonnelInfo(&quot;&quot;, &quot;&quot;, &quot;&quot;);<br>
+&nbsp;&nbsp;&nbsp; System.out.println(hello);<br>
+&nbsp;&nbsp;&nbsp; System.out.println(hello2);</p>
+<p>//&nbsp;&nbsp;&nbsp; hello = service.startSLEEChannel(&quot;10.130.24.55&quot;, &quot;inbound2.usml&quot;,&quot;456&quot;);<br>
+//&nbsp;&nbsp;&nbsp; System.out.println(&quot;启动SLEE通道返回值：：&quot; + hello);<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; catch (MalformedURLException e)<br>
+&nbsp;&nbsp; { <br>
+&nbsp;&nbsp;&nbsp; System.out.println(&quot;错误！！！&quot;);<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp; }<br>
+ }<br>
+}</p></div></body></html>

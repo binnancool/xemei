@@ -1,0 +1,60 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java实现基于NTLM的SSO（Single Sign On）</title></head><body><h1>java实现基于NTLM的SSO（Single Sign On）</h1><div><p><strong><font size="4">一、NTLM HTTP<span>认证过程</span></font></strong></p>
+<p><span>最近项目中要求实现</span>Web<span>应用的</span>SSO<span>（</span>Single Sign On<span>），即对于已经登录到</span>Windows Domain<span>中的用户，不需要输入用户名、密码而直接使用当前登录的</span>Domain<span>用户信息进行验证，如果验证成功则进入，否则拒绝进入。</span></p>
+<p><span>在网上搜了一些资料，同时也对</span>NTLM<span>的认证方式有了些了解，记录之。</span></p>
+<p>NTLM HTTP<span>认证</span></p>
+<p><span>过程如下：</span></p>
+<div style="border-bottom: windowtext 1pt solid; border-left: windowtext 1pt solid; padding-bottom: 1pt; padding-left: 4pt; padding-right: 4pt; border-top: windowtext 1pt solid; border-right: windowtext 1pt solid; padding-top: 1pt">
+<p>&nbsp;&nbsp;&nbsp;  1: C --&gt; S&nbsp;&nbsp;  GET ...</p>
+<p>&nbsp;&nbsp;&nbsp;  2: C &lt;-- S&nbsp;&nbsp;  401 Unauthorized</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;  WW-Authenticate: NTLM</p>
+<p>&nbsp;&nbsp;&nbsp;  3: C --&gt; S&nbsp;&nbsp;  GET ...</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Authorization: NTLM &lt;base64-encoded type-1-message&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;  4: C &lt;-- S&nbsp;&nbsp;  401 Unauthorized</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  WWW-Authenticate: NTLM &lt;base64-encoded type-2-message&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;  5: C --&gt; S&nbsp;&nbsp;  GET ...</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Authorization: NTLM &lt;base64-encoded type-3-message&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;  6: C &lt;-- S&nbsp;&nbsp;  200 Ok</p>
+</div>
+<p><span>从交互过程可以发现，</span>client<span>会发送</span>type-1<span>消息和</span>type-3<span>消息给</span>server<span>，而</span>server<span>会发送</span>type-2<span>消息给</span>client<span>。</span></p>
+<p>Type-1<span>消息包括机器名、</span>Domain<span>等</span></p>
+<p>Type-2<span>消息包括</span>server<span>发出的</span>NTLM challenge</p>
+<p>Type-3<span>消息包括用户名、机器名、</span>Domain<span>、以及两个根据</span>server<span>发出的</span>challenge<span>计算出的</span>response<span>，这里</span>response<span>是基于</span>challenge<span>和当前用户的登录密码计算而得</span></p>
+<p><span><strong><font size="4">二、<font face="Arial">NTLM HTTP</font><span>认证过程时序图</span></font></strong></span></p>
+<p><span><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/dbb824443b52da05869473b5.jpg"><br>
+<strong><font size="4">三、SSO网络结构图</font></strong></span></span></p>
+<p><span><span><strong><font size="4"><span><span><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/4a99f94b11f3701908f7ef2a.jpg"><br>
+</span><br>
+</span><br>
+四、使用Eclipse建立一个Web工程(实现外网)</span></font></strong></span></span></p>
+<p><span><span><strong><font size="4"><span>1、引入jcifs-1.3.14.jar包（jcifs是cifs协议的java实现）</span></font></strong></span></span></p>
+<p><span><span><strong><font size="4"><span>2、修改web.xml文件</span></font></strong></span></span></p>
+<p><span><span><span><font size="3">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br>
+&lt;web-app xmlns:xsi=&quot;</font><a href="http://www.w3.org/2001/XMLSchema-instance"><font size="3">http://www.w3.org/2001/XMLSchema-instance</font></a><font size="3">&quot; xmlns=&quot;</font><a href="http://java.sun.com/xml/ns/javaee"><font size="3">http://java.sun.com/xml/ns/javaee</font></a><font size="3">&quot; xmlns:web=&quot;</font><a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"><font size="3">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</font></a><font size="3">&quot; xsi:schemaLocation=&quot;</font><a href="http://java.sun.com/xml/ns/javaee"><font size="3">http://java.sun.com/xml/ns/javaee</font></a><font size="3"> </font><a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"><font size="3">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</font></a><font size="3">&quot; id=&quot;WebApp_ID&quot; version=&quot;2.5&quot;&gt;<br>
+&lt;display-name&gt;ITSystemSSO&lt;/display-name&gt;<br>
+<br>
+&nbsp;&nbsp;  <strong>&lt;filter&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;filter-name&gt;NtlmHttpFilter&lt;/filter-name&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;filter-class&gt;jcifs.http.NtlmHttpFilter&lt;/filter-class&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;init-param&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-name&gt;jcifs.http.domainController&lt;/param-name&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;param-value&gt;10.130.1.9&lt;/param-value&gt;//域服务器的IP地址<br>
+&nbsp;&nbsp;&nbsp;  &lt;/init-param&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;init-param&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;param-name&gt;jcifs.util.loglevel&lt;/param-name&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;param-value&gt;6&lt;/param-value&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;/init-param&gt;<br>
+&lt;/filter&gt;<br>
+&lt;filter-mapping&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;filter-name&gt;NtlmHttpFilter&lt;/filter-name&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br>
+&lt;/filter-mapping&gt;<br>
+</strong><br>
+&lt;welcome-file-list&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;welcome-file&gt;index.html&lt;/welcome-file&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;welcome-file&gt;index.htm&lt;/welcome-file&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;welcome-file&gt;default.html&lt;/welcome-file&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;welcome-file&gt;default.htm&lt;/welcome-file&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;welcome-file&gt;default.jsp&lt;/welcome-file&gt;<br>
+&lt;/welcome-file-list&gt;<br>
+&lt;/web-app&gt;</font></span></span></span></p></div></body></html>

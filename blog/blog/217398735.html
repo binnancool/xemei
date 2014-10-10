@@ -1,0 +1,85 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Apache服务器配置WEBDAV详解（不带共享目录的权限设置）</title></head><body><h1>Apache服务器配置WEBDAV详解（不带共享目录的权限设置）</h1><div><p><strong><font size="4">一、简介</font></strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <strong>WebDAV （Web-based Distributed Authoring and Versioning）是基于 HTTP 1.1 的一个通信协议。它为 HTTP 1.1 添加了一些扩展（就是在 GET、POST、HEAD 等几个 HTTP 标准方法以外添加了一些新的方法），使得应用<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=%E7%A8%8B%E5%BA%8F">程序</span>可以直接将文件写到 <span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=Web">Web</span> <span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=Server">Server</span> 上，并且在写文件时候可以对文件加锁，写完后对文件解锁，还可以支持对<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=%E6%96%87%E4%BB%B6">文件</span>所做的版本控制。这个协议的出现极大地增加了 Web 作为一种创作媒体对于我们的价值。基于 WebDAV 可以实现一个<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=%E5%8A%9F%E8%83%BD">功能</span>强大的内容管理系统或者配置管理<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=%E7%B3%BB%E7%BB%9F">系统</span>。<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;  现在主流的WEB<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=%E6%9C%8D%E5%8A%A1%E5%99%A8">服务器</span>一般都支持WebDAV，使用WebDAV的方便性，呵呵，就不用多说了吧，用过VS.NET开发<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=ASP">ASP</span>.<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=NET">NET</span>应用的朋友就应该知道，新建/修改WEB项目，其实就是通过WebDAV+FrontPage扩展做到的，下面我就较详细的介绍一下，WebDAV在<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=APACHE">APACHE</span>中的配置。</strong></p>
+<p><strong><font size="4">二、详细配置</font></strong></p>
+<p><strong><font size="3">1、修改D:\Apache2.2\conf\httpd.conf</font></strong></p>
+<p><strong><font size="3">去除下面三项前面的#号：</font></strong></p>
+<p><strong><font size="3">LoadModule dav_module modules/mod_dav.so<br>
+LoadModule dav_fs_module modules/mod_dav_fs.so</font></strong></p>
+<p><strong><font size="3">Include conf/extra/httpd-dav.conf</font></strong></p>
+<p><strong><font size="3">修改：DocumentRoot &quot;D:/&quot;</font></strong></p>
+<p><strong><font size="3">&lt;Directory &quot;D:/&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;  #<br>
+&nbsp;&nbsp;&nbsp;  # Possible values for the Options directive are &quot;None&quot;, &quot;All&quot;,<br>
+&nbsp;&nbsp;&nbsp;  # or any combination of:<br>
+&nbsp;&nbsp;&nbsp;  #&nbsp;&nbsp;  Indexes Includes FollowSymLinks SymLinksifOwnerMatch ExecCGI MultiViews<br>
+&nbsp;&nbsp;&nbsp;  #<br>
+&nbsp;&nbsp;&nbsp;  # Note that &quot;MultiViews&quot; must be named *explicitly* --- &quot;Options All&quot;<br>
+&nbsp;&nbsp;&nbsp;  # doesn't give it to you.<br>
+&nbsp;&nbsp;&nbsp;  #<br>
+&nbsp;&nbsp;&nbsp;  # The Options directive is both complicated and important.  Please see<br>
+&nbsp;&nbsp;&nbsp;  # <a href="http://httpd.apache.org/docs/2.2/mod/core.html#options">http://httpd.apache.org/docs/2.2/mod/core.html#options</a><br>
+&nbsp;&nbsp;&nbsp;  # for more information.<br>
+&nbsp;&nbsp;&nbsp;  #<br>
+&nbsp;&nbsp;&nbsp;  Options Indexes FollowSymLinks</font></strong></p>
+<p><strong><font size="3">&nbsp;&nbsp;&nbsp;  #<br>
+&nbsp;&nbsp;&nbsp;  # AllowOverride controls what directives may be placed in .htaccess files.<br>
+&nbsp;&nbsp;&nbsp;  # It can be &quot;All&quot;, &quot;None&quot;, or any combination of the keywords:<br>
+&nbsp;&nbsp;&nbsp;  #&nbsp;&nbsp;  Options FileInfo AuthConfig Limit<br>
+&nbsp;&nbsp;&nbsp;  #<br>
+&nbsp;&nbsp;&nbsp;  AllowOverride None</font></strong></p>
+<p><strong><font size="3">&nbsp;&nbsp;&nbsp;  #<br>
+&nbsp;&nbsp;&nbsp;  # Controls who can get stuff from this server.<br>
+&nbsp;&nbsp;&nbsp;  #<br>
+&nbsp;&nbsp;&nbsp;  Order allow,deny<br>
+&nbsp;&nbsp;&nbsp;  Allow from all</font></strong></p>
+<p><strong><font size="3">&lt;/Directory&gt;</font></strong></p>
+<p><strong><font size="3">2、修改D:\Apache2.2\conf\extra\httpd-dav.conf文件</font></strong></p>
+<p><strong><font size="3">增加：以无密码方式访问</font></strong></p>
+<p><strong><font size="3">Alias /load &quot;D:/?</font></strong></p>
+<p><strong><font size="3">&lt;Directory &quot;D:/&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;  Dav On<br>
+&lt;/Directory&gt;</font></strong></p>
+<p><strong><font size="3">删除：</font></strong></p>
+<p><strong><font size="3">Alias /uploads &quot;D:/Apache2.2/uploads&quot;</font></strong></p>
+<p><strong><font size="3">&lt;Directory &quot;D:/Apache2.2/uploads&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;  Dav On</font></strong></p>
+<p><strong><font size="3">&nbsp;&nbsp;&nbsp;  Order Allow,Deny<br>
+&nbsp;&nbsp;&nbsp;  Allow from all</font></strong></p>
+<p><strong><font size="3">&nbsp;&nbsp;&nbsp;  AuthType Digest<br>
+&nbsp;&nbsp;&nbsp;  AuthName DAV-upload</font></strong></p>
+<p><strong><font size="3">&nbsp;&nbsp;&nbsp;  # You can use the htdigest program to create the password database:<br>
+&nbsp;&nbsp;&nbsp;  #&nbsp;&nbsp;  htdigest -c &quot;D:/Apache2.2/user.passwd&quot; DAV-upload admin<br>
+&nbsp;&nbsp;&nbsp;  AuthUserFile &quot;D:/Apache2.2/user.passwd&quot;<br>
+&nbsp;&nbsp;&nbsp;  AuthDigestProvider file</font></strong></p>
+<p><strong><font size="3">&nbsp;&nbsp;&nbsp;  # Allow universal read-access, but writes are restricted<br>
+&nbsp;&nbsp;&nbsp;  # to the admin user.<br>
+&nbsp;&nbsp;&nbsp;  &lt;LimitExcept GET OPTIONS&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  require user admin<br>
+&nbsp;&nbsp;&nbsp;  &lt;/LimitExcept&gt;<br>
+&lt;/Directory&gt;</font></strong></p>
+<p><strong><font size="3">3、以web文件夹打开，index.html</font></strong></p>
+<p><strong><font size="3">&lt;html&gt;<br>
+&lt;head&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;title&gt;如何打开 Web 文件夹&lt;/title&gt;</font></strong></p>
+<p><strong><font size="3">&nbsp;&nbsp;&nbsp;  &lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!--<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  function fnNavigate(oViewFolder)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  var sFolder = &quot;<a href="http://10.130.14.42/">http://10.130.14.42/</a>&quot;;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  oViewFolder.navigate(sFolder);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  --&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;/script&gt;</font></strong></p>
+<p><strong><font size="3">&lt;/head&gt;<br>
+&lt;body&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;li&gt;方式1： &lt;a href=&quot;#&quot; onclick=&quot;return false;&quot;&gt;&lt;span folder=&quot;<a href="http://10.130.14.42/">http://10.130.14.42/</a>&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  style=&quot;behavior: url(#default#AnchorClick);&quot; target=&quot;_blank&quot;&gt;以Web 文件夹方式打开&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;li&gt;方式2： &lt;a href=&quot;#&quot; onclick=&quot;return false;&quot;&gt;&lt;span id=&quot;oViewWebFolder&quot; style=&quot;behavior: url(#default#httpFolder);&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  onclick=&quot;fnNavigate(this);&quot;&gt;以Web 文件夹方式打开&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;<br>
+&lt;/body&gt;<br>
+&lt;/html&gt;<br>
+4、以遨游浏览器打开index.html，点击其链接，打开如下页面：显示D:\盘的所有目录</font></strong></p>
+<p><strong><font size="3"><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/ac6f051dd29e4ab086d6b6fc.jpg"><br>
+</span></font></strong></p>
+<p> </p></div></body></html>

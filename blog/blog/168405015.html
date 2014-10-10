@@ -1,0 +1,55 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ant的bulid.xml文件说明</title></head><body><h1>ant的bulid.xml文件说明</h1><div><p>代码说明： <br>
+（ 1 ） property 项是定义变量，比如 &lt;property name=swt.dll value=swt-win32-3063.dll /&gt; ，就是定义一个变量： swt.dll=swt-win32-3063.dll 。以后用这个变量则是这样： ${swt.dll} 。 <br>
+一般尽量将今后可能会变动的目录、文件等定义成变量，以方便维护。不象 Java 变量有类型的区分， Ant 变量是不区别目录、文件等的，所以为了见名知意，在取变量名时，目录都加&ldquo; dir &rdquo;后缀，这个后缀是可以任取名的。 <br>
+下面给出本例用到的变量的含义： <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  src.dir － Java 源文件路径。 value=src 的 src 是一个相对路径，它相对的是 build.xml 的所在目录位置（即项目根目录）。 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  bin.dir － Java 编译文件的输出路径 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  eclipse_plugins.dir － eclipse 的 plugins 目录 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dist.dir － 打包文件的存放目录 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  doc.dir － API 文档的存放目录，这里用到了 dist.dir 变量，直接写 value=d:/dist/api 也未尝不可。 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  swt.dll － SWT 本地化文件。 <br>
+（ 2 ） &lt;path id=master-classpath&gt; ，定义编译文件时所引用的库，相当于 classpath 。 &lt;fileset&gt; 项表示一个文件集，再深入一层的 &lt;include&gt; 项，则表示此文件集下的文件，它们的路径定位相对于 &lt;fileset&gt; 的 dir 属性。 &lt;fileset&gt; 还有一个 id 属性，在后面复制引用库时会用到。 <br>
+也许有读者会问：&ldquo;你是怎么知道要引用这些文件的？&rdquo;回答：看项目根目录下的&ldquo; .classpath &rdquo;文件，就可以知道本项目要引用那些库了。实际上笔者是把 .classpath 复制一份后，然后用 Editplus 编辑而得。 <br>
+（ 3 ）接下来开始定义一些任务。首任务一般都让它为空（没有具体任务内容）： &lt;target name=init/&gt; 。 <br>
+（ 4 ） Ant 中的任务有着相互的依赖（ depends ）关系，这些依赖关系是通过 depends 属性来定义的。当要执行一个任务时， Ant 先去执行这个任务的 depends 任务，……， Ant 就这样一直往回找下去。比如：在本例的第二行 default=api_doc ，它定义了缺省任务是 api_doc （输出 api 文档）－＞此任务的 depends = pack （打包）－＞ pack 的 depends = compile （编译）－＞ compile 的 depends=init （首任务）， init 没有 depends 。于是， Ant 就从 init 开始依次往回执行任务： init －＞ compile －＞ pack －＞ api_doc 。 <br>
+如果你不想&ldquo;输出 api 文档&rdquo;，则将第二行的缺省任务定义成 default=pack 即可，这时整个任务链就抛开了 api_doc 。 <br>
+（ 5 ） &lt;delete dir=${bin.dir}/&gt; 删除目录。 &lt;mkdir dir=${bin.dir}/&gt; 新建目录 <br>
+（ 6 ）编译源程序，如下 <br>
+&lt;javac srcdir=${src.dir} destdir=${bin.dir} target=1.4&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;classpath refid=master-classpath/&gt; <br>
+&lt;/javac&gt; <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  srcdir － 源文件目录，其子目录中的源文件也会被 javac.exe 编译。 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  destdir － 编译文件输出目录。 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  target － 以 JDK1.4 为编译目标。 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  classpath － 编译的 classpath 设置， refid 是指引用前面设定的 master-classpath 。 <br>
+（ 7 ）将 icons （即 myswt/icons ）目录的文件，复制到 myswt/bin/icons 目录中，如下： <br>
+&lt;copy todir=${bin.dir}/icons&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;fileset dir=icons/&gt; <br>
+&lt;/copy&gt; <br>
+（ 8 ）将文件打成 JAR 包 <br>
+&lt;jar basedir=${bin.dir} destfile=${dist.dir}/myswt.jar manifest=ant_manifes.txt&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;exclude name=**/*Test.* /&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;exclude name=**/Test*.* /&gt; <br>
+&lt;/jar&gt; <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  basedir － 源目录。 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  destfile － 目标目录和打成 JAR 包名。 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  manifest － 打包清单文件（后面给出其内容）。 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  exclude － 使用了通配符将某一些文件排除不打包（主要是一些测试文件）。 <br>
+（ 9 ）如下，将 project_lib 的文件复制到 d:/dist/lib 目录中。 project_lib 是前面&ldquo;定义编译文件时所引用的库&rdquo;中的文件集的 id 。结果参数下图 21.25 <br>
+&lt;copy todir=${dist.dir}/lib&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;fileset refid=project_lib/&gt; <br>
+&lt;/copy&gt; <br>
+（ 10 ）将本地化文件复制到 d:/dist 目录中，如下： <br>
+&lt;copy todir=${dist.dir} file=${swt.dll}/&gt;  <br>
+（ 11 ）输出 API 文档（结果参数下图 21.26 ） <br>
+&lt;javadoc destdir=${doc.dir} author=true version=true use=true windowtitle=MySWT API&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;packageset dir=${src.dir} defaultexcludes=yes/&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;doctitle&gt;&lt;![CDATA[&lt;h1&gt;MySWT Project&lt;/h1&gt;]]&gt;&lt;/doctitle&gt; <br>
+&nbsp;&nbsp;&nbsp;  &lt;bottom&gt;&lt;![CDATA[&lt;i&gt;Document by ChenGang 2005.&lt;/i&gt;]]&gt;&lt;/bottom&gt; <br>
+&lt;/javadoc&gt; <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  destdir － 目标路径 d:/dist/api <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  packageset － 源文件目录 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  doctitle － 标题 <br>
+l&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  bottom － 标尾。</p>
+<p><br>
+本文来自CSDN博客，转载请标明出处：<a href="http://blog.csdn.net/smildlzj/archive/2007/04/01/1548713.aspx">http://blog.csdn.net/smildlzj/archive/2007/04/01/1548713.aspx</a></p></div></body></html>

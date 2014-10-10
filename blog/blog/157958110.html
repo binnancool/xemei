@@ -1,0 +1,127 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>nohup、ls、telnet、netstat、nslookup、finger、ping命令介绍</title></head><body><h1>nohup、ls、telnet、netstat、nslookup、finger、ping命令介绍</h1><div><p>1、nohup命令：一般形式为：nohup command &amp;<br>
+&nbsp;&nbsp;&nbsp;  如果你正在运行一个进程，而且你觉得在退出帐户时该进程还不会结束，那么可以使用nohup命令。该命令可以在你退出帐户/关闭终端之后继续运行相应的进程。nohup就是不挂起的意思( nohang up)。</p>
+<p>&nbsp;&nbsp;&nbsp;  如果使用nohup命令提交作业，那么在缺省情况下该作业的所有输出都被重定向到一个名为nohup.out的文件中，除非另外指定了输出文件：<br>
+　　nohup command &gt; myout.file 2&gt;&amp;1 &amp;<br>
+　　在上面的例子中，输出被重定向到myout.file文件中。</p>
+<p>2、ls 命令<br>
+&nbsp;&nbsp;  ls 命令的绝大多数选项： <br>
+　　<br>
+　　-a 列出目录下的所有文件，包括以 . 开头的隐含文件。 <br>
+　　-b 把文件名中不可输出的字符用反斜杠加字符编号(就象在C语言里一样)的形式列出。 <br>
+　　-c 输出文件的 i 节点的修改时间，并以此排序。 <br>
+　　-d 将目录象文件一样显示，而不是显示其下的文件。 <br>
+　　-e 输出时间的全部信息，而不是输出简略信息。 <br>
+　　-f -U 对输出的文件不排序。 <br>
+　　-g 无用。 <br>
+　　-i 输出文件的 i 节点的索引信息。 <br>
+　　-k 以 k 字节的形式表示文件的大小。 <br>
+　　-l 列出文件的详细信息。 <br>
+　　-m 横向输出文件名，并以&ldquo;，&rdquo;作分格符。 <br>
+　　-n 用数字的 UID,GID 代替名称。 <br>
+　　-o 显示文件的除组信息外的详细信息。 <br>
+　　-p -F 在每个文件名后附上一个字符以说明该文件的类型，&ldquo;*&rdquo;表示可执行的普通 <br>
+　　文件；&ldquo;/&rdquo;表示目录；&ldquo;@&rdquo;表示符号链接；&ldquo;|&rdquo;表示FIFOs；&ldquo;=&rdquo;表示套 <br>
+　　接字(sockets)。 <br>
+　　-q 用?代替不可输出的字符。 <br>
+　　-r 对目录反向排序。 <br>
+　　-s 在每个文件名后输出该文件的大小。 <br>
+　　-t 以时间排序。 <br>
+　　-u 以文件上次被访问的时间排序。 <br>
+　　-x 按列输出，横向排序。 <br>
+　　-A 显示除 &ldquo;.&rdquo;和&ldquo;..&rdquo;外的所有文件。 <br>
+　　-B 不输出以 &ldquo;~&rdquo;结尾的备份文件。 <br>
+　　-C 按列输出，纵向排序。 <br>
+　　-G 输出文件的组的信息。 <br>
+　　-L 列出链接文件名而不是链接到的文件。 <br>
+　　-N 不限制文件长度。 <br>
+　　-Q 把输出的文件名用双引号括起来。 <br>
+　　-R 列出所有子目录下的文件。 <br>
+　　-S 以文件大小排序。 <br>
+　　-X 以文件的扩展名(最后一个 . 后的字符)排序。 <br>
+　　-1 一行只输出一个文件。 <br>
+　　--color=no 不显示彩色文件名 <br>
+　　--help 在标准输出上显示帮助信息。 <br>
+　　--version 在标准输出上输出版本信息并退出。</p>
+<p>3、telnet<br>
+　　<br>
+　　功能说明：远端登入。<br>
+　　<br>
+　　语　　法：telnet [-8acdEfFKLrx][-b&lt;主机别名&gt;][-e&lt;脱离字符&gt;][-k&lt;域名&gt;][-l&lt;用户名称&gt;][-n&lt;记录文件&gt;][-S&lt;服务类型&gt;][-X&lt;认证形态&gt;][主机名称或IP地址&lt;通信端口&gt;]<br>
+　　<br>
+　　补充说明：执行telnet指令开启终端机阶段作业，并登入远端主机。<br>
+　　<br>
+　　参　　数：<br>
+　　-8 允许使用8位字符资料，包括输入与输出。<br>
+　　-a 尝试自动登入远端系统。<br>
+　　-b&lt;主机别名&gt; 使用别名指定远端主机名称。<br>
+　　-c 不读取用户专属目录里的.telnetrc文件。<br>
+　　-d 启动排错模式。<br>
+　　-e&lt;脱离字符&gt; 设置脱离字符。<br>
+　　-E 滤除脱离字符。<br>
+　　-f 此参数的效果和指定&quot;-F&quot;参数相同。<br>
+　　-F 使用Kerberos V5认证时，加上此参数可把本地主机的认证数据上传到远端主机。<br>
+　　-k&lt;域名&gt; 使用Kerberos认证时</p>
+<p>4、netstat命令<br>
+&nbsp;&nbsp;&nbsp;  netstat命令的功能是显示网络连接、路由表和网络接口信息，可以让用户得知目前都有哪些网络连接正在运作。 <br>
+　　<br>
+　　该命令的一般格式为： netstat [选项] <br>
+　　<br>
+　　命令中各选项的含义如下： <br>
+　　<br>
+　　-a 显示所有socket，包括正在监听的。 <br>
+　　<br>
+　　-c 每隔1秒就重新显示一遍，直到用户中断它。 <br>
+　　<br>
+　　-i 显示所有网络接口的信息，格式同&ldquo;ifconfig -e&rdquo;。 <br>
+　　<br>
+　　-n 以网络IP地址代替名称，显示出网络连接情形。 <br>
+　　<br>
+　　-r 显示核心路由表，格式同&ldquo;route -e&rdquo;。 <br>
+　　<br>
+　　-t 显示TCP协议的连接情况。 <br>
+　　<br>
+　　-u 显示UDP协议的连接情况。 <br>
+　　<br>
+　　-v 显示正在进行的工作。 <br>
+5、nslookup命令 <br>
+　　<br>
+　　nslookup命令的功能是查询一台机器的IP地址和其对应的域名。它通常需要一台域名服务器来提供域名服务。如果用户已经设置好域名服务器，就可以用这个命令查看不同主机的IP地址对应的域名。 <br>
+　　<br>
+　　该命令的一般格式为： nslookup [IP地址/域名] <br>
+6、finger命令 <br>
+　　<br>
+　　finger命令的功能是查询用户的信息，通常会显示系统中某个用户的用户名、主目录、停滞时间、登录时间、登录shell等信息。如果要查询远程机上的用户信息，需要在用户名后面接&ldquo;@主机名&rdquo;，采用[用户名@主机名]的格式，不过要查询的网络主机需要运行finger守护进程。 <br>
+　　<br>
+　　该命令的一般格式为： finger [选项] [使用者] [用户@主机] <br>
+　　<br>
+　　命令中各选项的含义如下： <br>
+　　<br>
+　　-s 显示用户的注册名、实际姓名、终端名称、写状态、停滞时间、登录时间等信息。 <br>
+　　<br>
+　　-l 除了用-s选项显示的信息外，还显示用户主目录、登录shell、邮件状态等信息，以及用户主目录下的.plan、.project和.forward文件的内容。 <br>
+　　<br>
+　　-p 除了不显示.plan文件和.project文件以外，与-l选项相同。 <br>
+7、ping命令 <br>
+　　<br>
+　　ping命令用于查看网络上的主机是否在工作，它向该主机发送ICMP ECHO_REQUEST包。有时我们想从网络上的某台主机上下载文件，可是又不知道那台主机是否开着，就需要使用ping命令查看。 <br>
+　　<br>
+　　该命令的一般格式为： ping [选项] 主机名/IP地址 <br>
+　　<br>
+　　命令中各选项的含义如下： <br>
+　　<br>
+　　-c 数目 在发送指定数目的包后停止。 <br>
+　　<br>
+　　-d 设定SO_DEBUG的选项。 <br>
+　　<br>
+　　-f 大量且快速地送网络封包给一台机器，看它的回应。 <br>
+　　<br>
+　　-I 秒数 设定间隔几秒送一个网络封包给一台机器，预设值是一秒送一次。 <br>
+　　<br>
+　　-l 次数 在指定次数内，以最快的方式送封包数据到指定机器（只有超级用户可以使用此选项）。 <br>
+　　<br>
+　　-q 不显示任何传送封包的信息，只显示最后的结果。 <br>
+　　<br>
+　　-r 不经由网关而直接送封包到一台机器，通常是查看本机的网络接口是否有问题。 <br>
+　　<br>
+　　-s 字节数 指定发送的数据字节数，预设值是56，加上8字节的ICMP头，一共是64ICMP数据字节。 </p>
+<p> </p></div></body></html>

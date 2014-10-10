@@ -1,0 +1,45 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java对文件的修改</title></head><body><h1>java对文件的修改</h1><div><p><font size="3" face="宋体">public void modify(){<br>
+&nbsp;&nbsp; StringBuffer buf = new StringBuffer();<br>
+&nbsp;&nbsp; String str,tempStr=&quot;发送消息总数：300&quot;;<br>
+&nbsp;&nbsp; FileInputStream fis = null;<br>
+&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp; fis = new FileInputStream(&quot;E:\\统计结果.txt&quot;);<br>
+&nbsp;&nbsp; } catch (FileNotFoundException e) {<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  InputStreamReader isr = new InputStreamReader(fis);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  BufferedReader br = new BufferedReader(isr);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;  // 保存该行前面的内容<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  try {<br>
+&nbsp;&nbsp;&nbsp; for (int j = 1; (str = br.readLine()) != null<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &amp;&amp; !str.equals(tempStr); j++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  buf = buf.append(str+&quot;\r\n&quot;);//\r\n为换行符</strong><br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; br.close();<br>
+&nbsp;&nbsp; } catch (IOException e) {<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; buf.append(&quot;发送消息总数：&quot;+&quot;1000000000000000&quot;+&quot;\r\n&quot;);<br>
+&nbsp;&nbsp; buf.append(&quot;接收消息总数：&quot;+&quot;1000000000000000&quot;+&quot;\r\n&quot;);<br>
+&nbsp;&nbsp; buf.append(&quot;状态信息总数：&quot;+&quot;1000000000000000&quot;+&quot;\r\n&quot;);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp; FileWriter fw = null;<br>
+&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;<strong> File f=new File(&quot;E:\\统计结果.txt&quot;);<br>
+&nbsp;&nbsp;&nbsp; f.delete();//删除文件</strong></font></p>
+<p><font size="3" face="宋体">&nbsp;&nbsp;&nbsp; fw = new FileWriter(&quot;E:\\统计结果.txt&quot;,true);<br>
+&nbsp;&nbsp; } catch (IOException e) {<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp; }<br>
+&nbsp;&nbsp; PrintWriter pw =new PrintWriter(fw);<br>
+ <strong> pw.println(buf); //输入记录在buf中的内容<br>
+</strong>&nbsp;&nbsp; pw.flush();<br>
+&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp; fw.flush();<br>
+&nbsp;&nbsp;&nbsp; pw.close();<br>
+&nbsp;&nbsp;&nbsp; fw.close();<br>
+&nbsp;&nbsp; } catch (IOException e) {<br>
+&nbsp;&nbsp;&nbsp; e.printStackTrace();<br>
+&nbsp;&nbsp; }<br>
+ }</font></p></div></body></html>

@@ -1,0 +1,36 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux系统SCP命令</title></head><body><h1>Linux系统SCP命令</h1><div><p>scp是 secure copy的缩写, scp是linux系统下基于ssh登陆进行安全的远程文件拷贝命令。linux的scp命令可以在linux服务器之间复制文件和目录.</p>
+<p><strong><span style="COLOR: #ff0000; FONT-SIZE: 16px">scp命令的用处：</span></strong></p>
+<p>scp在网络上不同的主机之间复制文件，它使用ssh安全协议传输数据，具有和ssh一样的验证机制，从而安全的远程拷贝文件。</p>
+<p><strong><span style="COLOR: #ff0000; FONT-SIZE: 16px">scp命令基本格式：</span></strong></p>
+<p>scp [-1246BCpqrv] [-c cipher] [-F ssh_config] [-i identity_file]<br>[-l limit] [-o ssh_option] [-P port] [-S program]<br>[[user@]host1:]file1 [...] [[user@]host2:]file2</p>
+<p>scp命令的参数说明:</p>
+<p>-1<br>强制scp命令使用协议ssh1</p>
+<p>-2<br>强制scp命令使用协议ssh2</p>
+<p>-4<br>强制scp命令只使用IPv4寻址</p>
+<p>-6<br>强制scp命令只使用IPv6寻址</p>
+<p>-B<br>使用批处理模式（传输过程中不询问传输口令或短语）</p>
+<p>-C<br>允许压缩。（将-C标志传递给ssh，从而打开压缩功能）</p>
+<p><strong><span style="COLOR: #ff0000">-p 保留原文件的修改时间，访问时间和访问权限。</span></strong></p>
+<p>-q<br>不显示传输进度条。</p>
+<p><strong><span style="COLOR: #ff0000">-r</span><br><span style="COLOR: #ff0000">递归复制整个目录。</span></strong></p>
+<p>-v 详细方式显示输出。scp和ssh(1)会显示出整个过程的调试信息。这些信息用于调试连接，验证和配置问题。</p>
+<p>-c cipher<br>以cipher将数据传输进行加密，这个选项将直接传递给ssh。</p>
+<p>-F ssh_config<br>指定一个替代的ssh配置文件，此参数直接传递给ssh。</p>
+<p>-i identity_file<br>从指定文件中读取传输时使用的密钥文件，此参数直接传递给ssh。</p>
+<p><strong><span style="COLOR: #ff0000">-</span><span style="COLOR: #ff0000"><span style="COLOR: #ff0000">l</span> limit</span><br><span style="COLOR: #ff0000">限定用户所能使用的带宽，以Kbit/s为单位。</span></strong></p>
+<p>-o ssh_option<br>如果习惯于使用ssh_config(5)中的参数传递方式，</p>
+<p>-P port&nbsp; 注意是大写的P, port是指定数据传输用到的端口号</p>
+<p>-S program<br>指定加密传输时所使用的程序。此程序必须能够理解ssh(1)的选项。</p>
+<p>scp命令的实际应用</p>
+<p>1&gt;从本地服务器复制到远程服务器</p>
+<p>(1) 复制文件：<br>命令格式：<br>scp local_file <a href="mailto:remote_username@remote_ip:remote_folder">remote_username@remote_ip:remote_folder</a><br>或者<br>scp local_file <a href="mailto:remote_username@remote_ip:remote_file">remote_username@remote_ip:remote_file</a><br>或者<br>scp local_file remote_ip:remote_folder<br>或者<br>scp local_file remote_ip:remote_file</p>
+<p>第1,2个指定了用户名，命令执行后需要输入用户密码，第1个仅指定了远程的目录，文件名字不变，第2个指定了文件名<br>第3,4个没有指定用户名，命令执行后需要输入用户名和密码，第3个仅指定了远程的目录，文件名字不变，第4个指定了文件名</p>
+<p>实例：<br>scp /home/linux/soft/scp.zip <a href="mailto:root@www.mydomain.com:/home/linux/others/soft">root@www.mydomain.com:/home/linux/others/soft</a><br>scp /home/linux/soft/scp.zip <a href="mailto:root@www.mydomain.com:/home/linux/others/soft/scp2.zip">root@www.mydomain.com:/home/linux/others/soft/scp2.zip</a><br>scp /home/linux/soft/scp.zip <a href="http://www.mydomain.com:/home/linux/others/soft">www.mydomain.com:/home/linux/others/soft</a><br>scp /home/linux/soft/scp.zip <a href="http://www.mydomain.com:/home/linux/others/soft/scp2.zip">www.mydomain.com:/home/linux/others/soft/scp2.zip</a></p>
+<p>(2) 复制目录：<br>命令格式：<br>scp -r local_folder <a href="mailto:remote_username@remote_ip:remote_folder">remote_username@remote_ip:remote_folder</a><br>或者<br>scp -r local_folder remote_ip:remote_folder</p>
+<p>第1个指定了用户名，命令执行后需要输入用户密码；<br>第2个没有指定用户名，命令执行后需要输入用户名和密码；</p>
+<p>例子：<br>scp -r /home/linux/soft/ <a href="mailto:root@www.mydomain.com:/home/linux/others/">root@www.mydomain.com:/home/linux/others/</a><br>scp -r /home/linux/soft/ <a href="http://www.mydomain.com:/home/linux/others/">www.mydomain.com:/home/linux/others/</a></p>
+<p>上面 命令 将 本地 soft 目录 复制 到 远程 others 目录下，即复制后远程服务器上会有/home/linux/others/soft/ 目录</p>
+<p>2&gt;从远程服务器复制到本地服务器</p>
+<p>从远程复制到本地的scp命令与上面的命令雷同，只要将从本地复制到远程的命令后面2个参数互换顺序就行了。</p>
+<p>例如：<br>scp <a href="mailto:root@www.mydomain.com:/home/linux/soft/scp.zip">root@www.mydomain.com:/home/linux/soft/scp.zip</a> /home/linux/others/scp.zip<br>scp <a href="http://www.mydomain.com:/home/linux/soft/">www.mydomain.com:/home/linux/soft/</a> -r /home/linux/others/</p>
+<p>linux系统下scp命令中很多参数都和 ssh1 有关 , 还需要看到更原汁原味的参数信息,可以运行man scp 看到更细致的英文说明. <br></p></div></body></html>

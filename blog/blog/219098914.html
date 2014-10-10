@@ -1,0 +1,77 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Cisco ASA 5500的Web VPN的URL编码及安全漏洞</title></head><body><h1>Cisco ASA 5500的Web VPN的URL编码及安全漏洞</h1><div><p><strong><font size="3">一、Cisco ASA 的Web VPN访问域名的URL编码方式</font></strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  链接(URL)中的域名使用ROT13替换进行混淆，将ASCII字符转换为16进制。如下所示：</p>
+<p><a href="https://*******/+CSCO+00756767633A2F2F7A76632E70756E616172792E70627A++/"><font color="#000000">https://*******/+CSCO+00756767633A2F2F7A76632E70756E616172792E70627A++/</font></a></p>
+<p><font color="#000000">其中：00756767633A2F2F7A76632E70756E616172792E70627A即为编号后的域名</font></p>
+<p><strong><font color="#000000">1、java类实现ROT13和字符串与16进制编码</font></strong></p>
+<p><font color="#000000">package my.test;</font></p>
+<p><font color="#000000">import java.io.ByteArrayOutputStream;</font></p>
+<p><font color="#000000">public class ROT13<br>
+{<br>
+/*<br>
+* 16进制数字字符集<br>
+*/<br>
+private static String hexString = &quot;0123456789ABCDEF&quot;;</font></p>
+<p><br>
+<font color="#000000">/*<br>
+* 将字符串编码成16进制数字,适用于所有字符（包括中文）<br>
+*/<br>
+public static String encode(String str) {<br>
+&nbsp;&nbsp;&nbsp;  // 根据默认编码获取字节数组<br>
+&nbsp;&nbsp;&nbsp;  byte[] bytes = str.getBytes();<br>
+&nbsp;&nbsp;&nbsp;  StringBuilder sb = new StringBuilder(bytes.length * 2);<br>
+&nbsp;&nbsp;&nbsp;  // 将字节数组中每个字节拆解成2位16进制整数<br>
+&nbsp;&nbsp;&nbsp;  for (int i = 0; i &lt; bytes.length; i++) <br>
+&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  sb.append(hexString.charAt((bytes[i] &amp; 0xf0) &gt;&gt; 4));//1-4<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  sb.append(hexString.charAt((bytes[i] &amp; 0x0f) &gt;&gt; 0));//1-2<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;  return sb.toString();<br>
+}</font></p>
+<p><font color="#000000">/*<br>
+* 将16进制数字解码成字符串,适用于所有字符（包括中文） decode(String<br>
+* bytes)方法里面的bytes字符串必须大写，即toUpperCase()<br>
+*/<br>
+public static String decode(String bytes) {<br>
+&nbsp;&nbsp;&nbsp;  ByteArrayOutputStream baos = new ByteArrayOutputStream(bytes.length() / 2);<br>
+&nbsp;&nbsp;&nbsp;  // 将每2位16进制整数组装成一个字节<br>
+&nbsp;&nbsp;&nbsp;  for (int i = 0; i &lt; bytes.length(); i += 2)<br>
+&nbsp;&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  baos.write((hexString.indexOf(bytes.charAt(i)) &lt;&lt; 4 | hexString.indexOf(bytes.charAt(i + 1))));<br>
+&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;  return new String(baos.toByteArray());<br>
+}</font></p>
+<p><font color="#000000">/**<br>
+* ROT13编码<br>
+* @param s<br>
+* @return<br>
+*/<br>
+public static String rot13(String s)<br>
+{<br>
+&nbsp;&nbsp;  StringBuffer h = new StringBuffer();<br>
+&nbsp;&nbsp;  for (int i = 0; i &lt; s.length(); i++)<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  char c = s.charAt(i);<br>
+&nbsp;&nbsp;&nbsp;  if (c &gt;= 'a' &amp;&amp; c &lt;= 'm')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  c += 13;<br>
+&nbsp;&nbsp;&nbsp;  else if (c &gt;= 'n' &amp;&amp; c &lt;= 'z')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  c -= 13;<br>
+&nbsp;&nbsp;&nbsp;  else if (c &gt;= 'A' &amp;&amp; c &lt;= 'M')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  c += 13;<br>
+&nbsp;&nbsp;&nbsp;  else if (c &gt;= 'A' &amp;&amp; c &lt;= 'Z')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  c -= 13;<br>
+&nbsp;&nbsp;&nbsp;  h.append(c);<br>
+&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  return h.toString();<br>
+}</font></p>
+<p><font color="#000000">public static void main(String[] args)<br>
+{<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;  String s1 = &quot;00756767633A2F2F7A76632E70756E616172792E70627A&quot;;<br>
+&nbsp;&nbsp;  System.out.println(decode(s1));<br>
+&nbsp;&nbsp;  System.out.println(rot13(decode(s1)));<br>
+}<br>
+}<br>
+输出结果为：</font></p>
+<p><font color="#000000">uggc://zvc.punaary.pbz</font></p>
+<p><a href="http://employ.channel.com/"><font color="#000000">http://employ.channel.com</font></a></p>
+<p><strong><font color="#000000">2、如果把00756767633A2F2F7A76632E70756E616172792E70627A，的第二个0修改为1，则在以后的URL转向中，不进行rot13和16进制编码，直接显示URL，此为Cisco ASA 漏洞。</font></strong></p></div></body></html>

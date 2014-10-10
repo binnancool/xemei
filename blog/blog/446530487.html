@@ -1,0 +1,102 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>LINUX+APACHE+MYSQL+PHP+SVN+SVNMANAGER编译安装配置</title></head><body><h1>LINUX+APACHE+MYSQL+PHP+SVN+SVNMANAGER编译安装配置</h1><div><p><strong>Linux: CentOS5.4</strong></p>
+<p><strong>Apache: httpd-2.2.14.tar.bz2</strong></p>
+<p><strong>Mysql: mysql-5.0.22.tar.gz</strong></p>
+<p><strong>Php: php-5.2.12.tar.gz</strong></p>
+<p><strong>Svn: subversion-1.6.6.tar.bz2</strong></p>
+<p><strong>Svn deps: subversion-deps-1.6.6.tar.bz2</strong></p>
+<p><strong>Svnmanager: svnmanager-1.08.tar.gz</strong></p>
+<p><strong><span style="FONT-SIZE: 16px">1.安装apache</span></strong></p>
+<p><strong>tar jxvf httpd-2.2.14.tar.bz2</strong> //解包</p>
+<p><strong>cd httpd-2.2.14</strong> //进来准备编译安装apache</p>
+<p><strong>mkdir /usr/local/apache2</strong> //这个目录用来安装apache</p>
+<p><strong>./configure --prefix=/usr/local/apache2 --enable-so --enable-dav --enable-dav-fs --enable-maintainer-mode</strong> //so是开启动态库支持，svn要求apache必须启用so，dav和dav-fs是将来svn认证用的，maintainer是开启调试模式不加亦可。</p>
+<p><strong>make;make install</strong> //编译并安装</p>
+<p><strong>id apache</strong> //确认apache用户不存在</p>
+<p><strong>useradd apache</strong> //添加apache用户，将来apache就以这个用户运行</p>
+<p><strong>chown -R apache.apache /usr/local/apache2</strong> //更改apache安装目录属主、组，这个不是必须的</p>
+<p><strong>vi /usr/local/apache2/conf/httpd.conf</strong> //修改apache配置文件，让它以用户apache身份运行</p>
+<p><strong>修改User和Group均为apache</strong></p>
+<p><strong>esc </strong>//按esc退出编辑模式</p>
+<p><strong>shift+zz</strong> //按住shift键然后按两次z键，即保存退出。</p>
+<p><strong><span style="FONT-SIZE: 16px">2.安装mysql</span></strong></p>
+<p><strong>tar zxvf mysql-5.0.22.tar.gz</strong> //解包</p>
+<p><strong>cd mysql-5.0.22</strong> //进去准备编译安装</p>
+<p><strong>mkdir /usr/local/mysql</strong> //先创建个安装目录</p>
+<p><strong>./configure --prefix=/usr/local/mysql</strong> //指定安装目录为刚创建的/usr/local/mysql</p>
+<p><strong>make;make install</strong> //编译并安装</p>
+<p><strong>id mysql</strong> //确认mysql用户不存在</p>
+<p><strong>useradd mysql</strong> //要是mysql用户已经存在了，可就不要在useradd了哦。</p>
+<p><strong>/usr/local/mysql/bin/mysql_install_db --user=mysql</strong> //以用户mysql身份创建默认库</p>
+<p><strong>/usr/local/mysql/bin/mysqld_safe &amp;</strong> //让mysql启动，并在后台运行</p>
+<p><strong>/usr/local/mysql/bin/mysql -u root password gaso123</strong> //给root用户加个密码，挡一挡菜鸟黑客:)</p>
+<p><strong><span style="FONT-SIZE: 16px">3.安装SVN</span></strong></p>
+<p><strong>tar jxvf subversion-1.6.6.tar.bz2</strong> //解包后得到subversion-1.6.6目录</p>
+<p><strong>tar jxvf subversion-deps-1.6.6.tar.bz2</strong> //这个是SVN的依赖包，解压后自动放在subversion-1.6.6目录里，本来这个依赖包里主要是要用到apr和apr-util,但是我们安装apache的时候已经默认安装上这两个模块了，所以剩下个neon模块在这包里（我不太确定这个是否是必须的）是我们需要用的。</p>
+<p><strong>cd subversion-1.6.6</strong></p>
+<p><strong>mkdir /usr/local/svn</strong> //svn将就装这里面</p>
+<p><strong>./configure --prefix=/usr/local/svn --with-apxs=/usr/local/apache2/bin/apxs --with-apr=/usr/local/apache2/bin/apr-1-config --with-apr-util=/usr/local/apache2/bin/apu-1-config</strong></p>
+<p>//prefix还是指定安装目录，apxs指定apache配置，这个apxs应该是里面涵盖了apache的安装目录配置文件目录模块目录执行目录等等的位置参数，指定了它的位置apache就整个显形了，svn就能知道想知道的关于apache的一切（这个参数很好很强大哦），withapr和aprutil这两个我推测即使不指定svn也能找到它，因为apxs很好很强大嘛，但没试验过，有兴趣的同学可以试下。</p>
+<p><strong>make;make install</strong></p>
+<p><strong><span style="FONT-SIZE: 16px">4.检查svn安装配置</span></strong></p>
+<p><strong>mkdir -p /app/svn</strong> //这个目录将作为svn的版本库的总（父）目录使用</p>
+<p><strong>vi /usr/local/apache2/conf/httpd.conf</strong> //apache的配置需要做些检查和更改</p>
+<p><strong>LoadModule dav_svn_module modules/mod_dav_svn.so<br>LoadModule authz_svn_module modules/mod_authz_svn.so</strong> //有这两个模块则svn安装是正确的，若是带#注释的就把#删掉，同时要保证/usr/local/apache2/modules目录下有mod_dav_svn.so和mod_authz_svn.so这两个文件。</p>
+<p>手动添加以下内容：</p>
+<p><strong>&lt;Location /svn&gt;</strong> //定义网页目录为/svn<br><strong>DAV svn</strong> //开启svn（融合apache的svn哦）<br><strong>SVNListParentPath On</strong> //开启svn版本库父目录功能<br><strong>SVNParentPath /app/svn</strong> //指定父目录位置，以后所有版本库都将存放在该目录下<br><strong>AuthType Basic</strong> //指定授权模式<br><strong>AuthName "SVN REPOS"</strong> //登陆窗口标题显示SVN REPOS<br><strong>AuthUserFile /usr/local/svn/svn_passwdfile</strong> //指定访问版本库的账户和密码存放文件，该文件需要用apache的htpasswd命令创建<br><strong>AuthzSVNAccessFile /usr/local/svn/svn_accessfile</strong> //指定访问版本库的用户和组的权限控制文件<br><strong>Require valid-user</strong> //要求有效的用户才能访问<br><strong>&lt;/Location&gt;</strong> //字段结束标志</p>
+<p><strong>esc </strong>//按esc退出编辑模式</p>
+<p><strong>shift+zz</strong> //保存退出</p>
+<p><strong><span style="FONT-SIZE: 16px">5.测试svn与apache是否融合成功</span></strong></p>
+<p><strong>/usr/local/apache2/bin/htpasswd -c /usr/local/svn/svn_passwdfile gaso</strong> //创建访问版本库的账户和存放账户的文件，回车后会提示输入密码两边（我们用gaso123做密码），因为是第一次创建，svn_passwdfile文件原本不存在所以需要加-c参数，以后创建svn用户就不需要-c参数了，直接引用svn_passwdfile文件即可</p>
+<p><strong>vi /usr/local/svn/svn_accessfile</strong></p>
+<p><strong>[/]<br>gaso=rw</strong> //这两行授权用户gaso有访问所有版本库的权限</p>
+<p><strong>[gasorepo:/]<br>gaso=rw</strong> //这两行授权用户gaso有访问gasorepo版本库的权限</p>
+<p>保存退出</p>
+<p><strong>/usr/local/svn/bin/svnadmin create /app/svn/gasorepo</strong> //创建gasorepo版本库</p>
+<p><strong><span style="FONT-SIZE: 16px">6.启动apache，测试svn</span></strong></p>
+<p><span style="FONT-SIZE: 16px"><strong>chown -R apache.apache /app/svn</strong> //我们这个部署里svn是通过apache对版本库进行访问的，它对版本库进行访问其实就是通过apache的用户apache来进行的，所以版本库父目录就必须属于用户apache才能规避权限问题，最后的svnmanager也有同样的问题，所以这个属主修改很重要！</span></p>
+<p><strong>/usr/local/apache2/bin/httpd -k start</strong> //启动apache</p>
+<p>在浏览器里输入<a href="http://localhost/svn/gasorepo"><strong>http://localhost/svn/gasorepo</strong></a> //输入用户名gaso和密码gaso123就可以看到版本库了，不过里面没东西：）</p>
+<p>也可以直接访问<a href="http://localhost/svn"><strong>http://localhost/svn</strong></a> //这个直接访问版本库总目录</p>
+<p><strong><span style="FONT-SIZE: 16px">7.安装php</span></strong></p>
+<p><strong>tar zxvf php-5.2.12.tar.gz</strong></p>
+<p><strong>cd php-5.2.12</strong></p>
+<p><strong>mkdir /usr/local/php</strong></p>
+<p><strong>./configure --prefix=/usr/local/php --with-apxs2=/usr/local/apache2/bin/apxs --with-mysql=/usr/local/mysql</strong> //php用apxs2指定apache2.0，用apxs指定apache1.x，所以这里用apxs2，因为svnmanager要用到mysql所以这里还要withmysql</p>
+<p><strong>make;make install</strong></p>
+<p><strong>cp php.ini-recommended /usr/local/php/lib/php/php.ini</strong> //拷贝php的配置文件到它该去的地儿</p>
+<p>编辑这个php.ini，添加一行<strong>include_path = /usr/local/php/lib/php</strong></p>
+<p><strong><span style="FONT-SIZE: 16px">8.测试php安装是否成功：</span></strong></p>
+<p><strong>vi /usr/local/apache2/conf/httpd.conf</strong> //修改apache配置文件</p>
+<p>检查是否有以下内容，没有则添加：</p>
+<p><strong>LoadModule php5_module modules/libphp5.so</strong> //没有这个模块就手工添加，同时要检查apache的安装目录里modules目录下，要保证有libphp5.so这个文件</p>
+<p><strong>DirectoryIndex index.php index.html</strong> //主要是加上index.php</p>
+<p><strong>vi /usr/local/apache2/htdocs/index.php</strong> //编辑一个php测试文件</p>
+<p>加入以下内容：</p>
+<p><strong>&lt;?php<br>phpinfo();<br>?&gt;</strong><br>保存退出</p>
+<p>重新启动apache</p>
+<p><strong>/usr/local/apache2/bin/httpd -k restart</strong></p>
+<p>访问<a href="http://localhost/"><strong>http://localhost</strong></a></p>
+<p>能看到apache的php信息页面则说明php安装成功</p>
+<p><strong><span style="FONT-SIZE: 16px">9.安装VersionControl_SVN</span></strong></p>
+<p><strong>/usr/local/php/bin/pear install VersionControl_SVN-0.3.3</strong> //pear是安装php的时候默认安装的，VersionControl_SVN这个软件是svnmanager需要用到的，必须安装</p>
+<p><strong><span style="FONT-SIZE: 16px">10.安装svnmanager</span></strong></p>
+<p><strong>tar zxvf svnmanager-1.08.tar.gz</strong></p>
+<p><strong>cp -r svnmanager-1.08 /usr/local/apache2/htdocs/svnman</strong> //把解压出来的文件复制到apache的站点根目录htdocs里</p>
+<p><strong>cd /usr/local/apache2/htdocs/svnman/</strong></p>
+<p><strong>cp config.php.linux config.php</strong> //把配置文件重命名一下</p>
+<p>编辑config.php,修改以下几项内容：</p>
+<p><strong>//Shell command's</strong><br><strong>$htpassword_cmd = "/usr/local/apache2/bin/htpasswd";</strong> //告诉svnmanager apache的密码生成执行文件的位置<br><strong>$svn_cmd = "/usr/local/svn/bin/svn";</strong> //告诉svnmanager svn命令的执行目录<br><strong>$svnadmin_cmd = "/usr/local/svn/bin/svnadmin";</strong> //告诉svnmanager svnadmin命令的执行目录</p>
+<p><strong>//Subversion locations</strong><br><strong>$svn_config_dir = "/app/svn";</strong> //告诉svnmanager svn的配置目录，通常指到版本库父目录或者版本库目录即可<br><strong>$svn_repos_loc = "/app/svn";</strong> //告诉svnmanager svn的版本库父目录在哪里，这个跟上面那个configdir我也搞不清楚到底有什么区别，我一般就是指到版本库父目录就没问题，上面的configdir要是注释掉则会报错<br><strong>$svn_passwd_file = "/usr/local/svn/svn_passwdfile";</strong> //告诉svnmanager svn的账户密码文件的位置<br><strong>$svn_access_file = "/usr/local/svn/svn_accessfile";</strong> //告诉svnmanager svn的权限控制文件的位置</p>
+<p><strong>$dsn = "mysql://root:gaso123@localhost/svnman";</strong> //指定mysql连接的信息，这行要注意原文可能是mysqli://多数情况下都需要改成mysql://,有时候不改可能会导致连不上mysql，最后的svnman为svnmanager将要使用的数据库，会在后面创建。</p>
+<p><strong>$admin_name = "admin";</strong> //本行和下面一行指定svnmanager首次登陆的初始账号和密码，这两行就不需要改了<br><strong>$admin_temp_password = "admin";</strong><br>保存退出</p>
+<p><strong><span style="FONT-SIZE: 16px">11.创建svnmanager使用的数据库</span></strong></p>
+<p><strong>/usr/local/mysql/bin/mysql -u root -p</strong></p>
+<p>输入密码gaso123</p>
+<p><strong>mysql&gt;create database svnman;</strong> //刚才在svnmanager的配置文件config.php里面指定的mysql连接信息的那个库就是这个。</p>
+<p><strong>mysql&gt;exit</strong></p>
+<p><strong><span style="FONT-SIZE: 16px">12.测试svnmanager安装是否成功</span></strong></p>
+<p>访问<a href="http://localhost/svnman"><strong>http://localhost/svnman</strong></a></p>
+<p>默认login信息是admin/admin，<strong>注册一个新的账户后admin账户就会被屏蔽掉了</strong>，这样用新用户登录就会出现管理svn的诸多选项，以后就用这个新账户管理svn就可以了，创建版本库，设置账户，设置权限，导入导出，功能还是可以的。</p>
+<p>如果不是本机访问，会有权限问题，用svnmanager所在主机的ip访问：</p>
+<p><a href="http://svnmanager-host-ip/svnman"><strong>http://svnmanager-host-ip/svnman</strong></a></p>
+<p>注册新账户时，会有提示说明修改什么文件才能远程登录svnmanager进行管理。说明的很清楚，不再赘述。</p></div></body></html>

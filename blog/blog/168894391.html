@@ -1,0 +1,69 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux如何开机自动运行自己的脚本</title></head><body><h1>Linux如何开机自动运行自己的脚本</h1><div><p>&nbsp;&nbsp;&nbsp;  <strong>方案一：</strong></p>
+<p>&nbsp;&nbsp;&nbsp;  <strong>root权限编辑/etc/rc.d/rc.local，在文件rc.local中加入自己的脚本或是shell程序。</strong></p>
+<p>&nbsp;&nbsp;&nbsp;  /etc/rc.d/目录下的初始化程序很多，rc.local是在完成所有初始化之后执行的，所以在这里做手脚很合适。</p>
+<p> </p>
+<p><strong>&nbsp;&nbsp;&nbsp;  方案二：</strong></p>
+<p><strong>&nbsp;&nbsp;&nbsp;  init.d目录下都为可执行程序，他们其实是服务脚本，按照一定格式编写，Linux 在启动时会自动执行，类似Windows下的服务。</strong></p>
+<p>  1、编写如下面的脚本simpleTest：</p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Shell代码：</div>
+</div>
+<ol class="dp-default">
+    <li><span><span>#!/bin/bash &nbsp;&nbsp;</span></span></li>
+    <li><span>#chkconfig:</span><span class="number"><font color="#c00000">2345</font></span><span> </span><span class="number"><font color="#c00000">80</font></span><span> </span><span class="number"><font color="#c00000">05</font></span><span> --指定在哪几个级别执行，</span><span class="number"><font color="#c00000">0</font></span><span>一般指关机，</span><span class="number"><font color="#c00000">6</font></span><span>指的是重启，其他为正常启动。</span><span class="number"><font color="#c00000">80</font></span><span>为启动的优先级，</span><span class="number"><font color="#c00000">05</font></span><span>为关闭的优先级别 &nbsp;&nbsp;</span></li>
+    <li><span>#description:simple example service &nbsp;&nbsp;</span></li>
+    <li><span>RETVAL=</span><span class="number"><font color="#c00000">0</font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>start(){ #启动服务的入口函数 &nbsp;&nbsp;</span></li>
+    <li><span>echo&nbsp;&nbsp;</span><span class="string"><font color="#0000ff">&quot;simple example service is started...&quot;</font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>} &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>stop(){ #关闭服务的入口函数 &nbsp;&nbsp;</span></li>
+    <li><span>echo&nbsp;&nbsp;</span><span class="string"><font color="#0000ff">&quot;simple example service is stoped...&quot;</font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>} &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>#使用case选择 &nbsp;&nbsp;</span></li>
+    <li><span>case $</span><span class="number"><font color="#c00000">1</font></span><span> in &nbsp;&nbsp;</span></li>
+    <li><span>start) &nbsp;&nbsp;</span></li>
+    <li><span>start &nbsp;&nbsp;</span></li>
+    <li><span>;; &nbsp;&nbsp;</span></li>
+    <li><span>stop) &nbsp;&nbsp;</span></li>
+    <li><span>stop &nbsp;&nbsp;</span></li>
+    <li><span>;; &nbsp;&nbsp;</span></li>
+    <li><span>*) &nbsp;&nbsp;</span></li>
+    <li><span>echo </span><span class="string"><font color="#0000ff">&quot;error choice ! please input start or stop&quot;</font></span><span>;; &nbsp;&nbsp;</span></li>
+    <li><span>esac &nbsp;&nbsp;</span></li>
+    <li><span>exit $RETVA&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<pre style="display: none" class="shell" name="code">#!/bin/bash
+#chkconfig:2345 80 05 --指定在哪几个级别执行，0一般指关机，6指的是重启，其他为正常启动。80为启动的优先级，05为关闭的优先级别
+#description:simple example service
+RETVAL=0
+start(){ #启动服务的入口函数
+echo  &quot;simple example service is started...&quot;
+}
+
+stop(){ #关闭服务的入口函数
+echo  &quot;simple example service is stoped...&quot;
+}
+
+#使用case选择
+case $1 in
+start)
+start
+;;
+stop)
+stop
+;;
+*)
+echo &quot;error choice ! please input start or stop&quot;;;
+esac
+exit $RETVA</pre>
+<p>3、运行chmod +x /etc/rc.d/init.d/simpleTest,使之可直接执行</p>
+<p>4、运行chkconfig --add simpleTest,把该服务添加到配置当中</p>
+<p>5、运行chkconfig --list simpleTest,可以查看该服务进程的状态</p>
+<p> </p>
+<p> </p>
+<p><strong>方案三、目的是挂载共享目录，所以可以在/etc/fstab中加上</strong></p>
+<p>//192.168.0.3/data2-1&nbsp;&nbsp;  /mnt/data2-1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  nfs&nbsp;&nbsp;&nbsp;&nbsp;  username=un,password=123&nbsp;&nbsp;&nbsp;&nbsp;  0 0</p></div></body></html>

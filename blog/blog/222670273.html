@@ -1,0 +1,79 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Tomcat的JVM设置和连接数设置</title></head><body><h1>Tomcat的JVM设置和连接数设置</h1><div><p><strong><font color="#ff0000" size="3">一、Tomcat的JVM提示内存溢出</font></strong></p>
+<p>查看%TOMCAT_HOME%\logs文件夹下，日志文件是否有内存溢出错误</p>
+<p><font color="#ff0000" size="3"><strong>二、修改Tomcat的JVM</strong></font></p>
+<p><font color="#ff0000" size="3"><strong>1、错误提示：<font color="#000000">java.lang.OutOfMemoryError: Java heap space</font></strong></font></p>
+<p>Tomcat默认可以使用的内存为128MB，在较大型的应用项目中，这点内存是不够的，有可能导致系统无法运行。常见的问题是报Tomcat内存溢出错误，Out of Memory(系统内存不足)的异常，从而导致客户端显示500错误，一般调整Tomcat的使用内存即可解决此问题。 <br>
+<br>
+Windows环境下修改&ldquo;%TOMCAT_HOME%\bin\catalina.bat&rdquo;文件，在文件开头增加如下设置：<strong>set JAVA_OPTS=-Xms256m -Xmx512m</strong> <br>
+<br>
+Linux环境下修改&ldquo;%TOMCAT_HOME%\bin\catalina.sh&rdquo;文件，在文件开头增加如下设置：<strong>JAVA_OPTS=&rsquo;-Xms256m -Xmx512m&rsquo; <br>
+</strong><br>
+其中，-Xms设置初始化内存大小，-Xmx设置可以使用的最大内存。</p>
+<p><strong><font color="#ff0000" size="3">2、错误提示：java.lang.OutOfMemoryError: PermGen space</font></strong></p>
+<p><strong>原因：<br>
+</strong>PermGen space的全称是Permanent Generation space,是指内存的永久保存区域，这块内存主要是被JVM存<br>
+放Class和Meta信息的,Class在被Loader时就会被放到PermGen space中，它和存放类实例(Instance)的<br>
+Heap区域不同,GC(Garbage Collection)不会在主程序运行期对PermGen space进行清理，所以如果你的应用<br>
+中有很CLASS的话,就很可能出现PermGen space错误，这种错误常见在web服务器对JSP进行pre compile的<br>
+时候。如果你的WEB APP下都用了大量的第三方jar, 其大小超过了jvm默认的大小(4M)那么就会产生此错误信<br>
+息了。<br>
+<strong>解决方法：</strong></p>
+<p>在catalina.bat的第一行增加：<br>
+set JAVA_OPTS=-Xms64m -Xmx256m -XX:PermSize=128M -XX:MaxNewSize=256m -<br>
+XX:MaxPermSize=256m<br>
+在catalina.sh的第一行增加：<br>
+JAVA_OPTS=-Xms64m -Xmx256m -XX:PermSize=128M -XX:MaxNewSize=256m -<br>
+XX:MaxPermSize=256m</p>
+<p><strong><font color="#ff0000" size="3">3、JVM设置</font></strong></p>
+<p>堆的尺寸 <br>
+-Xmssize in bytes <br>
+&nbsp;&nbsp;&nbsp;  设定Java堆的初始尺寸，缺省尺寸是2097152 (2MB)。这个值必须是1024个字节（1KB）的倍数，且比它大。（-server选项把缺省尺寸增加到32M。） <br>
+-Xmnsize in bytes <br>
+&nbsp;&nbsp;&nbsp;  为Eden对象设定初始Java堆的大小，缺省值为640K。（-server选项把缺省尺寸增加到2M。) <br>
+-Xmxsize in bytes <br>
+&nbsp;&nbsp;&nbsp;  设定Java堆的最大尺寸，缺省值为64M，（-server选项把缺省尺寸增加到128M。） 最大的堆尺寸达到将近2GB（2048MB）。 <br>
+<br>
+请注意：很多垃圾收集器的选项依赖于堆大小的设定。请在微调垃圾收集器使用内存空间的方式之前，确认是否已经正确设定了堆的尺寸。 <br>
+<br>
+垃圾收集:内存的使用 <br>
+-XX:MinHeapFreeRatio=percentage as a whole number <br>
+&nbsp;&nbsp;&nbsp;  修改垃圾回收之后堆中可用内存的最小百分比，缺省值是40。如果垃圾回收后至少还有40%的堆内存没有被释放，则系统将增加堆的尺寸。 <br>
+-XX:MaxHeapFreeRatio=percentage as a whole number <br>
+&nbsp;&nbsp;&nbsp;  改变垃圾回收之后和堆内存缩小之前可用堆内存的最大百分比，缺省值为70。这意味着如果在垃圾回收之后还有大于70%的堆内存，则系统就会减少堆的尺寸。 <br>
+-XX:NewSize=size in bytes <br>
+&nbsp;&nbsp;&nbsp;  为已分配内存的对象中的Eden代设置缺省的内存尺寸。它的缺省值是640K。（-server选项把缺省尺寸增加到2M。） <br>
+-XX:<font style="background-color: #ffff00">MaxNewSize</font>=size in bytes <br>
+&nbsp;&nbsp;&nbsp;  允许您改变初期对象空间的上限，新建对象所需的内存就是从这个空间中分配来的，这个选项的缺省值是640K。（-server选项把缺省尺寸增加到2M。） <br>
+-XX:NewRatio=value <br>
+&nbsp;&nbsp;&nbsp;  改变新旧空间的尺寸比例，这个比例的缺省值是8，意思是新空间的尺寸是旧空间的1/8。 <br>
+-XX:SurvivorRatio=number <br>
+&nbsp;&nbsp;&nbsp;  改变Eden对象空间和残存空间的尺寸比例，这个比例的缺省值是10，意思是Eden对象空间的尺寸比残存空间大survivorRatio+2倍。 <br>
+-XX:TargetSurvivorRatio=percentage <br>
+&nbsp;&nbsp;&nbsp;  设定您所期望的空间提取后被使用的残存空间的百分比，缺省值是50。 <br>
+-XX:MaxPermSize=size in MB <br>
+&nbsp;&nbsp;&nbsp;  长久代（permanent generation）的尺寸，缺省值为32（32MB）。</p>
+<p><strong><font color="#ff0000" size="3">三、查看Tomcat的JVM内存</font></strong></p>
+<p>1. Tomcat6中没有设置任何默认用户，因而需要手动往Tomcat6的conf文件夹下的tomcat-users.xml文件中添加用户。</p>
+<p> </p>
+<p>&nbsp;&nbsp;&nbsp;  如：&lt;role rolename=&quot;manager&quot;/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;user username=&quot;tomcat&quot; password=&quot;tomcat&quot; roles=&quot;manager&quot;/&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;  注：添加完需要重启Tomcat6。</p>
+<p> </p>
+<p>2. <span><span>访问http://localhost:8080/manager/status，输入上面添加的用户名和密码。</span> </span></p>
+<p> </p>
+<p>3. 然后在如下面的JVM下可以看到内存的使用情况。</p>
+<h1>JVM</h1>
+<p>&nbsp;&nbsp;&nbsp;  Free memory: 2.50 MB Total memory: 15.53 MB Max memory: 63.56 MB</p>
+<p><strong><font color="#ff0000" size="3">四、Tomcat连接数设置</font></strong></p>
+<p>在tomcat配置文件server.xml中的&lt;Connector ... /&gt;配置中，和连接数相关的参数有：<br>
+minProcessors：最小空闲连接线程数，用于提高系统处理性能，默认值为10<br>
+maxProcessors：最大连接线程数，即：并发处理的最大请求数，默认值为75<br>
+acceptCount：允许的最大连接数，应大于等于maxProcessors，默认值为100<br>
+enableLookups：是否反查域名，取值为：true或false。为了提高处理能力，应设置为false<br>
+connectionTimeout：网络连接超时，单位：毫秒。设置为0表示永不超时，这样设置有隐患的。通常可设置为30000毫秒。<br>
+<br>
+其中和最大连接数相关的参数为maxProcessors和acceptCount。如果要加大并发连接数，应同时加大这两个参数。<br>
+<br>
+<br>
+web server允许的最大连接数还受制于操作系统的内核参数设置，通常Windows是2000个左右，Linux是1000个左右。Unix中如何设置这些参数，请参阅Unix常用监控和管理命令</p>
+<p> </p></div></body></html>

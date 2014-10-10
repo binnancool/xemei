@@ -1,0 +1,17 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>linux中查看版本信息、查看内存、cpu信息、硬盘信息</title></head><body><h1>linux中查看版本信息、查看内存、cpu信息、硬盘信息</h1><div><p><strong><font face="宋体">版本信息： uname -ar </font></strong></p>
+<p><strong><font face="宋体"><br>
+内存信息： cat /proc/meminfo<br>
+</font></strong></p>
+<p><strong><font face="宋体">cpu信息： cat /proc/cpuinfo</font></strong></p>
+<p><font face="宋体"><strong>df -lh 命令</strong> <br>
+<br>
+df 是来自于coreutils 软件包，系统安装时，就自带的；我们通过这个命令可以查看磁盘的使用情况以及文件系统被挂载的位置； <br>
+[root@localhost ~]# df -l <br>
+文件系统&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 容量&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 已用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 可用&nbsp;&nbsp;&nbsp;&nbsp; 已用% 挂载点 <br>
+/dev/sda3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4956316&nbsp;&nbsp;&nbsp; 3565088&nbsp;&nbsp;&nbsp; 1135396 76% / <br>
+tmpfs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 241320&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 12&nbsp;&nbsp;&nbsp;&nbsp; 241308&nbsp;&nbsp;&nbsp; 1%&nbsp;&nbsp;&nbsp; /dev/shm <br>
+/dev/sda6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4806904&nbsp;&nbsp;&nbsp; 2523708&nbsp;&nbsp;&nbsp; 2039012 56% /media/disk <br>
+/dev/sda1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4956284&nbsp;&nbsp;&nbsp; 3529796&nbsp;&nbsp;&nbsp; 1170656 76% /media/_ <br>
+/dev/sda5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4845056&nbsp;&nbsp;&nbsp; 2581484&nbsp;&nbsp;&nbsp; 2019388 57% /media/disk-1 <br>
+<br>
+可以看到系统挂在sda3上，另外还挂了sda6/sda1/sda5三个系统。</font></p></div></body></html>

@@ -1,0 +1,30 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>javascript表单验证、textarea的说明</title></head><body><h1>javascript表单验证、textarea的说明</h1><div><p>&lt;html&gt;<br>
+&lt;head&gt;<br>
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=gb2312&quot; /&gt;<br>
+&lt;title&gt;实例&lt;/title&gt;</p>
+<p>&lt;script type=&quot;text/javascript&quot; language=&quot;javascript&quot;&gt;<br>
+function <strong>testTotalAndFileNum()//验证函数<br>
+</strong>{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  return false;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;  }</p>
+<p>function <strong>setDSPCacheFileNum（）</strong></p>
+<p>{</p>
+<p>}<br>
+&lt;/script&gt;</p>
+<p>&lt;/head&gt;</p>
+<p>&lt;&lt;body&gt;<br>
+&lt;form action=&quot;MyServlet?Command=caozuo&quot;<br>
+method=&quot;POST&quot; name=&quot;<strong>form</strong>&quot; <strong>onsubmit=&quot;return testTotalAndFileNum()&quot;</strong>&gt;<strong>//提交前验证，返回true则提交，否则放弃提交</strong></p>
+<p>&lt;input name=&quot;total&quot; size=&quot;30&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class=&quot;ivrbutton&quot; type=&quot;text&quot; value=&quot;&lt;%=umgConfig.umgISXDSPCacheFile.total %&gt;&quot; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;<strong> onblur=&quot;setDSPCacheFileNum()&quot;</strong> /&gt;//文本框失去编辑焦点时触发事件</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<strong> &lt;textarea name=file rows=&lt;%=umgConfig.umgISXDSPCacheFile.total %&gt; cols=30 style=&quot;overflow:auto&quot;&gt;&lt;% <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  int total=umgConfig.umgISXDSPCacheFile.total;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  for(int i=0;i&lt;total-1;i++){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.println(umgConfig.umgISXDSPCacheFile.filex.get(i));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  out.print(umgConfig.umgISXDSPCacheFile.filex.get(total-1));%&gt;&lt;/textarea&gt;</strong></p>
+<p><strong>//<font size="5">&lt;textarea&gt;&lt;/textarea&gt;中可能会出现很多空格或换行。<br>
+</font></strong>&nbsp;&nbsp;  &lt;/form&gt;<br>
+&lt;/body&gt;<br>
+&lt;/html&gt;</p></div></body></html>

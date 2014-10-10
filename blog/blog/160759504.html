@@ -1,0 +1,22 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java学习总结之线程篇</title></head><body><h1>java学习总结之线程篇</h1><div><p><strong>实现线程的第二种方式（实现Runnable接口）<br>
+</strong><font size="3"><br>
+</font><font size="3" face="宋体">1、 Thread类其实也实现了Runnable接口<br>
+2、 对于一个类来说，如果说它的实例想要被一个线程去执行，就应该实现Runnable接口。该接口只有一个方法run()。<br>
+3、 构造Thread的时候可以传递一个实现了Runnable接口的对象:<br>
+Thread(Runnable target)作为Thread构造函数的参数。Java虚拟机会调用实现了Runnable接口对象当中的run()方法来执行我们的代码。<br>
+<br>
+MyThread mt = new MyThread();<br>
+New Thread(mt).start();<br>
+4、 通常，如果不需要修改线程类当中除了run()方法之外的其它方法的行为之外，最好都<br>
+是要去实现Runnable接口。<br>
+5、 实现Runnable接口有两个好处：<br>
+*已经继承了其他类无法再继承Thread类时，就实现Runnable接口；<br>
+*如果多个线程访问同一种资源的话是很方便的：<br>
+6、Thread.sleep(long millis)让当前正在执行的线程睡眠一会。<br>
+7、 让一个线程进入一段代码后即使休眠了其它线程也不能进入这段代码，除非它将剩余的代码执行完成之后，其它的线程才能后进入到这段代码之中。可以利用java语言中的同步来完成。</font></p>
+<div style="margin: 0cm 0cm 0pt 21.2pt"><strong><span style="font-size: 10pt"><font size="5" face="宋体">线程的终止(两种方式)</font></span></strong></div>
+<div style="margin: 0cm 0cm 0pt 21.2pt"><strong><font size="5" face="宋体"> </font></strong></div>
+<div style="text-indent: -18pt; margin: 0cm 0cm 0pt 39pt"><font face="宋体"><font size="5"><span style="font-size: 10pt">1、 </span><span style="font-size: 10pt">设置一个flag变量</span></font></font></div>
+<div style="text-indent: -18pt; margin: 0cm 0cm 0pt 39pt"><font face="宋体"><font size="5"><span style="font-size: 10pt">2、 </span><span style="font-size: 10pt">interrupt()</span><span style="font-size: 10pt">方法（可以中断一个线程）</span></font></font></div>
+<p><br>
+<strong><font size="3" face="宋体">更详细的java介绍：</font></strong><a href="http://blog.csdn.net/allan_sun/archive/2006/02/21/604353.aspx"><strong><font size="3" face="宋体">http://blog.csdn.net/allan_sun/archive/2006/02/21/604353.aspx</font></strong></a></p></div></body></html>

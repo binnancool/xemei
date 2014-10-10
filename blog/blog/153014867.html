@@ -1,0 +1,76 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>linux下压缩及解压缩命令</title></head><body><h1>linux下压缩及解压缩命令</h1><div><p>.tar<br>
+解压：tar xvf FileName.tar<br>
+压缩：tar cvf FileName.tar DirName<br>
+（注：tar是打包，不是压缩！）<br>
+---------------------------------------------<br>
+.gz<br>
+解压1：gunzip FileName.gz<br>
+解压2：gzip -d FileName.gz<br>
+压缩：gzip FileName<br>
+.tar.gz<br>
+解压：tar zxvf FileName.tar.gz<br>
+压缩：tar zcvf FileName.tar.gz DirName<br>
+---------------------------------------------<br>
+.bz2<br>
+解压1：bzip2 -d FileName.bz2<br>
+解压2：bunzip2 FileName.bz2<br>
+压缩： bzip2 -z FileName<br>
+.tar.bz2<br>
+解压：tar jxvf FileName.tar.bz2<br>
+压缩：tar jcvf FileName.tar.bz2 DirName<br>
+---------------------------------------------<br>
+.bz<br>
+解压1：bzip2 -d FileName.bz<br>
+解压2：bunzip2 FileName.bz<br>
+压缩：未知<br>
+.tar.bz<br>
+解压：tar jxvf FileName.tar.bz<br>
+压缩：未知<br>
+---------------------------------------------<br>
+.Z<br>
+解压：uncompress FileName.Z<br>
+压缩：compress FileName<br>
+.tar.Z<br>
+解压：tar Zxvf FileName.tar.Z<br>
+压缩：tar Zcvf FileName.tar.Z DirName<br>
+---------------------------------------------<br>
+.tgz<br>
+解压：tar zxvf FileName.tgz<br>
+压缩：未知<br>
+.tar.tgz<br>
+解压：tar zxvf FileName.tar.tgz<br>
+压缩：tar zcvf FileName.tar.tgz FileName<br>
+---------------------------------------------<br>
+.a<br>
+解压：#tar xv file.a<br>
+---------------------------------------------<br>
+.cpio.gz/.cgz<br>
+解压：gzip -dc file.cgz | cpio -div<br>
+---------------------------------------------<br>
+.cpio/cpio<br>
+解压：cpio -div file.cpio 或cpio -divc file.cpio<br>
+---------------------------------------------<br>
+.rpm<br>
+安装: rpm -i file.rpm<br>
+解压：rpm2cpio file.rpm | cpio -div<br>
+---------------------------------------------<br>
+.deb<br>
+安装: dpkg -i file.deb<br>
+解压：dpkg-deb --fsys-tarfile file.deb | tar xvf - ar p file.deb data.tar.gz | tar xvzf -<br>
+---------------------------------------------<br>
+.zip<br>
+解压：unzip FileName.zip<br>
+压缩：zip FileName.zip DirName<br>
+---------------------------------------------<br>
+.rar<br>
+解压：rar a FileName.rar<br>
+压缩：rar e FileName.rar<br>
+rar请到：http://www.rarsoft.com/download.htm<br>
+访问网址超出本站范围，不能确定是否安全<br>
+继续访问 取消访问http://www.rarsoft.com/download.htm 下载！<br>
+解压后请将rar_static拷贝到/usr/bin目录（其他由$PATH环境变量指定的目录也可以）：<br>
+[root@www2 tmp]# cp rar_static /usr/bin/rar<br>
+---------------------------------------------<br>
+.lha<br>
+解压：lha -e FileName.lha<br>
+压缩：lha -a FileName.lha FileName</p></div></body></html>

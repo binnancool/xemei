@@ -1,0 +1,6 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java语言Runtime.getRuntime().exec();执行时的权限问题</title></head><body><h1>java语言Runtime.getRuntime().exec();执行时的权限问题</h1><div><p>一、问题描述（Windows7操作系统）</p>
+<p><span><img class="blogimg" border="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/f3bc83fb1d536edd9f5146cb.jpg" small="0"></span></p>
+<p><span>二、分析原因</span></p>
+<p><span></span>登陆用户不是administrator用户，发生错误时用于权限问题；</p>
+<p>windows7默认administrator用户是禁用的，开启方法：右键桌面的“计算机”——“管理”，打开计算机管理界面；点击“本地用户和组”中的“用户”，在右侧的界面中，右键“administrator”——“属性”，打开属性页面，把“常规”中的“账户已禁用”的复选框勾掉即可。</p>
+<p>以administrator用户登陆，无上述错误。<br></p></div></body></html>

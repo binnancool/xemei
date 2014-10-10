@@ -1,0 +1,11 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux命令，按tab键，自己显示完整要输入的名称；su命令</title></head><body><h1>Linux命令，按tab键，自己显示完整要输入的名称；su命令</h1><div><strong>1、su - username将模拟一次登录，所有的初始化文件将得到解释执行。关于su的控制文件是/etc/default/su，所有的su动作都将被记录到/var/adm/sulog。</strong>
+<p>例如：<br>
+<br>
+su bin将成为用户bin，但环境变量 保持不变。<br>
+<br>
+su - bin将等同于telnet -l bin localhost的效果。<br>
+<br>
+su - root -c &quot;more /etc/shadow&quot;将提示你输入口令，<br>
+<br>
+然后以root身份看shadow文件，然后立即回到当前用户，并不停留在root下。</p>
+<p><strong>2、在进入某个目录下时，可以使用Tab键自动的显示完整的目录名或文件名</strong></p></div></body></html>

@@ -1,0 +1,42 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Tomcat配置IP访问限制与允许（server.xml）</title></head><body><h1>Tomcat配置IP访问限制与允许（server.xml）</h1><div><p><font size="4">server.xml配置文件：</font></p>
+<p>在<br>
+&nbsp;&nbsp;&nbsp;  &lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot;&gt;<br>
+ <strong><font size="4">&lt;Valve className=&quot;org.apache.catalina.valves.RemoteAddrValve&quot; allow=&quot;&quot; deny=&quot;10.130.14.142,10.130.14.49&quot;/&gt; </font></strong></p>
+<p><strong><font size="4">注：拒绝10.130.14.142与10.130.14.49IP地址对Tomcat服务器的访问，其它允许</font></strong></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!--For clustering, please take a look at documentation at:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  /docs/cluster-howto.html  (simple how to)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  /docs/config/cluster.html (reference documentation) --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!--<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Cluster className=&quot;org.apache.catalina.ha.tcp.SimpleTcpCluster&quot;/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  --&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!-- The request dumper valve dumps useful debugging information about<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  the request and response data received and sent by Tomcat.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Documentation at: /docs/config/valve.html --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!--<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Valve className=&quot;org.apache.catalina.valves.RequestDumperValve&quot;/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  --&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!-- This Realm uses the UserDatabase configured in the global JNDI<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  resources under the key &quot;UserDatabase&quot;.  Any edits<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  that are performed against this UserDatabase are immediately<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  available for use by the Realm.  --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Realm className=&quot;org.apache.catalina.realm.UserDatabaseRealm&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  resourceName=&quot;UserDatabase&quot;/&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!-- Define the default virtual host<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Note: XML Schema validation will not work with Xerces 2.2.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Host name=&quot;localhost&quot;  appBase=&quot;webapps&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  xmlValidation=&quot;false&quot; xmlNamespaceAware=&quot;false&quot;&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!-- SingleSignOn valve, share authentication between web applications<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Documentation at: /docs/config/valve.html --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!--<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Valve className=&quot;org.apache.catalina.authenticator.SingleSignOn&quot; /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  --&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!-- Access log processes all example.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Documentation at: /docs/config/valve.html --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;!--<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;Valve className=&quot;org.apache.catalina.valves.AccessLogValve&quot; directory=&quot;logs&quot;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  prefix=&quot;localhost_access_log.&quot; suffix=&quot;.txt&quot; pattern=&quot;common&quot; resolveHosts=&quot;false&quot;/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  --&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/Host&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;/Engine&gt;</p></div></body></html>

@@ -1,0 +1,64 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>UML类之间的关系</title></head><body><h1>UML类之间的关系</h1><div><p><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;  UML类图中的关系分为四种：泛化、依赖、关联、实现，其中关联关系又可以细化为聚合和组合。</font></p>
+<p> </p>
+<p><font size="3" face="宋体">1. 泛化（Generalization）</font></p>
+<p style="padding-left: 30px"><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  泛化是父类和子类之间的关系，子类继承父类的所有结构和行为。在子类中可以增加新的结构和行为，也可以覆写父类的行为。</font></p>
+<p style="padding-left: 60px"><span><strong><font size="3" face="宋体"><img src="http://seagar.javaeye.com/upload/picture/pic/1320/10bfdb9d-ed2d-4226-bab2-f814d2e10a82.jpg"> </font></strong></span></p>
+<p><font size="3" face="宋体">2. 依赖（Generalization）</font></p>
+<p style="padding-left: 30px"><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  依赖关系是一种使用关系，特定事物的改变有可能会影响到使用该事物的事物，反之不成立。在你想显示一个事物使用另一个事物时使用。</font></p>
+<p style="padding-left: 30px"><font face="宋体"><font size="3"><span class="content">&nbsp;&nbsp;&nbsp;  通常情况下，依赖关系体现在<span style="color: #ff0000">某个类的方法使用另一个类作为参数</span> 。</span> </font></font></p>
+<p style="padding-left: 60px" align="left"><strong><font size="3" face="宋体"><img src="http://seagar.javaeye.com/upload/picture/pic/1319/ec7bca6c-c01a-4772-a91b-3a695773ddfb.jpg"> </font></strong></p>
+<p style="padding-left: 30px" align="left"><font size="3" face="宋体">下面的例子中class A 依赖与class B、C、D。</font></p>
+<p style="padding-left: 30px" align="left"> </p>
+<font size="3" face="宋体">
+<div class="code_title">java 代码</div>
+<div class="dp-highlighter">
+<ol class="dp-j">
+    <li class="alt"><span><span class="keyword"><strong><font color="#7f0055">&nbsp;&nbsp;  public</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">class</font></strong></span><span> A{&nbsp;&nbsp;</span></span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;  <span class="keyword"><strong><font color="#7f0055">public</font></strong></span><span> B getB(C c, D d){&nbsp;&nbsp;</span></span></li>
+    <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  E e = <span class="keyword"><strong><font color="#7f0055">new</font></strong></span><span> E();&nbsp;&nbsp;</span></span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  B b = <span class="keyword"><strong><font color="#7f0055">new</font></strong></span><span> B(c, d, e);&nbsp;&nbsp;</span></span></li>
+    <li class="alt"><span>&nbsp;&nbsp;&nbsp;  }&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;  } <br>
+    </span></li>
+</ol>
+</div>
+</font>
+<p style="padding-left: 30px" align="left"><font size="3" face="宋体"><br>
+</font></p>
+<p><font size="3" face="宋体">3. 关联（Dependency）</font></p>
+<p style="padding-left: 30px"><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  关联是一种结构化的关系，指一种对象和另一种对象有联系。给定有关联的两个类，可以从一个类的对象得到另一个类的对象。关联有两元关系和多元关系。两元关系是指一种一对一的关系，多元关系是一对多或多对一的关系。一般用实线连接有关联的同一个类或不同的两个类。当你想要表示结构化关系时使用关联。</font></p>
+<p style="padding-left: 30px"><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  关联关系是通过<span style="color: #ff0000">类的成员变量</span> 来实现的。</font></p>
+<p style="padding-left: 60px"><br>
+<span><span><strong><font size="3" face="宋体"><img src="http://seagar.javaeye.com/upload/picture/pic/1318/d4b10677-364d-4c34-beb7-416f8e835d8c.jpg"> </font><span><strong><span style="color: #339966"><br>
+</span></strong></span></strong></span></span></p>
+<p style="padding-left: 30px"><font size="3" face="宋体">3.1 聚合（Aggregation）</font></p>
+<p style="padding-left: 60px"><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  聚合是一种特殊的关联。它描述了&ldquo;has a&rdquo;关系，表示整体对象拥有部分对象。</font></p>
+<p style="padding-left: 60px"><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  关联关系和聚合关系来语法上是没办法区分的，从<span style="color: #ff0000">语义</span> 上才能更好的区分两者的区别。聚合是较强的关联关系，强调的是<span style="color: #ff0000">整体与部分</span> 之间的关系。</font></p>
+<p style="padding-left: 60px"><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  与关联关系一样，聚合关系也是通过<span style="color: #ff0000">类的成员变量</span> 来实现的。</font></p>
+<p style="padding-left: 90px"><span><br>
+</span><font size="3" face="宋体"><img border="0" alt="图 12: 一个聚合关联的例子" width="291" height="49" src="http://www.ibm.com/developerworks/cn/rational/rationaledge/content/feb05/bell/bell_fig12.jpg"> </font></p>
+<p style="padding-left: 60px"> </p>
+<p style="padding-left: 30px"><font size="3" face="宋体">3.2 组合（Composition）</font></p>
+<p style="padding-left: 60px"><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  组合是聚合的一种形式，它具有更强的拥有关系，强调整体与部分的<span style="color: #ff0000">生命周期</span> 是一致的。整体负责部分的生命周期的管理。如果整体被销毁，部分也必须跟着一起被销毁，如果所有者被复制，部分也必须一起被复制。</font></p>
+<p style="padding-left: 60px"><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  与关联关系一样，组合关系也是通过<span style="color: #ff0000">类的成员变量</span> 来实现的。</font></p>
+<p style="padding-left: 60px"> </p>
+<p style="padding-left: 90px"><font size="3" face="宋体"><img border="0" alt="图 13: 一个组合关系的例子" width="341" height="47" src="http://www.ibm.com/developerworks/cn/rational/rationaledge/content/feb05/bell/bell_fig13.jpg"> </font></p>
+<p style="padding-left: 60px"> </p>
+<p><font size="3" face="宋体">4. 实现（Realization）</font></p>
+<p style="padding-left: 30px"><font size="3" face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  实现<span style="color: #000000">关系指定两个实体之间的一个合约。换言之，一个实体定义一个</span> <span style="color: #000000">合约</span> <span style="color: #000000">，而另一个实体保证履行该</span> <span style="color: #000000">合约</span> <span style="color: #000000">。</span> </font></p>
+<p style="padding-left: 30px"> </p>
+<p style="padding-left: 90px"><span style="color: #996699"><font size="3" face="宋体"><img border="0" alt="图 10:Professor类和Student类实现Person接口的类图实例" width="325" height="262" src="http://www.ibm.com/developerworks/cn/rational/rationaledge/content/feb05/bell/bell_fig10.gif"> </font></span></p>
+<p> </p>
+<div class="code_title"> </div>
+<p><span>关联和依赖的区别： </span></p>
+<p><strong>1、从类之间关系的强弱程度来分</strong>，关联表示类之间的很强的关系；依赖表示类之间的较弱的关系；</p>
+<p><strong>2、从类之间关系的时间角度来分</strong>，关联表示类之间的&ldquo;持久&rdquo;关系，这种关系一般表示一种重要的业务之间的关系，需要保存的，或者说需要&ldquo;持久化&rdquo;的，或者说需要保存到数据库中的。</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  比如学生管理系统中的Student类和Class（班级）类，一个Student对象属于哪个Class是一个重要的业务关系，如果这种关系不保存，系统就无法管理。另外，依赖表示类之间的是一种&ldquo;临时、短暂&rdquo;关系，这种关系是不需要保存的，比如Student类和StuEditScreen（学生登录界面）类之间就是一种依赖关系，StuEditScreen类依赖Student类，依赖Student对象的信息来显示编辑学生信息。</p>
+<p><strong>3、设计类之间的关系是遵循的原则：</strong>首先判断类之间是否是一种&ldquo;关联&rdquo;关系，若不是再判断是否是&ldquo;依赖关系&rdquo;，一般情况下若不是关联，就是依赖关系</p>
+<p><strong>4、依赖一般情况下是以下几种情况之一</strong>：</p>
+<p>a、ClassA中某个方法的参数类型是ClassB；这种情况成为耦合；</p>
+<p>b、ClassA中某个方法的参数类型是ClassB的一个属性；这种情况成为紧耦合；</p>
+<p>c、ClassA中某个方法的实现实例化ClassB；</p>
+<p>d、ClassA中某个方法的返回值的类型是ClassB；</p>
+<p>如果出现了上述四种情况之一，两个类很有可能就是&ldquo;依赖&rdquo;关系。</p>
+<p>5、<span><span>依赖关系（</span><span>Dependency</span><span>）：是类与类之间的连接，<strong>依赖总是单向的</strong>。依赖关系代表一个类依赖于另一个类的定义。</span></span></p></div></body></html>

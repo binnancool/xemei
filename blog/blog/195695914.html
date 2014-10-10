@@ -1,0 +1,440 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>log4j详解与实战</title></head><body><h1>log4j详解与实战</h1><div><p>转自：<a href="http://www.javaeye.com/topic/378077">http://www.javaeye.com/topic/378077</a></p>
+<p>log4j是一个非常强大的log记录软件，下面我们就来看看在项目中如何使log4j。</p>
+<p>首先当然是得到log4j的jar档，推荐使用1.2.X版，下载地址：</p>
+<p><a href="http://logging.apache.org/log4j/1.2/download.html"><font color="#006699">http://logging.apache.org/log4j/1.2/download.html</font></a></p>
+<p> </p>
+<p>我们先看一个最简单的示例：</p>
+<p><strong>【示例1】</strong></p>
+<p><span style="color: #0000ff; font-size: medium"><font size="3">项目结构：</font></span></p>
+<p><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/df676701317fab22738b65aa.jpg"><br>
+</span><br>
+<br>
+【注：<span style="color: #ff0000">由于这里的多个项目公用一个jar档，我们可以创建一个专门放置jar档的Java工程，然后将jar档放到lib目录下。在要使用的工程中按图所示进行引用</span> 】</p>
+<p><span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/327580d2f4d8d0333bf3cfb5.jpg"><br>
+</span></p>
+<p><span style="color: #0000ff; font-size: medium"><font size="3">Java代码：</font></span></p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Java代码</div>
+</div>
+<ol class="dp-j">
+    <li><span><span class="keyword"><strong><font color="#7f0055">package</font></strong></span><span> com.coderdream.log4j; &nbsp;&nbsp;</span></span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">import</font></strong></span><span> org.apache.log4j.Logger; &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">public</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">class</font></strong></span><span> HelloLog4j { &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">private</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">static</font></strong></span><span> Logger logger = Logger.getLogger(HelloLog4j.</span><span class="keyword"><strong><font color="#7f0055">class</font></strong></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="comment"><font color="#008200">/** </font></span> </li>
+    <li><span><span class="comment"><font color="#008200">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * @param args </font></span> </span></li>
+    <li><span><span class="comment"><font color="#008200">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */</font></span><span>&nbsp;&nbsp;</span></span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">public</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">static</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">void</font></strong></span><span> main(String[] args) { &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="comment"><font color="#008200">// System.out.println(&quot;This is println message.&quot;); </font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="comment"><font color="#008200">// 记录debug级别的信息 </font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logger.debug(</span><span class="string"><font color="#0000ff">&quot;This is debug message.&quot;</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="comment"><font color="#008200">// 记录info级别的信息 </font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logger.info(</span><span class="string"><font color="#0000ff">&quot;This is info message.&quot;</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="comment"><font color="#008200">// 记录error级别的信息 </font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logger.error(</span><span class="string"><font color="#0000ff">&quot;This is error message.&quot;</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp; } &nbsp;&nbsp;</span></li>
+    <li><span>}&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<p><span style="color: #0000ff; font-size: medium"><font size="3">  配置文件log4j.properties:</font></span></p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Properties代码</div>
+</div>
+<ol class="dp-default">
+    <li><span><span>#可以设置级别：debug&gt;info&gt;error &nbsp;&nbsp;</span></span></li>
+    <li><span>#debug：显示debug、info、error &nbsp;&nbsp;</span></li>
+    <li><span>#info：显示info、error &nbsp;&nbsp;</span></li>
+    <li><span>#error：只error &nbsp;&nbsp;</span></li>
+    <li><span>log4j.rootLogger=debug,appender1 &nbsp;&nbsp;</span></li>
+    <li><span>#log4j.rootLogger=info,appender1 &nbsp;&nbsp;</span></li>
+    <li><span>#log4j.rootLogger=error,appender1 &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>#输出到控制台 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1=org.apache.log4j.ConsoleAppender &nbsp;&nbsp;</span></li>
+    <li><span>#样式为TTCCLayout &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1.layout=org.apache.log4j.TTCCLayout&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<pre style="display: none" class="properties" name="code"> </pre>
+<p><span style="color: #ff0000; font-size: small"><font size="2">输出结果：</font></span></p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Console代码</div>
+</div>
+<ol class="dp-default">
+    <li><span><span>[main] DEBUG com.coderdream.log4j.HelloLog4j - This is debug message. &nbsp;&nbsp;</span></span></li>
+    <li><span>[main] INFO com.coderdream.log4j.HelloLog4j - This is info message. &nbsp;&nbsp;</span></li>
+    <li><span>[main] ERROR com.coderdream.log4j.HelloLog4j - This is error message.&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<pre style="display: none" class="Console" name="code"> </pre>
+<p>  通过配置文件可知，我们需要配置3个方面的内容：</p>
+<p>1、根目录（级别和目的地）；</p>
+<p>2、目的地（控制台、文件等等）；</p>
+<p>3、输出样式。</p>
+<p><strong><span style="color: #0000ff; font-size: medium"><br>
+<font size="3">下面我们来看看Log4J的类图：</font></span> </strong></p>
+<p><br>
+<span><img class="blogimg" border="0" small="0" src="http://hiphotos.baidu.com/dd_taiyangxue/pic/item/ef2e67421eafb72072f05db0.jpg"><br>
+</span></p>
+<p> </p>
+<p><strong>Logger - 日志写出器，供程序员输出日志信息 </strong><br>
+<strong>Appender - 日志目的地，把格式化好的日志信息输出到指定的地方去 </strong><br>
+ConsoleAppender - 目的地为控制台的Appender <br>
+FileAppender - 目的地为文件的Appender <br>
+RollingFileAppender - 目的地为大小受限的文件的Appender <br>
+<strong>Layout - 日志格式化器，用来把程序员的logging request格式化成字符串</strong> <br>
+PatternLayout - 用指定的pattern格式化logging request的Layout</p>
+<p><span><span><span style="font-size: medium"><strong><span style="color: #0000ff"><br>
+<font size="3"><span style="color: #000000">Log4j基本使用方法</span> </font></span></strong></span><br>
+<br>
+　　Log4j由三个重要的组件构成：日志信息的优先级，日志信息的输出目的地，日志信息的输出格式。日志信息的优先级从高到低有ERROR、WARN、 INFO、DEBUG，分别用来指定这条日志信息的重要程度；日志信息的输出目的地指定了日志将打印到控制台还是文件中；而输出格式则控制了日志信息的显示内容。<br>
+<br>
+　　<strong><span style="color: #0000ff; font-size: medium"><font size="3">一、定义配置文件</font></span> </strong><br>
+<br>
+　　其实您也可以完全不使用配置文件，而是在代码中配置Log4j环境。但是，使用配置文件将使您的应用程序更加灵活。Log4j支持两种配置文件格式，一种是XML格式的文件，一种是Java特性文件（键=值）。下面我们介绍使用Java特性文件做为配置文件的方法：<br>
+<br>
+　　<span style="color: #0000ff; font-size: small"><font size="2">1.配置根Logger，其语法为：</font></span> <br>
+<br>
+　　log4j.rootLogger = [ level ] , appenderName, appenderName, …<br>
+<br>
+　　其中，level 是日志记录的优先级，分为OFF、FATAL、ERROR、WARN、INFO、DEBUG、ALL或者您定义的级别。Log4j建议只使用四个级别，优先级从高到低分别是ERROR、WARN、INFO、DEBUG。通过在这里定义的级别，您可以控制到应用程序中相应级别的日志信息的开关。比如在这里定义了INFO级别，则应用程序中所有DEBUG级别的日志信息将不被打印出来。 appenderName就是指B日志信息输出到哪个地方。您可以同时指定多个输出目的地。<br>
+<br>
+　　<span style="color: #0000ff; font-size: small"><font size="2">2.配置日志信息输出目的地Appender，其语法为：</font></span> <br>
+<br>
+　　log4j.appender.appenderName = fully.qualified.name.of.appender.class<br>
+　　log4j.appender.appenderName.option1 = value1<br>
+　　…<br>
+　　log4j.appender.appenderName.option = valueN<br>
+<br>
+　　其中，Log4j提供的appender有以下几种：<br>
+　　org.apache.log4j.ConsoleAppender（控制台），<br>
+　　org.apache.log4j.FileAppender（文件），<br>
+　　org.apache.log4j.DailyRollingFileAppender（每天产生一个日志文件），<br>
+　　org.apache.log4j.RollingFileAppender（文件大小到达指定尺寸的时候产生一个新的文件），<br>
+　　org.apache.log4j.WriterAppender（将日志信息以流格式发送到任意指定的地方）<br>
+<br>
+　　<span style="color: #0000ff; font-size: small"><font size="2">3.配置日志信息的格式（布局），其语法为：</font></span> <br>
+<br>
+　　log4j.appender.appenderName.layout = fully.qualified.name.of.layout.class<br>
+　　log4j.appender.appenderName.layout.option1 = value1<br>
+　　…<br>
+　　log4j.appender.appenderName.layout.option = valueN<br>
+<br>
+　　其中，Log4j提供的layout有以e几种：<br>
+　　org.apache.log4j.HTMLLayout（以HTML表格形式布局），<br>
+　　org.apache.log4j.PatternLayout（可以灵活地指定布局模式），<br>
+　　org.apache.log4j.SimpleLayout（包含日志信息的级别和信息字符串），<br>
+　　org.apache.log4j.TTCCLayout（包含日志产生的时间、线程、类别等等信息）<br>
+<br>
+　　Log4J采用类似C语言中的printf函数的打印格式格式化日志信息，打印参数如下： %m 输出代码中指定的消息<br>
+<br>
+　　%p 输出优先级，即DEBUG，INFO，WARN，ERROR，FATAL<br>
+　　%r 输出自应用启动到输出该log信息耗费的毫秒数<br>
+　　%c 输出所属的类目，通常就是所在类的全名<br>
+　　%t 输出产生该日志事件的线程名<br>
+　　%n 输出一个回车换行符，Windows平台为&ldquo;rn&rdquo;，Unix平台为&ldquo;n&rdquo;<br>
+　　%d 输出日志时间点的日期或时间，默认格式为ISO8601，也可以在其后指定格式，比如：%d{yyy MMM dd HH:mm:ss,SSS}，输出类似：2002年10月18日 22：10：28，921<br>
+　　%l 输出日志事件的发生位置，包括类目名、发生的线程，以及在代码中的行数。举例：Testlog4.main(TestLog4.java:10)<br>
+<br>
+　　<span style="color: #0000ff"><strong><span style="font-size: medium"><font size="3">二、在代码中使用Log4j</font></span> </strong></span><br>
+<br>
+　　<span style="color: #0000ff; font-size: medium"><font size="3">1.得到记录器</font></span> <br>
+<br>
+　　使用Log4j，第一步就是获取日志记录器，这个记录器将负责控制日志信息。其语法为：<br>
+<br>
+　　public static Logger getLogger( String name)<br>
+<br>
+　　通过指定的名字获得记录器，如果必要的话，则为这个名字创建一个新的记录器。Name一般取本类的名字，比如：<br>
+<br>
+　　static Logger logger = Logger.getLogger ( ServerWithLog4j.class.getName () )<br>
+<br>
+　　<span style="color: #0000ff; font-size: medium"><font size="3">2.读取配置文件</font></span> <br>
+<br>
+　　当获得了日志记录器之后，第二步将配置Log4j环境，其语法为：<br>
+<br>
+　　BasicConfigurator.configure ()： 自动快速地使用缺省Log4j环境。<br>
+　　PropertyConfigurator.configure ( String configFilename) ：读取使用Java的特性文件编写的配置文件。<br>
+　　DOMConfigurator.configure ( String filename ) ：读取XML形式的配置文件。<br>
+<br>
+　　<span style="color: #0000ff; font-size: medium"><font size="3">3.插入记录信息（格式化日志信息）</font></span> <br>
+<br>
+　　当上两个必要步骤执行完毕，您就可以轻松地使用不同优先级别的日志记录语句插入到您想记录日志的任何地方，其语法如下：<br>
+<br>
+　　Logger.debug ( Object message ) ;<br>
+　　Logger.info ( Object message ) ;<br>
+　　Logger.warn ( Object message ) ;<br>
+　　Logger.error ( Object message ) ;</span> </span></p>
+<p> </p>
+<p><span style="font-size: medium"><font size="3"><strong>示例2～示例8</strong> </font></span></p>
+<p> </p>
+<p><strong>【示例2】</strong> 输出为文本文件或HTML文件</p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Porperties代码</div>
+</div>
+<ol class="dp-default">
+    <li><span><span>#设置级别： &nbsp;&nbsp;</span></span></li>
+    <li><span>log4j.rootLogger=debug,appender1 &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>#输出到文件(这里默认为追加方式) &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1=org.apache.log4j.FileAppender &nbsp;&nbsp;</span></li>
+    <li><span>#设置文件输出路径 &nbsp;&nbsp;</span></li>
+    <li><span>#【</span><span class="number"><font color="#c00000">1</font></span><span>】文本文件 &nbsp;&nbsp;</span></li>
+    <li><span>#log4j.appender.appender1.File=c:/Log4JDemo02.log &nbsp;&nbsp;</span></li>
+    <li><span>#【</span><span class="number"><font color="#c00000">2</font></span><span>】HTML文件 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1.File=c:/Log4JDemo02.html &nbsp;&nbsp;</span></li>
+    <li><span>#设置文件输出样式 &nbsp;&nbsp;</span></li>
+    <li><span>#log4j.appender.appender1.layout=org.apache.log4j.TTCCLayout &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1.layout=org.apache.log4j.HTMLLayout&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<pre style="display: none" class="porperties" name="code"> </pre>
+<p> </p>
+<p><strong>【</strong> <strong>示例3】</strong> 输出为文本文件或HTML文件</p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Properties代码</div>
+</div>
+<ol class="dp-default">
+    <li><span><span>#设置级别和多个目的地 &nbsp;&nbsp;</span></span></li>
+    <li><span>log4j.rootLogger=debug,appender1,appender2 &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>#输出到控制台 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1=org.apache.log4j.ConsoleAppender &nbsp;&nbsp;</span></li>
+    <li><span>#设置输出样式 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1.layout=org.apache.log4j.TTCCLayout &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>#输出到文件(这里默认为追加方式) &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender2=org.apache.log4j.FileAppender &nbsp;&nbsp;</span></li>
+    <li><span>#设置文件输出路径 &nbsp;&nbsp;</span></li>
+    <li><span>#【</span><span class="number"><font color="#c00000">1</font></span><span>】文本文件 &nbsp;&nbsp;</span></li>
+    <li><span>#log4j.appender.appender2.File=c:/Log4JDemo02.log &nbsp;&nbsp;</span></li>
+    <li><span>#【</span><span class="number"><font color="#c00000">2</font></span><span>】HTML文件 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender2.File=c:/Log4JDemo02.html &nbsp;&nbsp;</span></li>
+    <li><span>#设置文件输出样式 &nbsp;&nbsp;</span></li>
+    <li><span>#log4j.appender.appender2.layout=org.apache.log4j.TTCCLayout &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender2.layout=org.apache.log4j.HTMLLayout&nbsp;&nbsp;</span>
+    <pre style="display: none" class="properties" name="code"> </pre>
+     </li>
+</ol>
+</div>
+<p><strong>【示例4】</strong> SimpleLayout样式</p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Properties代码</div>
+</div>
+<ol class="dp-default">
+    <li><span><span>#设置级别和目的地 &nbsp;&nbsp;</span></span></li>
+    <li><span>log4j.rootLogger=debug,appender1 &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>#输出到控制台 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1=org.apache.log4j.ConsoleAppender &nbsp;&nbsp;</span></li>
+    <li><span>#设置输出样式 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1.layout=org.apache.log4j.SimpleLayout&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<pre style="display: none" class="properties" name="code"> </pre>
+<p> <span style="color: #ff0000"><strong> </strong><span style="font-size: medium"><font size="3">输出结果：</font></span> </span></p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">控制台代码</div>
+</div>
+<ol class="dp-default">
+    <li><span><span>DEBUG - This is debug message. &nbsp;&nbsp;</span></span></li>
+    <li><span>INFO - This is info message. &nbsp;&nbsp;</span></li>
+    <li><span>ERROR - This is error message.&nbsp;&nbsp;</span>
+    <pre style="display: none" class="控制台" name="code"> </pre>
+     </li>
+</ol>
+</div>
+<p><strong>【示例5】</strong> 自定义样式</p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Java代码</div>
+</div>
+<ol class="dp-j">
+    <li><span><span>#设置级别和目的地 &nbsp;&nbsp;</span></span></li>
+    <li><span>log4j.rootLogger=debug,appender1 &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>#输出到控制台 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1=org.apache.log4j.ConsoleAppender &nbsp;&nbsp;</span></li>
+    <li><span>#设置输出样式 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1.layout=org.apache.log4j.PatternLayout &nbsp;&nbsp;</span></li>
+    <li><span>#自定义样式 &nbsp;&nbsp;</span></li>
+    <li><span># %r 时间 </span><span class="number"><font color="#c00000">0</font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span># %t 方法名 main &nbsp;&nbsp;</span></li>
+    <li><span># %p 优先级 DEBUG/INFO/ERROR &nbsp;&nbsp;</span></li>
+    <li><span># %c 所属类的全名(包括包名) &nbsp;&nbsp;</span></li>
+    <li><span># %l 发生的位置，在某个类的某行 &nbsp;&nbsp;</span></li>
+    <li><span># %m 输出代码中指定的讯息，如log(message)中的message &nbsp;&nbsp;</span></li>
+    <li><span># %n 输出一个换行 &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1.layout.ConversionPattern=%r [%t] [%p] - %c -%l -%m%n&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<p><span style="color: #ff0000; font-size: medium"><font size="3">输出结果：</font></span></p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">控制台代码</div>
+</div>
+<ol class="dp-default">
+    <li><span><span class="number"><font color="#c00000">0</font></span><span> [main] [DEBUG] - com.coderdream.log4j.HelloLog4j  &nbsp;&nbsp;</span></span></li>
+    <li><span>-com.coderdream.log4j.HelloLog4j.main(HelloLog4j.java:</span><span class="number"><font color="#c00000">16</font></span><span>) -This is debug message. &nbsp;&nbsp;</span></li>
+    <li><span class="number"><font color="#c00000">31</font></span><span> [main] [INFO] - com.coderdream.log4j.HelloLog4j  &nbsp;&nbsp;</span></li>
+    <li><span>-com.coderdream.log4j.HelloLog4j.main(HelloLog4j.java:</span><span class="number"><font color="#c00000">18</font></span><span>) -This is info message. &nbsp;&nbsp;</span></li>
+    <li><span class="number"><font color="#c00000">31</font></span><span> [main] [ERROR] - com.coderdream.log4j.HelloLog4j  &nbsp;&nbsp;</span></li>
+    <li><span>-com.coderdream.log4j.HelloLog4j.main(HelloLog4j.java:</span><span class="number"><font color="#c00000">20</font></span><span>) -This is error message.&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+ 
+<p><strong>【示例6】</strong> 多目的地、自定义样式</p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Properties代码</div>
+</div>
+<ol class="dp-default">
+    <li><span><span>#设置级别和目的地 &nbsp;&nbsp;</span></span></li>
+    <li><span>log4j.rootLogger=debug,appender1,appender2 &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>#输出到控制台 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1=org.apache.log4j.ConsoleAppender &nbsp;&nbsp;</span></li>
+    <li><span>#设置输出样式 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1.layout=org.apache.log4j.PatternLayout &nbsp;&nbsp;</span></li>
+    <li><span>#自定义样式 &nbsp;&nbsp;</span></li>
+    <li><span># %r 时间 </span><span class="number"><font color="#c00000">0</font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span># %t 方法名 main &nbsp;&nbsp;</span></li>
+    <li><span># %p 优先级 DEBUG/INFO/ERROR &nbsp;&nbsp;</span></li>
+    <li><span># %c 所属类的全名(包括包名) &nbsp;&nbsp;</span></li>
+    <li><span># %l 发生的位置，在某个类的某行 &nbsp;&nbsp;</span></li>
+    <li><span># %m 输出代码中指定的讯息，如log(message)中的message &nbsp;&nbsp;</span></li>
+    <li><span># %n 输出一个换行符号 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1.layout.ConversionPattern=[%d{yy/MM/dd HH:mm:ss:SSS}][%C-%M] %m%n &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>#输出到文件(这里默认为追加方式) &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender2=org.apache.log4j.FileAppender &nbsp;&nbsp;</span></li>
+    <li><span>#设置文件输出路径 &nbsp;&nbsp;</span></li>
+    <li><span>#【</span><span class="number"><font color="#c00000">1</font></span><span>】文本文件 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender2.File=c:/Log4JDemo06.log &nbsp;&nbsp;</span></li>
+    <li><span>#设置文件输出样式 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender2.layout=org.apache.log4j.PatternLayout &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender2.layout.ConversionPattern=[%d{HH:mm:ss:SSS}][%C-%M] -%m%n&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<p><strong>【示例7】</strong> <span style="font-size: medium"><strong><font size="3"><span style="color: #0000ff">【企业应用】设置</span> <span style="color: #0000ff">特定包的级别和目的地</span> </font></strong></span></p>
+<p>先增加一个包，新建一个类：</p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Java代码</div>
+</div>
+<ol class="dp-j">
+    <li><span><span class="keyword"><strong><font color="#7f0055">package</font></strong></span><span> com.coderdream.log4jDao; &nbsp;&nbsp;</span></span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">import</font></strong></span><span> org.apache.log4j.Logger; &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">public</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">class</font></strong></span><span> HelloDao { &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">private</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">static</font></strong></span><span> Logger logger = Logger.getLogger(HelloDao.</span><span class="keyword"><strong><font color="#7f0055">class</font></strong></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="comment"><font color="#008200">/** </font></span> </li>
+    <li><span><span class="comment"><font color="#008200">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * @param args </font></span> </span></li>
+    <li><span><span class="comment"><font color="#008200">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */</font></span><span>&nbsp;&nbsp;</span></span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword"><strong><font color="#7f0055">public</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">static</font></strong></span><span> </span><span class="keyword"><strong><font color="#7f0055">void</font></strong></span><span> main(String[] args) { &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="comment"><font color="#008200">// 记录debug级别的信息 </font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logger.debug(</span><span class="string"><font color="#0000ff">&quot;This is debug message from Dao.&quot;</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="comment"><font color="#008200">// 记录info级别的信息 </font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logger.info(</span><span class="string"><font color="#0000ff">&quot;This is info message from Dao.&quot;</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="comment"><font color="#008200">// 记录error级别的信息 </font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; logger.error(</span><span class="string"><font color="#0000ff">&quot;This is error message from Dao.&quot;</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp; } &nbsp;&nbsp;</span></li>
+    <li><span>}&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<p><span style="color: #0000ff"><strong>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: small"><font size="2">  如果这个类作为基类，如J2EE中的BaseDao、BaseAction、BaseService等等，则我们可以将各层的日志信息分类输出到各个文件。</font></span> </strong></span></p>
+<p> </p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Properties代码</div>
+</div>
+<ol class="dp-default">
+    <li><span><span>#省略根，只设置特定包的级别和目的地 &nbsp;&nbsp;</span></span></li>
+    <li><span>log4j.logger.com.coderdream.log4j=debug,appender1 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.logger.com.coderdream.log4jDao=info,appender1,appender2 &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>#输出到控制台 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1=org.apache.log4j.ConsoleAppender &nbsp;&nbsp;</span></li>
+    <li><span>#设置输出样式 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1.layout=org.apache.log4j.PatternLayout &nbsp;&nbsp;</span></li>
+    <li><span>#自定义样式 &nbsp;&nbsp;</span></li>
+    <li><span># %r 时间 </span><span class="number"><font color="#c00000">0</font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span># %t 方法名 main &nbsp;&nbsp;</span></li>
+    <li><span># %p 优先级 DEBUG/INFO/ERROR &nbsp;&nbsp;</span></li>
+    <li><span># %c 所属类的全名(包括包名) &nbsp;&nbsp;</span></li>
+    <li><span># %l 发生的位置，在某个类的某行 &nbsp;&nbsp;</span></li>
+    <li><span># %m 输出代码中指定的讯息，如log(message)中的message &nbsp;&nbsp;</span></li>
+    <li><span># %n 输出一个换行符号 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender1.layout.ConversionPattern=[%d{yy/MM/dd HH:mm:ss:SSS}][%C-%M] %m%n &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>#输出到文件(这里默认为追加方式) &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender2=org.apache.log4j.FileAppender &nbsp;&nbsp;</span></li>
+    <li><span>#设置文件输出路径 &nbsp;&nbsp;</span></li>
+    <li><span>#【</span><span class="number"><font color="#c00000">1</font></span><span>】文本文件 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender2.File=c:/Log4JDemo07_Dao.log &nbsp;&nbsp;</span></li>
+    <li><span>#设置文件输出样式 &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender2.layout=org.apache.log4j.PatternLayout &nbsp;&nbsp;</span></li>
+    <li><span>log4j.appender.appender2.layout.ConversionPattern=[%d{HH:mm:ss:SSS}][%C-%M] -%m%n&nbsp;&nbsp;</span></li>
+</ol>
+</div>
+<p><strong>【示例8】</strong> log4j.xml的配置方式</p>
+<div class="bar">
+<div class="tools">Xml代码</div>
+</div>
+<div class="dp-highlighter">
+<ol class="dp-xml">
+    <li><span><strong><font color="#006699"><span class="tag">&lt;?</span><span class="tag-name">xml</span></font></strong><span> </span><span class="attribute"><font color="#ff0000">version</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;1.0&quot;</font></span><span> </span><span class="attribute"><font color="#ff0000">encoding</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;UTF-8&quot;</font></span><span class="tag"><strong><font color="#006699">?&gt;</font></strong></span><span>&nbsp;&nbsp;</span></span></li>
+    <li><span>&lt;!DOCTYPE log4j:configuration SYSTEM &quot;log4j.dtd&quot;</span><span class="tag"><strong><font color="#006699">&gt;</font></strong></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">log4j:configuration</span></font></strong><span> </span><span class="attribute"><font color="#ff0000">xmlns:log4j</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;http://jakarta.apache.org/log4j/&quot;</font></span><span class="tag"><strong><font color="#006699">&gt;</font></strong></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">appender</span></font></strong><span> </span><span class="attribute"><font color="#ff0000">name</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;appender1&quot;</font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="attribute"><font color="#ff0000">class</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;org.apache.log4j.RollingFileAppender&quot;</font></span><span class="tag"><strong><font color="#006699">&gt;</font></strong></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">param</span></font></strong><span> </span><span class="attribute"><font color="#ff0000">name</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;File&quot;</font></span><span> </span><span class="attribute"><font color="#ff0000">value</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;logfile08.html&quot;</font></span><span> </span><span class="tag"><strong><font color="#006699">/&gt;</font></strong></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">param</span></font></strong><span> </span><span class="attribute"><font color="#ff0000">name</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;MaxFileSize&quot;</font></span><span> </span><span class="attribute"><font color="#ff0000">value</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;1MB&quot;</font></span><span> </span><span class="tag"><strong><font color="#006699">/&gt;</font></strong></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">param</span></font></strong><span> </span><span class="attribute"><font color="#ff0000">name</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;MaxBackupIndex&quot;</font></span><span> </span><span class="attribute"><font color="#ff0000">value</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;5&quot;</font></span><span> </span><span class="tag"><strong><font color="#006699">/&gt;</font></strong></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">layout</span></font></strong><span> </span><span class="attribute"><font color="#ff0000">class</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;org.apache.log4j.HTMLLayout&quot;</font></span><span class="tag"><strong><font color="#006699">&gt;</font></strong></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">layout</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">appender</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">root</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">level</span></font></strong><span> </span><span class="attribute"><font color="#ff0000">value</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;debug&quot;</font></span><span> </span><span class="tag"><strong><font color="#006699">/&gt;</font></strong></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;</span><span class="tag-name">appender-ref</span></font></strong><span> </span><span class="attribute"><font color="#ff0000">ref</font></span><span>=</span><span class="attribute-value"><font color="#0000ff">&quot;appender1&quot;</font></span><span> </span><span class="tag"><strong><font color="#006699">/&gt;</font></strong></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">root</span><span class="tag">&gt;</span></font></strong><span>&nbsp;&nbsp;</span></li>
+    <li><strong><font color="#006699"><span class="tag">&lt;/</span><span class="tag-name">log4j:configuration</span><span class="tag">&gt;</span></font></strong><span> </span></li>
+</ol>
+</div>
+<p>为了提高效率，我们可以在写日志前增加判断：</p>
+<div class="dp-highlighter">
+<div class="bar">
+<div class="tools">Java代码</div>
+</div>
+<ol class="dp-j">
+    <li><span><span class="comment"><font color="#008200">// 记录debug级别的信息 </font></span><span>&nbsp;&nbsp;</span></span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">if</font></strong></span><span> (logger.isDebugEnabled()) { &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp; logger.debug(</span><span class="string"><font color="#0000ff">&quot;This is debug message from Dao.&quot;</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>} &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span class="comment"><font color="#008200">// 记录info级别的信息 </font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span class="keyword"><strong><font color="#7f0055">if</font></strong></span><span> (logger.isInfoEnabled()) { &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;&nbsp;&nbsp; logger.info(</span><span class="string"><font color="#0000ff">&quot;This is info message from Dao.&quot;</font></span><span>); &nbsp;&nbsp;</span></li>
+    <li><span>} &nbsp;&nbsp;</span></li>
+    <li><span>&nbsp;&nbsp;</span></li>
+    <li><span class="comment"><font color="#008200">// 记录error级别的信息 </font></span><span>&nbsp;&nbsp;</span></li>
+    <li><span>logger.error(</span><span class="string"><font color="#0000ff">&quot;This is error message from Dao.&quot;</font></span><span>);&nbsp;&nbsp;</span></li>
+</ol>
+</div></div></body></html>

@@ -1,0 +1,155 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Web Service实践——Xfire的ws-security用户名和密码安全验证</title></head><body><h1>Web Service实践——Xfire的ws-security用户名和密码安全验证</h1><div><p><font size="4">一、参照《</font><a target="_blank" href="http://hi.baidu.com/dd_taiyangxue/blog/item/cc7f0144fee3ec2dcefca377.html"><font size="4">Web Service实践之&mdash;&mdash;XFire实例</font></a><font size="4">》（本空间的文章）建立一个Xfire的应用；</font></p>
+<p><font size="4">二、引入的jar包：</font></p>
+<p><font size="4">xfire-1.2.6的所有jar包（包括xfire-all-1.2.6.jar），下载地址：</font><a href="http://xfire.codehaus.org/Download"><font size="4">http://xfire.codehaus.org/Download</font></a></p>
+<p><font size="4">wss4j-1.5.8.jar：下载地址：</font><a href="http://ws.apache.org/wss4j/"><font size="4">http://ws.apache.org/wss4j/</font></a></p>
+<p><font size="4">三、服务器端</font></p>
+<p><font size="4">1、PasswordHandler类，继承自avax.security.auth.callback.CallbackHandler</font></p>
+<p><font size="4">package com.channelsoft.hr.wssecurity;</font></p>
+<p><font size="4">import java.io.IOException;<br>
+import java.util.HashMap;<br>
+import java.util.Map;</font></p>
+<p><font size="4">import javax.security.auth.callback.Callback;<br>
+import javax.security.auth.callback.CallbackHandler;<br>
+import javax.security.auth.callback.UnsupportedCallbackException;</font></p>
+<p><font size="4">import org.apache.ws.security.WSPasswordCallback;</font></p>
+<p><font size="4">public class PasswordHandler implements CallbackHandler {<br>
+&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+private Map passwords = new HashMap();</font></p>
+<p><font size="4">&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+public PasswordHandler() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </font><font size="4"><strong>passwords.put(&quot;server&quot;, &quot;serverpass&quot;);//服务器端记录的用户名和密码，可以有多个<br>
+</strong>&nbsp;&nbsp;&nbsp;  }</font></p>
+<p><font size="4">&nbsp;&nbsp;&nbsp;  public void handle(Callback[] callbacks) throws IOException,<strong>//<span>回调接口方法</span></strong><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  UnsupportedCallbackException {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;Handling Password!&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font size="4"><strong> WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];//<span><span>获取回调对象</span></span><br>
+</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </font><font size="4"><strong>String id = pc.getIdentifer();//<span>获取用户名</span><br>
+</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;id:&quot;+id+&quot; ,password:&quot;+(String) passwords.get(id));</font></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><font size="4"><span style="font-size: 10.5pt"><font face="宋体">String validPw = (String)password.get(id);<strong><span>②-3:</span></strong></font></span><strong><span style="font-size: 10.5pt">获取用户对应的正确密码</span></strong></font></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><font size="4"><strong><span style="font-size: 10.5pt">②-4:</span></strong><strong><span style="font-size: 10.5pt">如果是明文密码直接进行判断</span></strong></font></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><span style="font-size: 10.5pt"><font size="4" face="宋体"><strong>if(WSConstants.PASSWORD_TEXT.equals(callback.getPasswordType())){</strong></font></span></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><span style="font-size: 10.5pt"><font size="4" face="宋体"><strong>String pw = callback.getPassword();</strong></font></span></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><span style="font-size: 10.5pt"><font size="4" face="宋体"><strong>if(pw == null || !pw.equalsIgnoreCase(validPw)){</strong></font></span></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><span style="font-size: 10.5pt"><font size="4" face="宋体">throw new WSSecurityException(&quot;password not match&quot;);</font></span></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><span style="font-size: 10.5pt"><font size="4" face="宋体">}</font></span></p>
+<p><font size="4"><span>}else{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </font><font size="4"><strong>pc.setPassword((String) passwords.get(id));//<span>如果是密码摘要，向回调设置正确的密码（明文密码）</span><br>
+</strong>&nbsp;&nbsp;&nbsp;  }<br>
+}</font></p>
+<p><font size="4">2、service.xml</font></p>
+<p><font size="4">&lt;beans xmlns=&quot;</font><a href="http://xfire.codehaus.org/config/1.0"><font size="4">http://xfire.codehaus.org/config/1.0</font></a><font size="4">&quot;&gt;<br>
+&lt;service&gt;<br>
+&lt;name&gt;hrwebservice&lt;/name&gt;<br>
+&lt;namespace&gt;com.channelsoft.hr&lt;/namespace&gt;<br>
+&lt;serviceClass&gt;com.channelsoft.hr.webservice.DepartmentAndPersonInfo&lt;/serviceClass&gt;<br>
+&lt;implementationClass&gt;com.channelsoft.hr.webservice.impl.DepartmentAndPersonInfoImpl&lt;/implementationClass&gt;<br>
+&lt;inHandlers&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>&nbsp;&nbsp;  &lt;handler handlerClass=&quot;org.codehaus.xfire.util.dom.DOMInHandler&quot; /&gt;</strong><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;bean<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  class=&quot;org.codehaus.xfire.security.wss4j.WSS4JInHandler&quot; xmlns=&quot;&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;property name=&quot;properties&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;props&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font size="4"><strong> &lt;prop key=&quot;action&quot;&gt;UsernameToken&lt;/prop&gt;//使用用户名与密码进行安全验证<br>
+</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font size="4"><strong> &lt;prop key=&quot;passwordCallbackClass&quot;&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  com.channelsoft.hr.wssecurity.PasswordHandler//回调类<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/prop&gt;<br>
+</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/props&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/property&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;/bean&gt;<br>
+&nbsp;&nbsp;&nbsp;  &lt;/inHandlers&gt;<br>
+&lt;/service&gt;<br>
+&lt;/beans&gt;</font></p>
+<p><font size="4">四、客户端</font></p>
+<p><font size="4">1、</font></p>
+<p><font size="4">1、PasswordHandler类，继承自avax.security.auth.callback.CallbackHandler</font></p>
+<p><font size="4">package com.channelsoft.hr.wssecurity;</font></p>
+<p><font size="4">import java.io.IOException;<br>
+import java.util.HashMap;<br>
+import java.util.Map;</font></p>
+<p><font size="4">import javax.security.auth.callback.Callback;<br>
+import javax.security.auth.callback.CallbackHandler;<br>
+import javax.security.auth.callback.UnsupportedCallbackException;</font></p>
+<p><font size="4">import org.apache.ws.security.WSPasswordCallback;</font></p>
+<p><font size="4">public class PasswordHandler implements CallbackHandler {<br>
+&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+private Map passwords = new HashMap();</font></p>
+<p><font size="4">&nbsp;&nbsp;&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)<br>
+public PasswordHandler() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </font><font size="4"><strong>passwords.put(&quot;server&quot;, &quot;serverpass&quot;);//服务器端记录的用户名和密码，可以有多个<br>
+</strong>&nbsp;&nbsp;&nbsp;  }</font></p>
+<p><font size="4">&nbsp;&nbsp;&nbsp;  public void handle(Callback[] callbacks) throws IOException,<strong>//<span>回调接口方法</span></strong><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  UnsupportedCallbackException {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;Handling Password!&quot;);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font size="4"><strong> WSPasswordCallback pc = (WSPasswordCallback) callbacks[0];//<span><span>获取回调对象</span></span><br>
+</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </font><font size="4"><strong>String id = pc.getIdentifer();//<span>获取用户名</span><br>
+</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  System.out.println(&quot;id:&quot;+id+&quot; ,password:&quot;+(String) passwords.get(id));</font></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><font size="4"><span style="font-size: 10.5pt"><font face="宋体">String validPw = (String)password.get(id);<strong><span>②-3:</span></strong></font></span><strong><span style="font-size: 10.5pt">获取用户对应的正确密码</span></strong></font></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><font size="4"><strong><span style="font-size: 10.5pt">②-4:</span></strong><strong><span style="font-size: 10.5pt">如果是明文密码直接进行判断</span></strong></font></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><span style="font-size: 10.5pt"><font size="4" face="宋体"><strong>if(WSConstants.PASSWORD_TEXT.equals(callback.getPasswordType())){</strong></font></span></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><span style="font-size: 10.5pt"><font size="4" face="宋体"><strong>String pw = callback.getPassword();</strong></font></span></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><span style="font-size: 10.5pt"><font size="4" face="宋体"><strong>if(pw == null || !pw.equalsIgnoreCase(validPw)){</strong></font></span></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><span style="font-size: 10.5pt"><font size="4" face="宋体">throw new WSSecurityException(&quot;password not match&quot;);</font></span></p>
+<p style="line-height: 12pt; margin: 0cm 0cm 0pt"><span style="font-size: 10.5pt"><font size="4" face="宋体">}</font></span></p>
+<p><font size="4"><span>}else{</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </font><font size="4"><strong>pc.setPassword((String) passwords.get(id));//<span>如果是密码摘要，向回调设置正确的密码（明文密码）</span><br>
+</strong>&nbsp;&nbsp;&nbsp;  }<br>
+}</font></p>
+<p><font size="4">2、客户端调用</font></p>
+<p><font size="4">package hr;</font></p>
+<p><font size="4">import java.net.MalformedURLException;</font></p>
+<p><font size="4">import org.codehaus.xfire.client.Client;<br>
+import org.codehaus.xfire.client.XFireProxyFactory;<br>
+import org.codehaus.xfire.security.wss4j.WSS4JOutHandler;<br>
+import org.apache.ws.security.WSConstants;<br>
+import org.apache.ws.security.handler.WSHandlerConstants;<br>
+import org.codehaus.xfire.service.Service;<br>
+import org.codehaus.xfire.service.binding.ObjectServiceFactory;<br>
+import org.codehaus.xfire.transport.http.CommonsHttpMessageSender;<br>
+import org.codehaus.xfire.util.dom.DOMOutHandler;</font></p>
+<p><font size="4">import com.channelsoft.hr.webservice.DepartmentAndPersonInfo;</font></p>
+<p><font size="4">public class getHRInfo<br>
+{<br>
+public static void main(String args[])<br>
+{ <br>
+&nbsp;&nbsp;  String serviceURL = &quot;</font><a href="http://localhost:8080/HRWebService/services/hrwebservice"><font size="4">http://localhost:8080/HRWebService/services/hrwebservice</font></a><font size="4">&quot;;<br>
+&nbsp;&nbsp;  // 创建service对象<br>
+&nbsp;&nbsp;  Service serviceModel = new ObjectServiceFactory().create(DepartmentAndPersonInfo.class);<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;  XFireProxyFactory serviceFactory = new XFireProxyFactory();</font></p>
+<p><font size="4">&nbsp;&nbsp;  try<br>
+&nbsp;&nbsp;  {<br>
+&nbsp;&nbsp;&nbsp;  // 获取服务对象<br>
+&nbsp;&nbsp;&nbsp;  DepartmentAndPersonInfo service = (DepartmentAndPersonInfo) serviceFactory.create(serviceModel, serviceURL);<br>
+&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;  // 忽略http连接的超时时间,0为不设置超时时间，》=1为超时毫秒数<br>
+&nbsp;&nbsp;&nbsp;  Client client = Client.getInstance(service);<br>
+&nbsp;&nbsp;&nbsp;  client.setProperty(CommonsHttpMessageSender.HTTP_TIMEOUT, &quot;0&quot;);<br>
+&nbsp;&nbsp;&nbsp;  //发送授权信息<br>
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(new ClientAuthenticationHandler(&quot;abcd&quot;,&quot;1234&quot;));</font></p>
+<p><br>
+<font size="4">//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  //WS-Security<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><strong><font size="4"> WSS4JOutHandler wsOut = new WSS4JOutHandler(); <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  String actions =WSHandlerConstants.USERNAME_TOKEN; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.ACTION, actions);//<span>动作</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PASSWORD_DIGEST);//<span>密码类型</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.USER, &quot;server&quot;);&nbsp;&nbsp;  //<span>指定用户</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  wsOut.setProperty(WSHandlerConstants.PW_CALLBACK_CLASS, PasswordHandler.class.getName());//<span>密码回调类</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(new DOMOutHandler());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  client.addOutHandler(wsOut);</font></strong></p>
+<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></p>
+<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <br>
+&nbsp;&nbsp;&nbsp;  // 调用服务<br>
+&nbsp;&nbsp;&nbsp;  String hello = service.queryDepartmentInfo();<br>
+&nbsp;&nbsp;&nbsp;  String hello2 = service.queryPersonnelInfo(&quot;&quot;, &quot;&quot;, &quot;&quot;);<br>
+&nbsp;&nbsp;&nbsp;  System.out.println(hello);<br>
+&nbsp;&nbsp;&nbsp;  System.out.println(hello2);</font></p>
+<p><font size="4">&nbsp;&nbsp;  }<br>
+&nbsp;&nbsp;  catch (MalformedURLException e)<br>
+&nbsp;&nbsp;  { <br>
+&nbsp;&nbsp;&nbsp;  System.out.println(&quot;错误！！！&quot;);<br>
+&nbsp;&nbsp;&nbsp;  e.printStackTrace();<br>
+&nbsp;&nbsp;  }<br>
+}<br>
+}</font></p></div></body></html>

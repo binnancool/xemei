@@ -1,0 +1,58 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>iptables基本策略实例</title></head><body><h1>iptables基本策略实例</h1><div><strong>iptables简介</strong> 
+<p>iptables是基于内核的防火墙，功能非常强大，iptables内置了filter，nat和mangle三张表。</p>
+<p>filter负责过滤数据包，包括的规则链有，input，output和forward；</p>
+<p>nat则涉及到网络地址转换，包括的规则链有，prerouting，postrouting和output；</p>
+<p>mangle表则主要应用在修改数据包内容上，用来做流量整形的，默认的规则链有：INPUT，OUTPUT，NAT，POSTROUTING，PREROUTING；</p>
+<p>input匹配目的IP是本机的数据包，forward匹配流经本机的数据包，prerouting用来修改目的地址用来做DNAT，postrouting用来修改源地址用来做SNAT。</p>
+<p><strong>iptables主要参数</strong></p>
+<p>-A 向规则链中添加一条规则，默认被添加到末尾</p>
+<p>-T指定要操作的表，默认是filter</p>
+<p>-D从规则链中删除规则，可以指定序号或者匹配的规则来删除</p>
+<p>-R进行规则替换</p>
+<p>-I插入一条规则，默认被插入到首部</p>
+<p>-F清空所选的链，重启后恢复</p>
+<p>-N新建用户自定义的规则链</p>
+<p>-X删除用户自定义的规则链</p>
+<p>-p用来指定协议可以是tcp，udp，icmp等也可以是数字的协议号，</p>
+<p>-s指定源地址</p>
+<p>-d指定目的地址</p>
+<p>-i进入接口</p>
+<p>-o流出接口</p>
+<p>-j采取的动作，accept，drop，snat，dnat，masquerade</p>
+<p>--sport源端口</p>
+<p>--dport目的端口，端口必须和协议一起来配合使用</p>
+<p><span style="COLOR: rgb(255,0,0)">注意：所有链名必须大写，表明必须小写，动作必须大写，匹配必须小写</span></p>
+<p><span style="COLOR: rgb(255,0,0)"><span style="COLOR: rgb(255,0,0); FONT-SIZE: 16px">默认操作filter表。</span><br></span></p>
+<p><span style="COLOR: rgb(255,0,0)">设定默认规则:</span>在iptables规则中没有匹配到规则则使用默认规则进行处理 </p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">iptables -p INPUT DROP <br>iptables -p OUTPUT ACCEPT <br>iptables -p FORWARD DROP </div>
+<p>1、<span style="COLOR: rgb(255,0,0)">防止外网用内网IP欺骗</span></p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">iptables -t nat -A PREROUTING -i eth0 -s 10.0.0.0/8 -j DROP <br>iptables -t nat -A PREROUTING -i eth0 -s 172.16.0.0/12 -j DROP <br>iptables -t nat -A PREROUTING -i eth0 -s 192.168.0.0/16 -j DROP</div>
+<p>&nbsp;&nbsp; <span style="COLOR: rgb(255,0,0)">查看nat规则</span></p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">iptables -t nat -L</div>
+<p>2、<span style="COLOR: rgb(255,0,0)">如果想取消上面所加的规则：</span></p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">iptables -F -t nat <br>iptables -X -t nat <br>iptables -Z -t nat </div>
+<p>3、<span style="COLOR: rgb(255,0,0)">阻止一个IP连接本机</span></p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">iptables -t filter -A INPUT -s 192.168.1.5 -i eth0 -j DROP</div>
+<p>4、<span style="COLOR: rgb(255,0,0)">查看本机的IPTABLES的所填规则</span></p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">iptables -L -n</div>
+<p>5、<span style="COLOR: rgb(255,0,0)">清除filter中所有的规则连接</span></p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">iptables -F</div>
+<p>&nbsp; <span style="COLOR: rgb(255,0,0)">清除filter中使用者自定义连接中的规则</span></p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 97.84%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; HEIGHT: 26px; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">iptables -X</div>
+<p>6、<span style="COLOR: rgb(255,0,0)">保存所修改的iptables规则</span></p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">/etc/rc.d/init.d/iptables save</div>
+<p><span style="COLOR: rgb(255,0,0)">&nbsp; 重新启动iptables服务</span></p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">service iptables restart</div>
+<p>7、<span style="COLOR: rgb(255,0,0)">关闭不安全的端口连接本机</span></p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">iptables -A OUTPUT -p tcp --sport 31337 -j DROP <br>iptables -A OUTPUT -p tcp --dport 31337 -j DROP</div>
+<p>8、<span style="COLOR: rgb(255,0,0)">开启所需要的端口</span></p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">22 <br>iptables -A INPUT -p tcp --dport 22 -j ACCEPT <br>iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT <br>80 <br>iptables -A OUTPUT -p tcp --sport 80 -j ACCEPT <br>iptables -A INPUT -p tcp --dport 80 -j ACCEPT</div>
+<p>9、<span style="COLOR: rgb(255,0,0)">禁止一个IP或者一个IP段访问服务器端口服务</span></p>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">80端口 <br>iptables -t filter -I INPUT 2 -s 192.168.5.0/24 -p tcp --dport http -j DROP</div>
+<div style="BORDER-BOTTOM: rgb(204,204,204) 1px solid; BORDER-LEFT: rgb(204,204,204) 1px solid; PADDING-BOTTOM: 4px; LINE-HEIGHT: 16px; BACKGROUND-COLOR: rgb(238,238,238); PADDING-LEFT: 4px; WIDTH: 98%; PADDING-RIGHT: 4px; FONT-FAMILY: Verdana,宋体; COLOR: rgb(0,0,0); FONT-SIZE: 10pt; BORDER-TOP: rgb(204,204,204) 1px solid; BORDER-RIGHT: rgb(204,204,204) 1px solid; PADDING-TOP: 4px">FTP端口 <br>
+<p>iptables -t filter -I INPUT 2 -s 192.168.7.9 -p tcp --dport ftp -j DROP</p></div>
+<p>10、<font color="#ff0000">保存、启停</font></p>
+<p style="MARGIN: 0cm 0cm 0pt" class="MsoNormal"><span>写到</span><span><span style="FONT-FAMILY: Times New Roman">:/etc/sysconfig/iptables</span></span><span>使用脚本：</span><span><span style="FONT-FAMILY: Times New Roman">service iptablse save</span></span></p>
+<p><span>设置为开机启动：在</span><span>etc/rc.d/rc.local</span><span>文件中加入</span><span>service iptables start</span></p>
+<p><span>11、<span style="COLOR: #ff0000">禁ping</span></span></p>
+<p><span>echo "1" &gt; /proc/sys/net/ipv4/icmp_echo_ignore_all （立即生效，重启后需要再次设置）</span></p></div></body></html>
