@@ -297,20 +297,24 @@ var Taber = {
     }
 
 }
-  function AddFavorite(sURL, sTitle){
-	try {
-            window.external.addFavorite(sURL, sTitle);
-        }
-        catch (e) {
-            try {
-                window.sidebar.addPanel(sTitle, sURL, "114la");
-            }
-            catch (e) {
-                alert("加入收藏失败,请手动添加.");
-            }
-        }
-}
 
+function addFavorite(url, title) {
+	try 
+	{
+		window.external.addFavorite(url, title);
+	} 
+	catch (e)
+	{
+		try 
+		{
+			window.sidebar.addPanel(title, url, '');
+		} 
+		catch (e) 
+		{
+			showDialog("请按 Ctrl+D 键添加到收藏夹", 'notice');
+		}
+	}
+}
 
 
 
