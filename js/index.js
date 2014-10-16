@@ -311,7 +311,7 @@ function addFavorite1(url, title) {
 		} 
 		catch (e) 
 		{
-			showDialog("请按 Ctrl+D 键添加到收藏夹", 'notice');
+			alert("请按 Ctrl+D 键添加到收藏夹");
 		}
 	}
 }
