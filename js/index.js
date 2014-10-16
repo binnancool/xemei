@@ -240,6 +240,25 @@ $(function(){
         }
     });
     goTop();
+	
+	
+	function addFavorite(url, title) {
+	try 
+	{
+		window.external.addFavorite(url, title);
+	} 
+	catch (e)
+	{
+		try 
+		{
+			window.sidebar.addPanel(title, url, '');
+		} 
+		catch (e) 
+		{
+			showDialog("请按 Ctrl+D 键添加到收藏夹", 'notice');
+		}
+	}
+}
     
 });
 
@@ -296,24 +315,6 @@ var Taber = {
         }
     }
 
-}
-
-function addFavorite(url, title) {
-	try 
-	{
-		window.external.addFavorite(url, title);
-	} 
-	catch (e)
-	{
-		try 
-		{
-			window.sidebar.addPanel(title, url, '');
-		} 
-		catch (e) 
-		{
-			showDialog("请按 Ctrl+D 键添加到收藏夹", 'notice');
-		}
-	}
 }
 
 
