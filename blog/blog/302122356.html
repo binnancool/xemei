@@ -1,4 +1,12 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>配置Tomcat访问日志</title></head><body><h1>配置Tomcat访问日志</h1><div><p><span style="WIDOWS: 2; TEXT-TRANSFORM: none; TEXT-INDENT: 0px; BORDER-COLLAPSE: separate; FONT: medium Simsun; WHITE-SPACE: normal; ORPHANS: 2; LETTER-SPACING: normal; COLOR: rgb(0,0,0); WORD-SPACING: 0px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px; -webkit-text-decorations-in-effect: none; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px" class="Apple-style-span"><span style="TEXT-ALIGN: left; LINE-HEIGHT: 21px; FONT-FAMILY: verdana, sans-serif; FONT-SIZE: 14px" class="Apple-style-span"></p>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>配置Tomcat访问日志</title><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- top1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3347102627476643"
+     data-ad-slot="2352128818"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></head><body><h1>配置Tomcat访问日志</h1><div><p><span style="WIDOWS: 2; TEXT-TRANSFORM: none; TEXT-INDENT: 0px; BORDER-COLLAPSE: separate; FONT: medium Simsun; WHITE-SPACE: normal; ORPHANS: 2; LETTER-SPACING: normal; COLOR: rgb(0,0,0); WORD-SPACING: 0px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px; -webkit-text-decorations-in-effect: none; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px" class="Apple-style-span"><span style="TEXT-ALIGN: left; LINE-HEIGHT: 21px; FONT-FAMILY: verdana, sans-serif; FONT-SIZE: 14px" class="Apple-style-span"></p>
 <p style="PADDING-BOTTOM: 0px; MARGIN: 1em 0px 0.5em; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 0px">最近需要配置tomcat访问日志，通过造访他人的博客，再根据apache官方的一些文章，才逐渐清晰了许多<br>配置方法很简单：在server.xml里的&lt;host&gt;标签下加上<span ><br>&lt;Valve className="org.apache.catalina.valves.AccessLogValve"<br>directory="logs" prefix="localhost_access_log." suffix=".txt"<br>pattern="common" resolveHosts="false"/&gt;<br>就可以了，下面咱们逐一分析各个参数。<br></span></p>
 <p>
 <table style="WIDTH: 586px; HEIGHT: 363px" border="1">

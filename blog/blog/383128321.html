@@ -1,4 +1,12 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux 绑定(bond或team)多个网口作为一个网口</title></head><body><h1>Linux 绑定(bond或team)多个网口作为一个网口</h1><div><p></p>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux 绑定(bond或team)多个网口作为一个网口</title><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- top1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3347102627476643"
+     data-ad-slot="2352128818"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></head><body><h1>Linux 绑定(bond或team)多个网口作为一个网口</h1><div><p></p>
 <p><span style="FONT-SIZE: 16px">英文原文参考:</span><a href="http://www.cyberciti.biz/tips/linux-bond-or-team-multiple-network-interfaces-nic-into-single-interface.html" target="_blank"><font color="#003366"><span style="FONT-SIZE: 16px">Linux bond or team multiple network interfaces (NIC) into single interface</span></font></a><span style="FONT-SIZE: 16px">–</span><a href="http://www.nixway.net/" target="_blank"><font color="#003366"><span style="FONT-SIZE: 16px">nixway.net</span></font></a></p>
 <p><span style="FONT-SIZE: 16px">将多个Linux网络端口绑定为一个，可以提升网络的性能，比如对于备份服务器，需要在一个晚上备份几个T的数据，如果使用单个的千兆网口将会是很严重的瓶颈。其它的应用，比如ftp服务器，高负载的下载网站, 都有类似的问题。因此使用Linux teaming或bond来绑定多个网卡作为一个逻辑网口，配置单个的IP地址，会大幅提升服务器的网络吞吐(I/O).</span></p>
 <p><span style="FONT-SIZE: 16px">Linux的多网卡绑定功能使用的是内核中的"bonding"模块，关于此模块可以参考</span><a href="http://www.cyberciti.biz/howto/question/static/linux-ethernet-bonding-driver-howto.php"><font color="#003366"><span style="FONT-SIZE: 16px">Linux Ethernet Bonding Driver</span></font></a><span style="FONT-SIZE: 16px">文档, 但是目前发布各个Linux版本内核均已包含了此模块，大多数情况下不需要重新编译内核。 Linux 的 bonding 驱动提供了绑定/集成(bond)多个网卡为一个虚拟逻辑网口的功能。并请注意绑定的网口(bonded)有多种工作模式; 一般来说，分为 热后备(hot standby) 和 负载均衡(load balancing). 在Redhat/Fedora和其它类Redhat Linux中是比较容易配置的.</span></p>

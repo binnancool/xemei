@@ -1,4 +1,12 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Apache服务器配置WEBDAV详解（不带共享目录的权限设置）</title></head><body><h1>Apache服务器配置WEBDAV详解（不带共享目录的权限设置）</h1><div><p><strong><font size="4">一、简介</font></strong></p>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Apache服务器配置WEBDAV详解（不带共享目录的权限设置）</title><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- top1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3347102627476643"
+     data-ad-slot="2352128818"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></head><body><h1>Apache服务器配置WEBDAV详解（不带共享目录的权限设置）</h1><div><p><strong><font size="4">一、简介</font></strong></p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <strong>WebDAV （Web-based Distributed Authoring and Versioning）是基于 HTTP 1.1 的一个通信协议。它为 HTTP 1.1 添加了一些扩展（就是在 GET、POST、HEAD 等几个 HTTP 标准方法以外添加了一些新的方法），使得应用<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=%E7%A8%8B%E5%BA%8F">程序</span>可以直接将文件写到 <span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=Web">Web</span> <span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=Server">Server</span> 上，并且在写文件时候可以对文件加锁，写完后对文件解锁，还可以支持对<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=%E6%96%87%E4%BB%B6">文件</span>所做的版本控制。这个协议的出现极大地增加了 Web 作为一种创作媒体对于我们的价值。基于 WebDAV 可以实现一个<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=%E5%8A%9F%E8%83%BD">功能</span>强大的内容管理系统或者配置管理<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=%E7%B3%BB%E7%BB%9F">系统</span>。<br>
   &nbsp;&nbsp;&nbsp;&nbsp;  现在主流的WEB<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=%E6%9C%8D%E5%8A%A1%E5%99%A8">服务器</span>一般都支持WebDAV，使用WebDAV的方便性，呵呵，就不用多说了吧，用过VS.NET开发<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=ASP">ASP</span>.<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=NET">NET</span>应用的朋友就应该知道，新建/修改WEB项目，其实就是通过WebDAV+FrontPage扩展做到的，下面我就较详细的介绍一下，WebDAV在<span class="t_tag" onxxxxx="tagshow(event)" href="tag.php?name=APACHE">APACHE</span>中的配置。</strong></p>
 <p><strong><font size="4">二、详细配置</font></strong></p>

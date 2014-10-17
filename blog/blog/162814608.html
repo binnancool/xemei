@@ -1,4 +1,12 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>客户端SMSAPI压力测试心得</title></head><body><h1>客户端SMSAPI压力测试心得</h1><div><p><font size="3" face="宋体">&nbsp;&nbsp;  经过一周的测试，今天终于测试完毕，得出了确切的结论。回顾一周来的测试过程，也是一个思考过程，先做总结如下：</font></p>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>客户端SMSAPI压力测试心得</title><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- top1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3347102627476643"
+     data-ad-slot="2352128818"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></head><body><h1>客户端SMSAPI压力测试心得</h1><div><p><font size="3" face="宋体">&nbsp;&nbsp;  经过一周的测试，今天终于测试完毕，得出了确切的结论。回顾一周来的测试过程，也是一个思考过程，先做总结如下：</font></p>
 <p><font size="3" face="宋体">&nbsp;&nbsp;  1、压力测试，首先就是怎么制作压力。每秒发送100条消息怎么才能达到？有两种方案：一是循环发送100条消息，sleep（1000）；二是利用java.util.timer定时器类，每秒定时触发循环发送100条消息的操作。可以做一下测试，两种方法都有缺陷，不够精确。</font></p>
 <p><font size="3" face="宋体">&nbsp;&nbsp;  2、测试工具的编写。此次测试需要编写两种测试工具一个java测试工具，一个C++测试工具。本人对于java比较熟悉，根据需求编写比较容易；对于C++测试工具的编写费了些力气，不过也有所收获。</font></p>
 <p><font size="3" face="宋体">&nbsp;&nbsp;  3、测试，对测试结果进行分析。测试结果容易得到，但是对于测试结果的分析比较麻烦，查看日志、分析日志、询问同事，到底是哪里出了问题？怎么证明客户端SMSAPI没有问题？</font></p>

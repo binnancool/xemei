@@ -1,4 +1,12 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java定时问题</title></head><body><h1>java定时问题</h1><div><p><font size="3" face="宋体">问题描述：要确保每秒发送100条消息，怎么实现？</font></p>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>java定时问题</title><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- top1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3347102627476643"
+     data-ad-slot="2352128818"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></head><body><h1>java定时问题</h1><div><p><font size="3" face="宋体">问题描述：要确保每秒发送100条消息，怎么实现？</font></p>
 <p><font size="3" face="宋体">1、循环发送100条消息，然后休眠1秒sleep（1000）；因为发送消息需要时间，每秒发送数目会小于100 。当然可以休眠不到一秒，近可能的使每秒发送数目保持在100。</font></p>
 <p><font size="3" face="宋体">2、利用java.util.Timer类实现，但是定时器不准确，多长时间触发一次。如果循环发送正在进行，又触发了下一次循环发送，会使每秒的发送数目大于100.</font></p>
 <p><font size="3" face="宋体">没有完全精确的方法实现定时，因为sleep（）和java.util.Timer类的定时都是不够精确的。</font></p></div></body></html>

@@ -1,4 +1,12 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux策略路由</title></head><body><h1>Linux策略路由</h1><div><p></p>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux策略路由</title><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- top1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3347102627476643"
+     data-ad-slot="2352128818"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></head><body><h1>Linux策略路由</h1><div><p></p>
 <p>基于策略的路由比传统路由在功能上更强大，使用更灵活，它使网络管理员不仅能够根据目的地址而且能够根据报文大小、应用或IP源地址来选择转发路径...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; #/etc/iproute2/rt_tables 此文件存有linux 系统路由表默认表有255 254 253三张表 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 255&nbsp; local 本地路由表 存有本地接口地址，广播地址，已及NAT地址. <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; local表由系统自动维护..管理员不能操作此表... <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 254&nbsp; main 主路由表 传统路由表,ip route若没指定表亦操作表254.一般存所有的路由.. <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 注:平时用ip ro sh查看的亦是此表设置的路由. <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 253&nbsp; default&nbsp; 默认路由表一般存放默认路由... <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 注：rt_tables文件中表以数字来区分表0保留最多支持255张表 <br>&nbsp;&nbsp;<strong>&nbsp; 路由表的查看可有以下二种方法： <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #ip route list table table_number</strong></p>
 <p><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #ip route list table table_name </strong></p>
 <p>&nbsp;&nbsp;&nbsp; 路由表添加完毕,即可在策略路由表内添加路由例: </p>

@@ -1,4 +1,12 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Radius认证原理</title></head><body><h1>Radius认证原理</h1><div><p><strong><span style="FONT-SIZE: 16px">认证过程及原理</span></strong></p>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Radius认证原理</title><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- top1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3347102627476643"
+     data-ad-slot="2352128818"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></head><body><h1>Radius认证原理</h1><div><p><strong><span style="FONT-SIZE: 16px">认证过程及原理</span></strong></p>
 <p>用户接入NAS，NAS向Radius服务器使用Access-Require<font color="#136ec2">数据包</font>提交用户信息，包括用户名、密码等相关信息，其中用户密码是经过MD5加密的，双方使用共享<font color="#136ec2">密钥，</font>这个密钥不经过网络传播；RADIUS服务器对用户名和密码的合法性进行检验，必要时可以提出一个Challenge，要求进一步对用户认证，也可以对NAS进行类似的认证；如果合法，给NAS返回Access-Accept数据包，允许用户进行下一步工作，否则返回Access-Reject数据包，拒绝用户访问；如果允许访问，NAS向RADIUS服务器提出计费请求Account- Require，RADIUS服务器响应Account-Accept，对用户的计费开始，同时用户可以进行自己的相关操作。 </p>
 <div class="spctrl"></div>
 <p>　　RADIUS还支持代理和漫游功能。简单地说，代理就是一台服务器，可以作为其他RADIUS服务器的代理，负责转发RADIUS认证和计费数据包。所谓漫游功能，就是代理的一个具体实现，这样可以让用户通过本来和其无关的RADIUS服务器进行认证，用户到非归属运营商所在地也可以得到服务，也可以实现虚拟运营。 </p>

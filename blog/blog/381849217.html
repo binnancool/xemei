@@ -1,4 +1,12 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux设置SSH的证书登陆</title></head><body><h1>Linux设置SSH的证书登陆</h1><div><p>一、新建用户： useradd mytest //passwd mytest</p>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Linux设置SSH的证书登陆</title><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- top1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3347102627476643"
+     data-ad-slot="2352128818"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></head><body><h1>Linux设置SSH的证书登陆</h1><div><p>一、新建用户： useradd mytest //passwd mytest</p>
 <p>二、su - mytest</p>
 <p>三、ssh-keygen -t rsa</p>
 <p>Generating public/private rsa key pair.<br>Enter file in which to save the key (/home/mytest/.ssh/id_rsa):&nbsp; <span style="COLOR: #ff0000">使用默认路径</span><br>Created directory '/home/mytest/.ssh'.<br>Enter passphrase (empty for no passphrase): <span style="COLOR: #ff0000">输入密码：123456 (<strong>如果输入为空，则可以实现无密码访问</strong>)</span><br>Enter same passphrase again: <span style="BACKGROUND-COLOR: #ffffff; COLOR: #ff0000">输入密码：123456</span><br>Your identification has been saved in /home/mytest/.ssh/id_rsa.<br>Your public key has been saved in /home/mytest/.ssh/id_rsa.pub.<br>The key fingerprint is:<br>c0:e4:f2:03:c6:2c:86:0d:2b:1b:bc:ca:4c:d6:c6:14 <a href="mailto:mytest@dibin-pc.channel.com">mytest@dibin-pc.channel.com</a></p>

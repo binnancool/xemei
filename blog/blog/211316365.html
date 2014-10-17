@@ -1,4 +1,12 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Kerberos单点登录实现过程</title></head><body><h1>Kerberos单点登录实现过程</h1><div><p style="text-align: center; margin: 0cm 0cm 0pt" class="MsoNormal" align="center"><span style="font-size: small"><font size="2"><span>最近公司在做单点登录的选型，看了看</span><span>Kerberos</span><span>的技术实现。感觉网上</span><span>Kerberos</span><span>的相关资料不多，自己做了总结和大家分享，因为是在选型阶段，没做太深入的学习，学习了</span><span>Kerberos</span><span>的单点登录过程。</span></font></span></p>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>Kerberos单点登录实现过程</title><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- top1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3347102627476643"
+     data-ad-slot="2352128818"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></head><body><h1>Kerberos单点登录实现过程</h1><div><p style="text-align: center; margin: 0cm 0cm 0pt" class="MsoNormal" align="center"><span style="font-size: small"><font size="2"><span>最近公司在做单点登录的选型，看了看</span><span>Kerberos</span><span>的技术实现。感觉网上</span><span>Kerberos</span><span>的相关资料不多，自己做了总结和大家分享，因为是在选型阶段，没做太深入的学习，学习了</span><span>Kerberos</span><span>的单点登录过程。</span></font></span></p>
 <p style="line-height: 150%; margin: 0cm 0cm 7.8pt" class="MsoNormal"><strong><span style="line-height: 150%;  font-size: 12pt">Kerberos</span></strong><strong><span>基本原理</span></strong></p>
 <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span style="font-size: small"><span><font size="2">先转几个链接</font></span></span></p>
 <p style="margin: 0cm 0cm 0pt" class="MsoNormal"><span style="font-size: small"><font size="2"><span>1.</span><span>关于理解</span><span>Kerberos</span><span>原理的经典对话，</span><span>MIT</span><span>的人为了帮助人们理解</span><span>Kerberos</span><span>的<span>原理</span>而写的一篇对话集，</span><span>google </span><span>&ldquo;</span><span>Kerberos</span><span>的<span>原理</span>&rdquo;，满篇都是。</span></font></span></p>

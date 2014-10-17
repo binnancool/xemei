@@ -1,4 +1,12 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ANT-build.xml文件详解</title></head><body><h1>ANT-build.xml文件详解</h1><div><p>Ant的概念 <br>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>ANT-build.xml文件详解</title><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- top1 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-3347102627476643"
+     data-ad-slot="2352128818"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script></head><body><h1>ANT-build.xml文件详解</h1><div><p>Ant的概念 <br>
 可能有些读者并不理解什么是Ant以及入可使用它，但只要使用通过Linux系统得读者，应该知道make这个命令。当编译Linux内核及一些软件的源程序时，经常要用这个命令。Make命令其实就是一个项目管理工具，而Ant所实现功能与此类似。像make，gnumake和nmake这些编译工具都有一定的缺陷，但是Ant却克服了这些工具的缺陷。最初Ant开发者在开发跨平台的应用时，用样也是基于这些缺陷对Ant做了更好的设计。</p>
 <p>Ant 与 makefile <br>
 Makefile有一些不足之处，比如很多人都会碰到的烦人的Tab问题。最初的Ant开发者多次强调&rdquo;只是我在Tab前面加了一个空格，所以我的命令就不能执行&rdquo;。有一些工具在一定程度上解决了这个问题，但还是有很多其他的问题。Ant则与一般基于命令的工具有所不同，它是Java类的扩展。Ant运行需要的XML格式的文件不是Shell命令文件。它是由一个Project组成的，而一个Project又可分成可多target，target再细分又分成很多task，每一个task都是通过一个实现特定接口的java类来完成的。</p>
